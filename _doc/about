@@ -1,0 +1,21 @@
+Flaskz-admin是基于Flaskz的管理系统开发模板，提供了基础的代码框架和文件目录，可用于快速搭建系统开发框架和业务模块的开发
+
+Flaskz介绍
+-[数据库初始化&常用函数] http://zhangyiheng.com/blog/articles/py_flaskz_model_init.html
+-[数据模型扩展类] http://zhangyiheng.com/blog/articles/py_flaskz_model_mixin.html
+-[API封装、访问权限控制和系统日志] http://zhangyiheng.com/blog/articles/py_flaskz_api.html
+-[常用函数] http://zhangyiheng.com/blog/articles/py_flaskz_utils.html
+
+Flaskz-admin介绍
+-[基于Flaskz的管理系统开发模板] http://zhangyiheng.com/blog/articles/py_flaskz_admin.html
+-[使用手册] http://zhangyiheng.com/blog/articles/py_flaskz_manual.html
+
+请遵循以下原则
+-标准化/可配置/规范命名
+-写好注释和文档
+-尽量消除IDE中的告警提示
+-永远不要写临时代码
+-能用单引号的地方不要用双引号
+
+联系
+Email: taozh@cisco.com / taozh1982@gmail.com

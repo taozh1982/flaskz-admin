@@ -1,0 +1,253 @@
+@drawer-size: 39em;
+
+//common
+html, body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  //overflow: auto;
+  //height: auto;
+  //font-family: "Microsoft YaHei","微软雅黑",SimSun,"宋体",Arial,sans-serif;
+  //font-family: Roboto, Helvetica Neue, Helvetica, Tahoma, Arial, PingFang SC, Microsoft YaHei;
+  font-family: arial, sans-serif;
+  font-size: 14px;
+}
+
+/*//form
+select option[disabled] {
+  color: #D3D3D3;
+}*/
+
+
+//drawer
+.drawer {
+  position: absolute !important;
+  margin: 0 !important;
+  > .content {
+    height: 100% !important;
+    max-height: 100% !important;
+  }
+  //default in right
+
+  &.right, &.left {
+    top: 0;
+    width: @drawer-size;
+    max-width: 80%;
+    height: 100%;
+  }
+  &.right {
+    right: 0;
+    left: auto;
+  }
+  &.left {
+    left: 0;
+    right: auto;
+  }
+  &.top, &.bottom {
+    width: 100%;
+    max-width: none;
+    height: @drawer-size;
+    max-height: 80%;
+  }
+  &.top {
+    top: 0;
+    bottom: auto;
+  }
+  &.bottom {
+    bottom: 0;
+    top: auto;
+  }
+  &:not(.right):not(.left):not(.top):not(.bottom) {
+    top: 0;
+    width: @drawer-size;
+    max-width: 80%;
+    height: 100%;
+
+    right: 0;
+    left: auto;
+  }
+}
+
+//module
+.module {
+  width: 100%;
+  height: 100%;
+  padding: 0.2em;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-flow: column nowrap;
+
+  ._toolbar_content();
+
+  .modal-form {
+    display: none;
+  }
+}
+
+//widget
+.z-grid {
+  .head {
+    th {
+      //border: none;
+      font-weight: normal;
+      padding: 0.6em;
+    }
+    .z-thead {
+      //background: #ebecf0;
+    }
+  }
+  .body {
+    tr {
+      &:hover {
+        background-color: #f8f9fa !important;
+      }
+      > td {
+        //border-left: none;
+        //border-right: none;
+        border-top: none;
+        border-color: #dcdee3;
+        padding: 0.6em;
+        vertical-align: middle;
+        word-break: break-word;
+
+        select, input:not([type]), input[type='text'], input[type='password'] {
+          width: 100%;
+          padding: 0.1em;
+          line-height: 2em;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+
+          &:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2em rgba(0, 123, 255, 0.25);
+          }
+        }
+      }
+    }
+  }
+  /*
+    tbody tr[v_index_oe=even] {
+      background-color: rgba(0,0,0,.02);
+    }*/
+  .nested_td {
+    padding: 0 !important;
+    tr:hover {
+      background-color: transparent !important;
+    }
+    td {
+      border: none !important;
+      border-bottom: 1px solid #e6e6e6 !important;
+    }
+    tr:last-child td {
+      border-bottom: none !important;
+    }
+  }
+
+  .filter-matched {
+    background-color: yellowgreen;
+  }
+  button {
+    padding: 0.1em 0.2em!important;
+    margin-right: 0.1em!important;
+  }
+  input[type=checkbox][readonly] {
+    pointer-events: none;
+  }
+  & > .body .center tbody:empty {
+    display: table-caption;
+  }
+  & > .body .center tbody:empty:before {
+    content: "数据为空";
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    color: #CCCCCC;
+    font-size: 92%;
+    padding: 1em;
+  }
+}
+
+.z-listview {
+  .item .node {
+    border-right: 2px solid transparent;
+    border-top: 1px solid transparent;
+    box-sizing: border-box;
+  }
+  .item.selected .node {
+    background-color: #e6f7ff !important;
+    color: #1890ff !important;
+    border-right-color: #1890ff;
+  }
+}
+
+.z-tabs {
+  .contents > div {
+    height: 100%;
+  }
+}
+
+.z-notification {
+  opacity: 0.7;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+body > .z-modal {
+  position: fixed;
+}
+
+.modal-inner-grid {
+  td {
+    padding: 0.3em !important;
+    input, select {
+      width: 100%;
+      font-size: 1em;
+      padding: .3em;
+      border-radius: .2em;
+      border: 1px solid rgba(0, 0, 0, .125);
+      vertical-align: middle;
+      display: inline-block;
+    }
+
+    input[type=checkbox] {
+      width: auto;
+    }
+  }
+  .z-treegrid {
+    .tree-column {
+      padding-left: 1.4em !important;
+    }
+  }
+}
+
+//mixin
+._toolbar_content() {
+  .toolbar {
+    flex: none;
+    display: flex;
+    padding: 0.2em 0.2em 0.3em;
+
+    > * {
+      width: auto;
+      min-width: 0;
+      margin-right: 0.6em;
+    }
+    input, select {
+      width: auto !important;
+    }
+    label:not(:first-child) {
+      padding-left: .6em;
+    }
+    button:last-of-type {
+      margin-right: auto;
+    }
+  }
+  > .content {
+    flex: 1 1 0;
+    overflow: auto;
+  }
+}

@@ -1,0 +1,1082 @@
+{
+	"info": {
+		"_postman_id": "4f86947e-751f-440c-9deb-284ee4995d73",
+		"name": "flaskz-admin",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "template",
+			"item": [
+				{
+					"name": "query",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{flaskz_auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "{{flaskz_requested_with}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/",
+							"protocol": "http",
+							"host": [
+								"{{flaskz_server_url}}"
+							],
+							"path": [
+								"api",
+								"v1.0",
+								"template",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{flaskz_auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "{{flaskz_requested_with}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"T-X\",\n    \"age\":10,\n\t\"email\":\"t-x@focus-ui.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/",
+							"protocol": "http",
+							"host": [
+								"{{flaskz_server_url}}"
+							],
+							"path": [
+								"api",
+								"v1.0",
+								"template",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{flaskz_auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "{{flaskz_requested_with}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/3",
+							"protocol": "http",
+							"host": [
+								"{{flaskz_server_url}}"
+							],
+							"path": [
+								"api",
+								"v1.0",
+								"template",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{flaskz_auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "{{flaskz_requested_with}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":3,\n    \"name\":\"T-X-x\",\n    \"age\":20,\n\t\"email\":\"t-x@focus-ui.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/",
+							"protocol": "http",
+							"host": [
+								"{{flaskz_server_url}}"
+							],
+							"path": [
+								"api",
+								"v1.0",
+								"template",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query_ pss",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{flaskz_auth_token}}"
+							},
+							{
+								"key": "X-Requested-With",
+								"type": "text",
+								"value": "{{flaskz_requested_with}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"search\": {\r\n        \"like\": \"t\",\r\n        \"_ors\": {\r\n            \"email\": \"t1@focus-ui.com||t2@focus-ui.com\"\r\n        },\r\n        \"_ands\": {\r\n            \"age\": {\r\n                \">\": 1,\r\n                \"<\": 20\r\n            }\r\n        }\r\n    },\r\n    \"sort\": {\r\n        \"field\": \"name\",\r\n        \"order\": \"asc\"\r\n    },\r\n    \"page\": {\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/query_pss/",
+							"protocol": "http",
+							"host": [
+								"{{flaskz_server_url}}"
+							],
+							"path": [
+								"api",
+								"v1.0",
+								"template",
+								"query_pss",
+								""
+							]
+						},
+						"description": "search : search conditions\r\n    --like : like search    # (name like '%t%' OR description like '%t%')\r\n    --_ors : other or conditions    # email='t1@focus-ui.com' OR email='t2@focus-ui.com'\r\n    --_ands : other and conditions  #age>1 AND age<20\r\nsort : sort options    # ORDER BY templates.name ASC\r\n    -- field : sort field\r\n    -- order : sort order asc/desc\r\npage : page options     #  LIMIT ? OFFSET ? (20, 0)\r\n    -- offset : page offset \r\n    -- size : size per page\r\n\r\nSELECT templates.id AS templates_id, templates.name AS templates_name, templates.age AS templates_age, templates.email AS templates_email, templates.description AS templates_description, templates.created_at AS templates_created_at, templates.updated_at AS templates_updated_at\r\nFROM templates\r\nWHERE (name like '%t%' OR description like '%t%') AND (age>1 AND age<20) AND (email='t1@focus-ui.com' OR email='t2@focus-ui.com') ORDER BY templates.name ASC\r\n    LIMIT ? OFFSET ? (20, 0)\r\n\r\n{\r\n    \"search\": {\r\n        \"like\": \"t\",\r\n        \"_ors\": {\r\n            \"email\": \"t1@focus-ui.com||t2@focus-ui.com\"\r\n        },\r\n        \"_ands\": {\r\n            \"age\": {\r\n                \">\": 1,\r\n                \"<\": 20\r\n            }\r\n        }\r\n    },\r\n    \"sort\": {\r\n        \"field\": \"name\",\r\n        \"order\": \"asc\"\r\n    },\r\n    \"page\": {\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    }\r\n}"
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "sys_mgmt",
+			"item": [
+				{
+					"name": "_private",
+					"item": [
+						{
+							"name": "sys_log",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/_/sys_log/?date=2019-10-18",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"_",
+										"sys_log",
+										""
+									],
+									"query": [
+										{
+											"key": "date",
+											"value": "2019-10-18"
+										}
+									]
+								},
+								"description": "query sys log"
+							},
+							"response": []
+						},
+						{
+							"name": "clear_cache",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/_/clear_cache",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"_",
+										"clear_cache"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "auth",
+					"item": [
+						{
+							"name": "token",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"username\":\"admin\",\n\t\"password\":\"admin\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/auth/token/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"auth",
+										"token",
+										""
+									]
+								},
+								"description": "get auth token"
+							},
+							"response": []
+						},
+						{
+							"name": "login",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"username\":\"admin\",\n\t\"password\":\"admin\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/auth/login/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"auth",
+										"login",
+										""
+									]
+								},
+								"description": "use session&cookie to login"
+							},
+							"response": []
+						},
+						{
+							"name": "logout",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/auth/logout/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"auth",
+										"logout",
+										""
+									]
+								},
+								"description": "logout session&cookie"
+							},
+							"response": []
+						},
+						{
+							"name": "account",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/auth/account/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"auth",
+										"account",
+										""
+									]
+								},
+								"description": "query account profile and menus"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "user",
+					"item": [
+						{
+							"name": "add_user",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"u12\",\n    \"password\": \"123456\",\n    \"name\": \"ux\",\n    \"email\": \"ux@focus-ui.com\",\n    \"role_id\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/user/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete_user",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/user/2",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"user",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update_user",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\":2,\n    \"username\": \"u12\",\n    \"password\": \"123456\",\n    \"name\": \"ux-x\",\n    \"email\": \"ux-x@focus-ui.com\",\n    \"status\": \"disable\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/user/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "query_user",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/user/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"user",
+										""
+									]
+								},
+								"description": "query user list"
+							},
+							"response": []
+						},
+						{
+							"name": "query_multiple",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{flaskz_auth_token}}"
+									},
+									{
+										"key": "X-Requested-With",
+										"type": "text",
+										"value": "{{flaskz_requested_with}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/user/query_multiple",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"user",
+										"query_multiple"
+									]
+								},
+								"description": "query user&role list"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "role",
+					"item": [
+						{
+							"name": "add_role",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\"name\":\"test\",\n\"default\": false,\n\"description\": null,\n\n\"menus\": [\n  {\n    \"menu_id\": 901,\n    \"op_permissions\": [\"update\"]\n  },\n  {\n    \"menu_id\": 902,\n    \"op_permissions\": [\"update\"]\n  }\n]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/role/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"role",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete_role",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/role/2",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"role",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update_role",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"default\": false,\r\n\t\"description\": null,\r\n\t\"id\": 2,\r\n\t\"menus\": [\r\n\t  {\r\n\t    \"menu_id\": 901,\r\n\t    \"op_permissions\": [\"update\"]\r\n\t  }\r\n\t],\r\n\t\"name\": \"test-x\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/role/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"role",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "query_role",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/role",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"role"
+									]
+								},
+								"description": "query all menus and role list"
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "op_log",
+					"item": [
+						{
+							"name": "query_menu",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{flaskz_auth_token}}"
+									},
+									{
+										"key": "X-Requested-With",
+										"type": "text",
+										"value": "{{flaskz_requested_with}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/op_log/menu",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"op_log",
+										"menu"
+									]
+								},
+								"description": "query log modules"
+							},
+							"response": []
+						},
+						{
+							"name": "query_ pss",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n \"search\": {\n  \"like\": \"\",\n  \"result\": \"success\"\n },\n \"page\": {\n \t \"limit\": 20,\n \t \"offset\": 0\n },\n \"sort\": {\n  \"field\": \"result\",\n  \"order\": \"asc\"\n }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/op_log/query_pss/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"op_log",
+										"query_pss",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "flaskz_auth_token",
+			"value": "flaskz_auth_token"
+		},
+		{
+			"key": "flaskz_requested_with",
+			"value": "XMLHttpRequest"
+		},
+		{
+			"key": "flaskz_server_url",
+			"value": "127.0.0.1:666"
+		}
+	]
+}

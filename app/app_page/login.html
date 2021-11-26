@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Flasky+Focus Admin</title>
+    <script src="./libs/focus-ui/monitor.js"></script>
+    <link rel="stylesheet" href="./libs/focus-ui/theme/bootstrap.min.css">
+    <link rel="stylesheet" href="./libs/focus-ui/fu-pro.css">
+    <link rel="stylesheet" href="./login/login.css">
+
+    <script src="./libs/focus-ui/focus-ui.min.js"></script>
+    <script src="./libs/focus-ui/fu-pro.js"></script>
+    <script src="./libs/project/proj.js"></script>
+
+    <script src="./login/login.js"></script>
+</head>
+<body class="fu-pro">
+<div class="fill-container">
+    <div class="content controls inline">
+        <div class="grid-row title">
+            Flasky+Focus Admin
+        </div>
+        <div class="grid-row">
+            <label for="usernameInput">Username</label>
+            <input id="usernameInput" name="z_username"
+                   ze-model="username" v-rules="required" v-message="Please enter username"
+                   placeholder="Username" autofocus>
+        </div>
+        <div class="grid-row">
+            <label for="pwdInput">Password</label>
+            <input id="pwdInput"
+                   ze-model="password" v-rules="required" v-message="Please enter password"
+                   type="password" placeholder="*********">
+        </div>
+        <div class="grid-row">
+            <label class="check-label"><input type="checkbox" class="form-check-input" id="rememberCheck" ze-model="remember_me">Remember me</label>
+        </div>
+        <div id="errDiv" class="color-danger error-msg"></div>
+        <div class="grid-row">
+            <button id="loginBtn" class="btn btn-primary">Login</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

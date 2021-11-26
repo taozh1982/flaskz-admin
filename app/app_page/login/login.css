@@ -1,0 +1,65 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: arial, sans-serif;
+  font-size: 14px;
+}
+.fill-container {
+  background: url("login_bg.jpg");
+  background-size: cover;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.fill-container .content {
+  padding: 2em 2em 1.2em;
+  width: 22em;
+  background-color: #fff;
+  border-radius: 4px;
+}
+.fill-container .content .grid-row {
+  margin-bottom: 0.8em;
+}
+.fill-container .content .title {
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 0.6em;
+  margin-bottom: 1em;
+  text-align: center;
+  display: block;
+  font-size: 1.6em;
+  font-weight: bold;
+}
+.fill-container .content label {
+  padding-left: 0;
+}
+.fill-container .content button {
+  margin-top: 1em;
+  padding: 0.6em;
+  width: 100%;
+}
+.fill-container .content .error-msg {
+  text-align: center;
+}
+.fill-container .content.inline .grid-row input:not([type='checkbox']) {
+  display: inline-block;
+  width: 75% !important;
+}
+.fill-container .content.inline .grid-row label {
+  box-sizing: border-box;
+}
+.fill-container .content.inline .grid-row label:not(.check-label) {
+  width: 25%;
+}
+.fill-container .content.inline .grid-row label.check-label {
+  padding-left: 25%;
+}
+.fill-container .content.inline .grid-row button {
+  margin-left: 25%;
+  width: 75%;
+}

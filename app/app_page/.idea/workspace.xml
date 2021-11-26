@@ -1,0 +1,840 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3a795ccf-20a8-4ef7-aa19-0aa1eda5dc73" name="Default" comment="" />
+    <ignored path="$PROJECT_DIR$/.tmp/" />
+    <ignored path="$PROJECT_DIR$/temp/" />
+    <ignored path="$PROJECT_DIR$/tmp/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file leaf-file-name="role.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/modules/sys_mgmt/role/role.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="660">
+              <caret line="22" column="65" lean-forward="false" selection-start-line="22" selection-start-column="65" selection-end-line="22" selection-end-column="65" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="user.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/modules/sys_mgmt/user/user.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="570">
+              <caret line="19" column="10" lean-forward="false" selection-start-line="19" selection-start-column="10" selection-end-line="19" selection-end-column="10" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="template.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/modules/template/template/template.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="360">
+              <caret line="12" column="26" lean-forward="false" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="template.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/modules/template/template/template.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="360">
+              <caret line="12" column="50" lean-forward="false" selection-start-line="12" selection-start-column="50" selection-end-line="12" selection-end-column="50" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="page.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/libs/project/js/page.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="7" column="48" lean-forward="false" selection-start-line="7" selection-start-column="48" selection-end-line="7" selection-end-column="48" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="admin_pro.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/homepage/admin_pro.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="600">
+              <caret line="20" column="9" lean-forward="false" selection-start-line="20" selection-start-column="9" selection-end-line="20" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="proj.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/libs/project/proj.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="312">
+              <caret line="98" column="11" lean-forward="true" selection-start-line="98" selection-start-column="11" selection-end-line="98" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AjaxUrl.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/libs/project/js/AjaxUrl.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="226">
+              <caret line="18" column="46" lean-forward="false" selection-start-line="18" selection-start-column="46" selection-end-line="18" selection-end-column="46" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="fu-pro.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/libs/focus-ui/fu-pro.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="32940">
+              <caret line="1098" column="8" lean-forward="false" selection-start-line="1098" selection-start-column="8" selection-end-line="1098" selection-end-column="8" />
+              <folding>
+                <marker date="1630210024800" expanded="false" signature="0:50" ph="/*...*/" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>module_permissions</find>
+      <find>refreshMenuByPath</find>
+      <find>restore_value</find>
+      <find>initSelectOptions</find>
+      <find>runCode</find>
+      <find>class=&quot;form-control&quot;</find>
+      <find>row form-group</find>
+      <find>col-sm-9</find>
+      <find>bootst</find>
+      <find>35re</find>
+      <find>35rem</find>
+      <find>label</find>
+      <find>col-sm-3 col-form-label</find>
+      <find>grid-col-9-12</find>
+      <find>.disabled</find>
+      <find>@aside_bg</find>
+      <find>cache_page</find>
+      <find>errDiv</find>
+      <find>renderUpdateColumn</find>
+      <find>pro.template.CRUDTablePage.renderUpdateColumn(td, data, column);</find>
+      <find>isEditColumnVisible</find>
+      <find>z.ajax.</find>
+      <find>getQueryPa</find>
+      <find>page_module</find>
+      <find>RoleUtil.</find>
+      <find>RoleUtil</find>
+      <find>access</find>
+      <find>check</find>
+      <find>role_ops</find>
+      <find>getModelDeleteData</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>sys</replace>
+      <replace>OPLog</replace>
+      <replace>sys_mgmt/</replace>
+      <replace>ForTest</replace>
+      <replace>grid-row</replace>
+      <replace>grid-col-3-12 required</replace>
+      <replace>grid-col-3-12</replace>
+      <replace>grid-col-9-12</replace>
+      <replace>grid-col-8-12</replace>
+    </replaceStrings>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/modules/user/role/role.js" />
+        <option value="$PROJECT_DIR$/modules/user/user/user.js" />
+        <option value="$PROJECT_DIR$/libs/project/js/pro.js" />
+        <option value="$PROJECT_DIR$/404.html" />
+        <option value="$PROJECT_DIR$/libs/project/css/drawer.less" />
+        <option value="$PROJECT_DIR$/libs/project/css/ext.less" />
+        <option value="$PROJECT_DIR$/libs/project/js/proj.js" />
+        <option value="$PROJECT_DIR$/libs/project/css/_toolbar_content.less" />
+        <option value="$PROJECT_DIR$/libs/project/css/override.less" />
+        <option value="$PROJECT_DIR$/libs/project/css/module.less" />
+        <option value="$PROJECT_DIR$/libs/project/css/common.less" />
+        <option value="$PROJECT_DIR$/libs/project/css/page/page.less" />
+        <option value="$PROJECT_DIR$/libs/project/css/test.html" />
+        <option value="$PROJECT_DIR$/libs/project/test.html" />
+        <option value="$PROJECT_DIR$/modules/sys/role/role_sub.js" />
+        <option value="$PROJECT_DIR$/libs/project/js/AjaxCache.js" />
+        <option value="$PROJECT_DIR$/modules/sys/op_log/op_log.js" />
+        <option value="$PROJECT_DIR$/login/login.js" />
+        <option value="$PROJECT_DIR$/modules/sys/role/role.html" />
+        <option value="$PROJECT_DIR$/libs/focus-ui/monitor.js" />
+        <option value="$PROJECT_DIR$/modules/sys/user/user.js" />
+        <option value="$PROJECT_DIR$/modules/sys/op_log/op_log.html" />
+        <option value="$PROJECT_DIR$/modules/sys/user/user.html" />
+        <option value="$PROJECT_DIR$/modules/sys/role/role.js" />
+        <option value="$PROJECT_DIR$/homepage/admin_pro.js" />
+        <option value="$PROJECT_DIR$/modules/test/for_test/for_test.js" />
+        <option value="$PROJECT_DIR$/modules/test/for_test/for_test.html" />
+        <option value="$PROJECT_DIR$/libs/project/js/init.js" />
+        <option value="$PROJECT_DIR$/modules/sys_mgmt/op_log/op_log.html" />
+        <option value="$PROJECT_DIR$/libs/focus-ui/fu-pro.css" />
+        <option value="$PROJECT_DIR$/libs/project/proj.less" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/homepage/admin.js" />
+        <option value="$PROJECT_DIR$/error/404.html" />
+        <option value="$PROJECT_DIR$/login.html" />
+        <option value="$PROJECT_DIR$/login/login.less" />
+        <option value="$PROJECT_DIR$/modules/sys_mgmt/op_log/op_log.js" />
+        <option value="$PROJECT_DIR$/libs/project/js/page.js" />
+        <option value="$PROJECT_DIR$/libs/project/js/RoleUtil.js" />
+        <option value="$PROJECT_DIR$/modules/template/template/template.html" />
+        <option value="$PROJECT_DIR$/libs/project/js/_proj.txt" />
+        <option value="$PROJECT_DIR$/modules/sys_mgmt/role/role.js" />
+        <option value="$PROJECT_DIR$/modules/sys_mgmt/user/user.js" />
+        <option value="$PROJECT_DIR$/libs/focus-ui/fu-pro.js" />
+        <option value="$PROJECT_DIR$/libs/project/css/page.less" />
+        <option value="$PROJECT_DIR$/modules/sys_mgmt/role/role_sub.js" />
+        <option value="$PROJECT_DIR$/libs/focus-ui/focus-ui.min.js" />
+        <option value="$PROJECT_DIR$/modules/sys_mgmt/role/role.html" />
+        <option value="$PROJECT_DIR$/modules/sys_mgmt/user/user.html" />
+        <option value="$PROJECT_DIR$/modules/template/template/template.js" />
+        <option value="$PROJECT_DIR$/libs/project/js/AjaxUrl.js" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
+    <option name="width" value="1938" />
+    <option name="height" value="1048" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="flasky_page" type="b2602c69:ProjectViewProjectNode" />
+              <item name="flasky_page" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="flasky_page" type="b2602c69:ProjectViewProjectNode" />
+              <item name="flasky_page" type="462c0819:PsiDirectoryNode" />
+              <item name="error" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="flasky_page" type="b2602c69:ProjectViewProjectNode" />
+              <item name="flasky_page" type="462c0819:PsiDirectoryNode" />
+              <item name="homepage" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="flasky_page" type="b2602c69:ProjectViewProjectNode" />
+              <item name="flasky_page" type="462c0819:PsiDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="flasky_page" type="b2602c69:ProjectViewProjectNode" />
+              <item name="flasky_page" type="462c0819:PsiDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
+              <item name="focus-ui" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="flasky_page" type="b2602c69:ProjectViewProjectNode" />
+              <item name="flasky_page" type="462c0819:PsiDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
+              <item name="project" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="flasky_page" type="b2602c69:ProjectViewProjectNode" />
+              <item name="flasky_page" type="462c0819:PsiDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
+              <item name="project" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="settings.editor.selected.configurable" value="settings.javascript.linters.eslint" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="D:/Dev/WorkSpace/focus-ui/core/api/js_doc.js" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://D:/PyDev/WorkSpace/flasky/app/flasky_page/libs/project/js/page.js&#10;byDev&#9;FILE&#9;file://D:/PyDev/WorkSpace/flasky/app/page/modules/acl/network_object/ByDevice.js&#10;by&#9;FILE&#9;file://D:/PyDev/WorkSpace/flasky/app/page/modules/acl/network_object/ByDevice.js" />
+    <property name="NewWatcherDialog.advanced.open" value="true" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="C:\Users\taozh\AppData\Roaming\npm\node_modules\eslint" />
+    <property name="node.js.path.for.package.standard" value="project" />
+    <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.selected.package.standard" value="" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\libs\project\js\bak" />
+      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\libs\project" />
+      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\libs\project\css" />
+      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\libs\project\css\page" />
+      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\libs\focus-ui" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\homepage" />
+      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\modules\test\for_test" />
+      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\libs\focus-ui" />
+      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\libs\focus-ui\theme" />
+      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\modules\sys\user" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3a795ccf-20a8-4ef7-aa19-0aa1eda5dc73" name="Default" comment="" />
+      <created>1582707198211</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1582707198211</updated>
+      <workItem from="1582707199554" duration="10515000" />
+      <workItem from="1582776139532" duration="17916000" />
+      <workItem from="1582963393042" duration="11182000" />
+      <workItem from="1583213760241" duration="1391000" />
+      <workItem from="1583566515358" duration="120000" />
+      <workItem from="1583847989566" duration="276000" />
+      <workItem from="1585196443983" duration="1530000" />
+      <workItem from="1585209015616" duration="379000" />
+      <workItem from="1585658277813" duration="5455000" />
+      <workItem from="1585672510224" duration="714000" />
+      <workItem from="1585705122855" duration="7605000" />
+      <workItem from="1585727598806" duration="6000" />
+      <workItem from="1585743352379" duration="1741000" />
+      <workItem from="1585919964088" duration="3941000" />
+      <workItem from="1585970874051" duration="1581000" />
+      <workItem from="1585981766871" duration="181000" />
+      <workItem from="1586002339896" duration="3153000" />
+      <workItem from="1586005509761" duration="83000" />
+      <workItem from="1586010500121" duration="4689000" />
+      <workItem from="1586021480969" duration="788000" />
+      <workItem from="1586024238948" duration="330000" />
+      <workItem from="1586166580111" duration="2636000" />
+      <workItem from="1586256472917" duration="636000" />
+      <workItem from="1586399424872" duration="1365000" />
+      <workItem from="1586608080519" duration="3506000" />
+      <workItem from="1586681350656" duration="254000" />
+      <workItem from="1586687121187" duration="86000" />
+      <workItem from="1586687653954" duration="966000" />
+      <workItem from="1586783707400" duration="627000" />
+      <workItem from="1587029839861" duration="2897000" />
+      <workItem from="1587469782267" duration="10000" />
+      <workItem from="1587520284350" duration="1015000" />
+      <workItem from="1589033276743" duration="363000" />
+      <workItem from="1589190076644" duration="1329000" />
+      <workItem from="1589613275045" duration="8000" />
+      <workItem from="1590637652578" duration="705000" />
+      <workItem from="1590717750209" duration="2142000" />
+      <workItem from="1592196465737" duration="39000" />
+      <workItem from="1592450991087" duration="6594000" />
+      <workItem from="1592979982557" duration="3808000" />
+      <workItem from="1593487404112" duration="1274000" />
+      <workItem from="1593545081532" duration="2721000" />
+      <workItem from="1595215936077" duration="2405000" />
+      <workItem from="1595814947248" duration="5369000" />
+      <workItem from="1595913441703" duration="2753000" />
+      <workItem from="1596523295875" duration="2685000" />
+      <workItem from="1596541896936" duration="4816000" />
+      <workItem from="1596683116056" duration="3686000" />
+      <workItem from="1596762867246" duration="2000" />
+      <workItem from="1603942195722" duration="4100000" />
+      <workItem from="1604031243074" duration="3813000" />
+      <workItem from="1604289432562" duration="3924000" />
+      <workItem from="1604643779100" duration="1323000" />
+      <workItem from="1604975759783" duration="614000" />
+      <workItem from="1604994993851" duration="709000" />
+      <workItem from="1605593971836" duration="1426000" />
+      <workItem from="1605598240371" duration="3424000" />
+      <workItem from="1610693238595" duration="1665000" />
+      <workItem from="1611206496615" duration="1217000" />
+      <workItem from="1612343226691" duration="2946000" />
+      <workItem from="1614743910152" duration="622000" />
+      <workItem from="1614841220387" duration="4503000" />
+      <workItem from="1615797751473" duration="293000" />
+      <workItem from="1615881859696" duration="659000" />
+      <workItem from="1615966457214" duration="483000" />
+      <workItem from="1616386396863" duration="192000" />
+      <workItem from="1617090532235" duration="8301000" />
+      <workItem from="1617252967269" duration="6427000" />
+      <workItem from="1617266729209" duration="257000" />
+      <workItem from="1618293096149" duration="699000" />
+      <workItem from="1622545461589" duration="9000" />
+      <workItem from="1622545534903" duration="2234000" />
+      <workItem from="1622548416470" duration="1128000" />
+      <workItem from="1622686651245" duration="771000" />
+      <workItem from="1623235447965" duration="3722000" />
+      <workItem from="1623293168923" duration="11577000" />
+      <workItem from="1624422165361" duration="610000" />
+      <workItem from="1624611834131" duration="1479000" />
+      <workItem from="1625109151393" duration="442000" />
+      <workItem from="1636021772348" duration="613000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="198455000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18984663" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3293348" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33587787" sideWeight="0.5050238" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14394766" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.12322792" sideWeight="0.49861386" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29334787" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Eval Reset" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4711014" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.0261723" sideWeight="0.4949762" order="5" side_tool="false" content_ui="tabs" />
+    </layout>
+    <layout-to-restore>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3293348" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33587787" sideWeight="0.5050238" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.12322792" sideWeight="0.49861386" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14394766" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18984663" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29334787" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.0261723" sideWeight="0.4949762" order="5" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="2" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/modules/f5/f5_pool/f5_pool.js" />
+    <entry file="file://$PROJECT_DIR$/modules/f5/f5_pool/f5_pool_sub.js" />
+    <entry file="file://$PROJECT_DIR$/libs/project/css/bak/scrollbar.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="11" column="1" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/css/bak/drawer.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="48" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/css/bak/_toolbar_content.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/css/bak/common.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="10" column="1" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/css/page.css" />
+    <entry file="file://$PROJECT_DIR$/libs/project/css/bak/ext.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="10" lean-forward="true" selection-start-line="0" selection-start-column="10" selection-end-line="0" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/css/bak/layout.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1124">
+          <caret line="1" column="15" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="61" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/css/bak/module.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="14" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/css/bak/override.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-404">
+          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="32" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/js/bak/RoleUtil1.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="690">
+          <caret line="23" column="42" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/js/bak/proj.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="586">
+          <caret line="58" column="2" lean-forward="true" selection-start-line="58" selection-start-column="2" selection-end-line="58" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/test.html" />
+    <entry file="file://$PROJECT_DIR$/libs/focus-ui/theme/bootstrap.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Dev/WorkSpace/focus-ui/core/api/js_doc.js" />
+    <entry file="file://$PROJECT_DIR$/homepage/menu_items.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="17" lean-forward="true" selection-start-line="0" selection-start-column="17" selection-end-line="0" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/proj.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="10314" column="1" lean-forward="false" selection-start-line="10314" selection-start-column="1" selection-end-line="10314" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/login/login.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="17" column="17" lean-forward="false" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/focus-ui/fu-pro.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="757">
+          <caret line="652" column="0" lean-forward="false" selection-start-line="652" selection-start-column="0" selection-end-line="652" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/proj.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="4" column="21" lean-forward="true" selection-start-line="4" selection-start-column="21" selection-end-line="4" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-34">
+          <caret line="81" column="56" lean-forward="false" selection-start-line="81" selection-start-column="47" selection-end-line="81" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/homepage/logo.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/focus-ui/monitor.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="8" column="20" lean-forward="true" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/sys_mgmt/op_log/op_log.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/homepage/admin.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="32" column="21" lean-forward="true" selection-start-line="32" selection-start-column="21" selection-end-line="32" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/homepage/admin.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="16" column="1" lean-forward="true" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/error/404.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="6" column="14" lean-forward="true" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1110">
+          <caret line="37" column="54" lean-forward="false" selection-start-line="37" selection-start-column="45" selection-end-line="37" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/login/login.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1080">
+          <caret line="36" column="22" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="69" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/sys_mgmt/op_log/op_log.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1590">
+          <caret line="53" column="49" lean-forward="false" selection-start-line="53" selection-start-column="49" selection-end-line="53" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/js/AjaxCache.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="6" column="45" lean-forward="false" selection-start-line="6" selection-start-column="45" selection-end-line="6" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/sys_mgmt/role/role.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="20" column="50" lean-forward="false" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/sys_mgmt/user/user.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="630">
+          <caret line="48" column="68" lean-forward="false" selection-start-line="48" selection-start-column="68" selection-end-line="48" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/login/login.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="24" column="34" lean-forward="false" selection-start-line="24" selection-start-column="34" selection-end-line="24" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/css/page.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="6" column="14" lean-forward="false" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/sys_mgmt/role/role_sub.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="7" column="28" lean-forward="true" selection-start-line="7" selection-start-column="28" selection-end-line="7" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/focus-ui/focus-ui.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="796">
+          <caret line="21879" column="1" lean-forward="false" selection-start-line="21879" selection-start-column="1" selection-end-line="21879" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/js/bak/RoleUtil.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="3" column="12" lean-forward="false" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/js/init.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/js/_proj.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/js/_merge.bat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="1" column="72" lean-forward="true" selection-start-line="1" selection-start-column="72" selection-end-line="1" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/sys_mgmt/role/role.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="660">
+          <caret line="22" column="65" lean-forward="false" selection-start-line="22" selection-start-column="65" selection-end-line="22" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/sys_mgmt/user/user.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="19" column="10" lean-forward="false" selection-start-line="19" selection-start-column="10" selection-end-line="19" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/template/template/template.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="12" column="26" lean-forward="false" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/focus-ui/fu-pro.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32940">
+          <caret line="1098" column="8" lean-forward="false" selection-start-line="1098" selection-start-column="8" selection-end-line="1098" selection-end-column="8" />
+          <folding>
+            <marker date="1630210024800" expanded="false" signature="0:50" ph="/*...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/template/template/template.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="12" column="50" lean-forward="false" selection-start-line="12" selection-start-column="50" selection-end-line="12" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/js/page.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="7" column="48" lean-forward="false" selection-start-line="7" selection-start-column="48" selection-end-line="7" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/homepage/admin_pro.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="600">
+          <caret line="20" column="9" lean-forward="false" selection-start-line="20" selection-start-column="9" selection-end-line="20" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/proj.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="98" column="11" lean-forward="true" selection-start-line="98" selection-start-column="11" selection-end-line="98" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/project/js/AjaxUrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="18" column="46" lean-forward="false" selection-start-line="18" selection-start-column="46" selection-end-line="18" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

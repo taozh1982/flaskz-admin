@@ -1,0 +1,8 @@
+flaskz          # 会自动安装flask+sqlalchemy+requests
+Flask-Login     # 用户登录管理
+alembic         # 数据库表结构维护
+
+#pymysql        # mysql驱动
+#flask-cors     # 服务跨域
+#celery         # 任务调度
+#redis          # redis

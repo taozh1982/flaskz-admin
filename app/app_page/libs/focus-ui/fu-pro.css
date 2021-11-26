@@ -1,0 +1,868 @@
+/*! Focus Pro v2.0 | http://focus-ui.com/ | 2021-08-29 */
+/*
+轻量级style
+ref: pure+bootstrap
+添加fu-pro可用
+
+*/
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar:horizontal {
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  border-radius: 3px;
+  background-color: #efefef;
+}
+::-webkit-scrollbar-track:hover {
+  background-color: #e0e0e0;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #bcbcbc;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #939393;
+}
+@-moz-document url-prefix() {
+  * {
+    scrollbar-width: thin;
+  }
+}
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+.fu-pro {
+  /*
+  提供默认属性
+ */
+  /*input, select, textarea,*/
+}
+.fu-pro .align-right {
+  text-align: right;
+}
+.fu-pro .abs-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+.fu-pro .color-primary {
+  color: #0078e7 !important;
+}
+.fu-pro .color-secondary {
+  color: #6c757d !important;
+}
+.fu-pro .color-success {
+  color: #1cb841 !important;
+}
+.fu-pro .color-danger {
+  color: #ca3c3c !important;
+}
+.fu-pro .color-warning {
+  color: #df7514 !important;
+}
+.fu-pro .color-info {
+  color: #42b8dd !important;
+}
+.fu-pro .color-dark {
+  color: #212529 !important;
+}
+.fu-pro .color-light {
+  color: #f8f9fa !important;
+}
+.fu-pro .bg-color-primary {
+  background-color: #0078e7 !important;
+}
+.fu-pro .bg-color-secondary {
+  background-color: #6c757d !important;
+}
+.fu-pro .bg-color-success {
+  background-color: #1cb841 !important;
+}
+.fu-pro .bg-color-danger {
+  background-color: #ca3c3c !important;
+}
+.fu-pro .bg-color-warning {
+  background-color: #df7514 !important;
+}
+.fu-pro .bg-color-info {
+  background-color: #42b8dd !important;
+}
+.fu-pro .bg-color-dark {
+  background-color: #212529 !important;
+}
+.fu-pro .bg-color-light {
+  background-color: #f8f9fa !important;
+}
+.fu-pro .size-xsm {
+  font-size: 70% !important;
+}
+.fu-pro .size-sm {
+  font-size: 85% !important;
+}
+.fu-pro .size-lg {
+  font-size: 110% !important;
+}
+.fu-pro .size-xlg {
+  font-size: 125% !important;
+}
+.fu-pro .btn {
+  display: inline-block;
+  text-decoration: none;
+  vertical-align: middle;
+  text-align: center;
+  cursor: pointer;
+  outline: 0;
+  padding: 0.375rem 0.7rem;
+  border-radius: 0.2rem;
+  border: 1px solid transparent;
+  font-size: 1rem;
+  color: #212529;
+  background-color: #ffffff;
+  border-color: #d9d9d9;
+}
+.fu-pro .btn:hover,
+.fu-pro .btn.hover,
+.fu-pro .btn:focus,
+.fu-pro .btn.focus {
+  background-color: #f2f2f2;
+  border-color: #cccccc;
+}
+.fu-pro .btn:active,
+.fu-pro .btn.active {
+  background-color: #e6e6e6;
+  border-color: #c0c0c0;
+}
+.fu-pro .btn:disabled,
+.fu-pro .btn.disabled {
+  cursor: default;
+  opacity: 0.7;
+  pointer-events: none;
+}
+.fu-pro .btn.btn-primary {
+  color: #fff;
+  background-color: #0078e7;
+  border-color: #0078e7;
+}
+.fu-pro .btn.btn-primary:hover,
+.fu-pro .btn.btn-primary.hover,
+.fu-pro .btn.btn-primary:focus,
+.fu-pro .btn.btn-primary.focus {
+  background-color: #006bce;
+  border-color: #006bce;
+}
+.fu-pro .btn.btn-primary:active,
+.fu-pro .btn.btn-primary.active {
+  background-color: #005eb4;
+  border-color: #005eb4;
+}
+.fu-pro .btn.btn-secondary {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+.fu-pro .btn.btn-secondary:hover,
+.fu-pro .btn.btn-secondary.hover,
+.fu-pro .btn.btn-secondary:focus,
+.fu-pro .btn.btn-secondary.focus {
+  background-color: #60686f;
+  border-color: #60686f;
+}
+.fu-pro .btn.btn-secondary:active,
+.fu-pro .btn.btn-secondary.active {
+  background-color: #545b62;
+  border-color: #545b62;
+}
+.fu-pro .btn.btn-success {
+  color: #fff;
+  background-color: #1cb841;
+  border-color: #1cb841;
+}
+.fu-pro .btn.btn-success:hover,
+.fu-pro .btn.btn-success.hover,
+.fu-pro .btn.btn-success:focus,
+.fu-pro .btn.btn-success.focus {
+  background-color: #19a239;
+  border-color: #19a239;
+}
+.fu-pro .btn.btn-success:active,
+.fu-pro .btn.btn-success.active {
+  background-color: #158c31;
+  border-color: #158c31;
+}
+.fu-pro .btn.btn-danger {
+  color: #fff;
+  background-color: #ca3c3c;
+  border-color: #ca3c3c;
+}
+.fu-pro .btn.btn-danger:hover,
+.fu-pro .btn.btn-danger.hover,
+.fu-pro .btn.btn-danger:focus,
+.fu-pro .btn.btn-danger.focus {
+  background-color: #ba3333;
+  border-color: #ba3333;
+}
+.fu-pro .btn.btn-danger:active,
+.fu-pro .btn.btn-danger.active {
+  background-color: #a62d2d;
+  border-color: #a62d2d;
+}
+.fu-pro .btn.btn-warning {
+  color: #fff;
+  background-color: #df7514;
+  border-color: #df7514;
+}
+.fu-pro .btn.btn-warning:hover,
+.fu-pro .btn.btn-warning.hover,
+.fu-pro .btn.btn-warning:focus,
+.fu-pro .btn.btn-warning.focus {
+  background-color: #c86912;
+  border-color: #c86912;
+}
+.fu-pro .btn.btn-warning:active,
+.fu-pro .btn.btn-warning.active {
+  background-color: #b05c10;
+  border-color: #b05c10;
+}
+.fu-pro .btn.btn-info {
+  color: #fff;
+  background-color: #42b8dd;
+  border-color: #42b8dd;
+}
+.fu-pro .btn.btn-info:hover,
+.fu-pro .btn.btn-info.hover,
+.fu-pro .btn.btn-info:focus,
+.fu-pro .btn.btn-info.focus {
+  background-color: #2cb0d9;
+  border-color: #2cb0d9;
+}
+.fu-pro .btn.btn-info:active,
+.fu-pro .btn.btn-info.active {
+  background-color: #24a1c8;
+  border-color: #24a1c8;
+}
+.fu-pro .btn.btn-dark {
+  color: #fff;
+  background-color: #212529;
+  border-color: #212529;
+}
+.fu-pro .btn.btn-dark:hover,
+.fu-pro .btn.btn-dark.hover,
+.fu-pro .btn.btn-dark:focus,
+.fu-pro .btn.btn-dark.focus {
+  background-color: #16181b;
+  border-color: #16181b;
+}
+.fu-pro .btn.btn-dark:active,
+.fu-pro .btn.btn-dark.active {
+  background-color: #0a0c0d;
+  border-color: #0a0c0d;
+}
+.fu-pro .btn.btn-outline-primary {
+  color: #0078e7;
+  background-color: transparent;
+  border-color: #0078e7;
+}
+.fu-pro .btn.btn-outline-primary:hover,
+.fu-pro .btn.btn-outline-primary.hover {
+  color: #fff;
+  background-color: #0078e7;
+}
+.fu-pro .btn.btn-outline-primary:active,
+.fu-pro .btn.btn-outline-primary.active {
+  color: #fff;
+  background-color: #0058aa;
+  border-color: #0058aa;
+}
+.fu-pro .btn.btn-outline-secondary {
+  color: #6c757d;
+  background-color: transparent;
+  border-color: #6c757d;
+}
+.fu-pro .btn.btn-outline-secondary:hover,
+.fu-pro .btn.btn-outline-secondary.hover {
+  color: #fff;
+  background-color: #6c757d;
+}
+.fu-pro .btn.btn-outline-secondary:active,
+.fu-pro .btn.btn-outline-secondary.active {
+  color: #fff;
+  background-color: #50565c;
+  border-color: #50565c;
+}
+.fu-pro .btn.btn-outline-success {
+  color: #1cb841;
+  background-color: transparent;
+  border-color: #1cb841;
+}
+.fu-pro .btn.btn-outline-success:hover,
+.fu-pro .btn.btn-outline-success.hover {
+  color: #fff;
+  background-color: #1cb841;
+}
+.fu-pro .btn.btn-outline-success:active,
+.fu-pro .btn.btn-outline-success.active {
+  color: #fff;
+  background-color: #14832e;
+  border-color: #14832e;
+}
+.fu-pro .btn.btn-outline-danger {
+  color: #ca3c3c;
+  background-color: transparent;
+  border-color: #ca3c3c;
+}
+.fu-pro .btn.btn-outline-danger:hover,
+.fu-pro .btn.btn-outline-danger.hover {
+  color: #fff;
+  background-color: #ca3c3c;
+}
+.fu-pro .btn.btn-outline-danger:active,
+.fu-pro .btn.btn-outline-danger.active {
+  color: #fff;
+  background-color: #9e2b2b;
+  border-color: #9e2b2b;
+}
+.fu-pro .btn.btn-outline-warning {
+  color: #df7514;
+  background-color: transparent;
+  border-color: #df7514;
+}
+.fu-pro .btn.btn-outline-warning:hover,
+.fu-pro .btn.btn-outline-warning.hover {
+  color: #fff;
+  background-color: #df7514;
+}
+.fu-pro .btn.btn-outline-warning:active,
+.fu-pro .btn.btn-outline-warning.active {
+  color: #fff;
+  background-color: #a7580f;
+  border-color: #a7580f;
+}
+.fu-pro .btn.btn-outline-info {
+  color: #42b8dd;
+  background-color: transparent;
+  border-color: #42b8dd;
+}
+.fu-pro .btn.btn-outline-info:hover,
+.fu-pro .btn.btn-outline-info.hover {
+  color: #fff;
+  background-color: #42b8dd;
+}
+.fu-pro .btn.btn-outline-info:active,
+.fu-pro .btn.btn-outline-info.active {
+  color: #fff;
+  background-color: #229abf;
+  border-color: #229abf;
+}
+.fu-pro .btn.btn-outline-dark {
+  color: #212529;
+  background-color: transparent;
+  border-color: #212529;
+}
+.fu-pro .btn.btn-outline-dark:hover,
+.fu-pro .btn.btn-outline-dark.hover {
+  color: #fff;
+  background-color: #212529;
+}
+.fu-pro .btn.btn-outline-dark:active,
+.fu-pro .btn.btn-outline-dark.active {
+  color: #fff;
+  background-color: #060607;
+  border-color: #060607;
+}
+.fu-pro .btn.btn-link {
+  color: #0078e7;
+  background-color: transparent;
+  text-decoration: underline;
+  border-color: transparent;
+}
+.fu-pro .btn.btn-link:hover,
+.fu-pro .btn.btn-link.hover,
+.fu-pro .btn.btn-link:focus,
+.fu-pro .btn.btn-link.focus {
+  color: #006bce;
+}
+.fu-pro .controls input:not([type]),
+.fu-pro .controls input[type='date'],
+.fu-pro .controls input[type='datetime-local'],
+.fu-pro .controls input[type='email'],
+.fu-pro .controls input[type='month'],
+.fu-pro .controls input[type='number'],
+.fu-pro .controls input[type='password'],
+.fu-pro .controls input[type='search'],
+.fu-pro .controls input[type='tel'],
+.fu-pro .controls input[type='tel'],
+.fu-pro .controls input[type='text'],
+.fu-pro .controls input[type='time'],
+.fu-pro .controls input[type='url'],
+.fu-pro .controls input[type='week'],
+.fu-pro .controls select,
+.fu-pro .controls textarea,
+.fu-pro input.control,
+.fu-pro select.control,
+.fu-pro textarea.control {
+  width: 100%;
+  box-sizing: border-box;
+  vertical-align: middle;
+  font-size: 1rem;
+  outline: 0;
+  padding: 0.375rem 0.7rem;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.2rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.fu-pro .controls input:not([type]):focus,
+.fu-pro .controls input[type='date']:focus,
+.fu-pro .controls input[type='datetime-local']:focus,
+.fu-pro .controls input[type='email']:focus,
+.fu-pro .controls input[type='month']:focus,
+.fu-pro .controls input[type='number']:focus,
+.fu-pro .controls input[type='password']:focus,
+.fu-pro .controls input[type='search']:focus,
+.fu-pro .controls input[type='tel']:focus,
+.fu-pro .controls input[type='tel']:focus,
+.fu-pro .controls input[type='text']:focus,
+.fu-pro .controls input[type='time']:focus,
+.fu-pro .controls input[type='url']:focus,
+.fu-pro .controls input[type='week']:focus,
+.fu-pro .controls select:focus,
+.fu-pro .controls textarea:focus,
+.fu-pro input.control:focus,
+.fu-pro select.control:focus,
+.fu-pro textarea.control:focus,
+.fu-pro .controls input:not([type]).focus,
+.fu-pro .controls input[type='date'].focus,
+.fu-pro .controls input[type='datetime-local'].focus,
+.fu-pro .controls input[type='email'].focus,
+.fu-pro .controls input[type='month'].focus,
+.fu-pro .controls input[type='number'].focus,
+.fu-pro .controls input[type='password'].focus,
+.fu-pro .controls input[type='search'].focus,
+.fu-pro .controls input[type='tel'].focus,
+.fu-pro .controls input[type='tel'].focus,
+.fu-pro .controls input[type='text'].focus,
+.fu-pro .controls input[type='time'].focus,
+.fu-pro .controls input[type='url'].focus,
+.fu-pro .controls input[type='week'].focus,
+.fu-pro .controls select.focus,
+.fu-pro .controls textarea.focus,
+.fu-pro input.control.focus,
+.fu-pro select.control.focus,
+.fu-pro textarea.control.focus {
+  border-color: #129fea;
+  box-shadow: 0 0 0 2px #bae4fa;
+}
+.fu-pro .controls input:not([type]):disabled,
+.fu-pro .controls input[type='date']:disabled,
+.fu-pro .controls input[type='datetime-local']:disabled,
+.fu-pro .controls input[type='email']:disabled,
+.fu-pro .controls input[type='month']:disabled,
+.fu-pro .controls input[type='number']:disabled,
+.fu-pro .controls input[type='password']:disabled,
+.fu-pro .controls input[type='search']:disabled,
+.fu-pro .controls input[type='tel']:disabled,
+.fu-pro .controls input[type='tel']:disabled,
+.fu-pro .controls input[type='text']:disabled,
+.fu-pro .controls input[type='time']:disabled,
+.fu-pro .controls input[type='url']:disabled,
+.fu-pro .controls input[type='week']:disabled,
+.fu-pro .controls select:disabled,
+.fu-pro .controls textarea:disabled,
+.fu-pro input.control:disabled,
+.fu-pro select.control:disabled,
+.fu-pro textarea.control:disabled,
+.fu-pro .controls input:not([type])[readonly],
+.fu-pro .controls input[type='date'][readonly],
+.fu-pro .controls input[type='datetime-local'][readonly],
+.fu-pro .controls input[type='email'][readonly],
+.fu-pro .controls input[type='month'][readonly],
+.fu-pro .controls input[type='number'][readonly],
+.fu-pro .controls input[type='password'][readonly],
+.fu-pro .controls input[type='search'][readonly],
+.fu-pro .controls input[type='tel'][readonly],
+.fu-pro .controls input[type='tel'][readonly],
+.fu-pro .controls input[type='text'][readonly],
+.fu-pro .controls input[type='time'][readonly],
+.fu-pro .controls input[type='url'][readonly],
+.fu-pro .controls input[type='week'][readonly],
+.fu-pro .controls select[readonly],
+.fu-pro .controls textarea[readonly],
+.fu-pro input.control[readonly],
+.fu-pro select.control[readonly],
+.fu-pro textarea.control[readonly],
+.fu-pro .controls input:not([type]).disabled,
+.fu-pro .controls input[type='date'].disabled,
+.fu-pro .controls input[type='datetime-local'].disabled,
+.fu-pro .controls input[type='email'].disabled,
+.fu-pro .controls input[type='month'].disabled,
+.fu-pro .controls input[type='number'].disabled,
+.fu-pro .controls input[type='password'].disabled,
+.fu-pro .controls input[type='search'].disabled,
+.fu-pro .controls input[type='tel'].disabled,
+.fu-pro .controls input[type='tel'].disabled,
+.fu-pro .controls input[type='text'].disabled,
+.fu-pro .controls input[type='time'].disabled,
+.fu-pro .controls input[type='url'].disabled,
+.fu-pro .controls input[type='week'].disabled,
+.fu-pro .controls select.disabled,
+.fu-pro .controls textarea.disabled,
+.fu-pro input.control.disabled,
+.fu-pro select.control.disabled,
+.fu-pro textarea.control.disabled,
+.fu-pro .controls input:not([type]).readonly,
+.fu-pro .controls input[type='date'].readonly,
+.fu-pro .controls input[type='datetime-local'].readonly,
+.fu-pro .controls input[type='email'].readonly,
+.fu-pro .controls input[type='month'].readonly,
+.fu-pro .controls input[type='number'].readonly,
+.fu-pro .controls input[type='password'].readonly,
+.fu-pro .controls input[type='search'].readonly,
+.fu-pro .controls input[type='tel'].readonly,
+.fu-pro .controls input[type='tel'].readonly,
+.fu-pro .controls input[type='text'].readonly,
+.fu-pro .controls input[type='time'].readonly,
+.fu-pro .controls input[type='url'].readonly,
+.fu-pro .controls input[type='week'].readonly,
+.fu-pro .controls select.readonly,
+.fu-pro .controls textarea.readonly,
+.fu-pro input.control.readonly,
+.fu-pro select.control.readonly,
+.fu-pro textarea.control.readonly {
+  background-color: #e9ecef;
+  cursor: default;
+}
+.fu-pro .controls input:not([type]).is-invalid,
+.fu-pro .controls input[type='date'].is-invalid,
+.fu-pro .controls input[type='datetime-local'].is-invalid,
+.fu-pro .controls input[type='email'].is-invalid,
+.fu-pro .controls input[type='month'].is-invalid,
+.fu-pro .controls input[type='number'].is-invalid,
+.fu-pro .controls input[type='password'].is-invalid,
+.fu-pro .controls input[type='search'].is-invalid,
+.fu-pro .controls input[type='tel'].is-invalid,
+.fu-pro .controls input[type='tel'].is-invalid,
+.fu-pro .controls input[type='text'].is-invalid,
+.fu-pro .controls input[type='time'].is-invalid,
+.fu-pro .controls input[type='url'].is-invalid,
+.fu-pro .controls input[type='week'].is-invalid,
+.fu-pro .controls select.is-invalid,
+.fu-pro .controls textarea.is-invalid,
+.fu-pro input.control.is-invalid,
+.fu-pro select.control.is-invalid,
+.fu-pro textarea.control.is-invalid {
+  border-color: #ca3c3c;
+}
+.fu-pro .controls input:not([type]).is-invalid:focus,
+.fu-pro .controls input[type='date'].is-invalid:focus,
+.fu-pro .controls input[type='datetime-local'].is-invalid:focus,
+.fu-pro .controls input[type='email'].is-invalid:focus,
+.fu-pro .controls input[type='month'].is-invalid:focus,
+.fu-pro .controls input[type='number'].is-invalid:focus,
+.fu-pro .controls input[type='password'].is-invalid:focus,
+.fu-pro .controls input[type='search'].is-invalid:focus,
+.fu-pro .controls input[type='tel'].is-invalid:focus,
+.fu-pro .controls input[type='tel'].is-invalid:focus,
+.fu-pro .controls input[type='text'].is-invalid:focus,
+.fu-pro .controls input[type='time'].is-invalid:focus,
+.fu-pro .controls input[type='url'].is-invalid:focus,
+.fu-pro .controls input[type='week'].is-invalid:focus,
+.fu-pro .controls select.is-invalid:focus,
+.fu-pro .controls textarea.is-invalid:focus,
+.fu-pro input.control.is-invalid:focus,
+.fu-pro select.control.is-invalid:focus,
+.fu-pro textarea.control.is-invalid:focus,
+.fu-pro .controls input:not([type]).is-invalid.focus,
+.fu-pro .controls input[type='date'].is-invalid.focus,
+.fu-pro .controls input[type='datetime-local'].is-invalid.focus,
+.fu-pro .controls input[type='email'].is-invalid.focus,
+.fu-pro .controls input[type='month'].is-invalid.focus,
+.fu-pro .controls input[type='number'].is-invalid.focus,
+.fu-pro .controls input[type='password'].is-invalid.focus,
+.fu-pro .controls input[type='search'].is-invalid.focus,
+.fu-pro .controls input[type='tel'].is-invalid.focus,
+.fu-pro .controls input[type='tel'].is-invalid.focus,
+.fu-pro .controls input[type='text'].is-invalid.focus,
+.fu-pro .controls input[type='time'].is-invalid.focus,
+.fu-pro .controls input[type='url'].is-invalid.focus,
+.fu-pro .controls input[type='week'].is-invalid.focus,
+.fu-pro .controls select.is-invalid.focus,
+.fu-pro .controls textarea.is-invalid.focus,
+.fu-pro input.control.is-invalid.focus,
+.fu-pro select.control.is-invalid.focus,
+.fu-pro textarea.control.is-invalid.focus {
+  border-color: #ca3c3c;
+  box-shadow: 0 0 0 2px #f1cccc;
+}
+.fu-pro .controls select option:disabled,
+.fu-pro select.control option:disabled {
+  background-color: #e9ecef;
+}
+.fu-pro .controls textarea,
+.fu-pro textarea.control {
+  resize: none;
+  height: 5.75rem;
+}
+.fu-pro .controls.label-align-right label {
+  text-align: right;
+}
+.fu-pro .controls label,
+.fu-pro label.control-label {
+  padding: 0.375rem 0.7rem;
+}
+.fu-pro .controls label.required:before,
+.fu-pro label.control-label.required:before {
+  display: inline-block;
+  content: "*";
+  vertical-align: middle;
+  color: #ca3c3c;
+}
+.fu-pro .controls label.check-label,
+.fu-pro label.control-label.check-label {
+  padding: 0.375rem 0;
+  text-align: left;
+}
+.fu-pro .controls .invalid-feedback,
+.fu-pro span.invalid-feedback {
+  font-size: .8rem;
+  color: #ca3c3c;
+}
+.fu-pro .controls input[type='checkbox'],
+.fu-pro input[type='checkbox'].control {
+  width: 1rem;
+  height: 1rem;
+  vertical-align: middle;
+  margin: 0.375rem;
+}
+.fu-pro .controls input[type='checkbox'].is-invalid,
+.fu-pro input[type='checkbox'].control.is-invalid {
+  border-color: #ca3c3c;
+  box-shadow: 0 0 0 2px #f1cccc;
+}
+.fu-pro .controls input[type='range'],
+.fu-pro input[type='range'].control {
+  padding: 0.375rem;
+}
+.fu-pro .controls input[type='color'],
+.fu-pro input[type='color'].control {
+  box-sizing: content-box;
+  width: 2.2rem;
+  height: 1.75rem;
+}
+.fu-pro .controls input.check-input[type='checkbox'],
+.fu-pro input.check-input[type='checkbox'].control {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  border-radius: 0.15rem;
+}
+.fu-pro .controls input.check-input[type='checkbox']:checked,
+.fu-pro input.check-input[type='checkbox'].control:checked {
+  background-color: #0078e7;
+  border-color: #0078e7;
+}
+.fu-pro .controls input.check-input[type='checkbox']:disabled,
+.fu-pro input.check-input[type='checkbox'].control:disabled {
+  pointer-events: none;
+  opacity: .5;
+}
+.fu-pro .controls input.check-input[type='checkbox']:checked,
+.fu-pro input.check-input[type='checkbox'].control:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='19 6 8 17 3 12'%3E%3C/polyline%3E%3C/svg%3E");
+}
+.fu-pro .controls input.switch-input[type='checkbox'],
+.fu-pro input.switch-input[type='checkbox'].control {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 2rem;
+  border-radius: 2rem;
+  transition: background-position 0.15s ease-in-out;
+  background-position: left center;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.3%29'/%3e%3c/svg%3e");
+}
+.fu-pro .controls input.switch-input[type='checkbox']:checked,
+.fu-pro input.switch-input[type='checkbox'].control:checked {
+  background-color: #0078e7;
+  border-color: #0078e7;
+}
+.fu-pro .controls input.switch-input[type='checkbox']:disabled,
+.fu-pro input.switch-input[type='checkbox'].control:disabled {
+  pointer-events: none;
+  opacity: .5;
+}
+.fu-pro .controls input.switch-input[type='checkbox']:checked,
+.fu-pro input.switch-input[type='checkbox'].control:checked {
+  background-position: right center;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+}
+.fu-pro .grid-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 0.3rem;
+}
+.fu-pro .grid-row [class*=grid-col] {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+}
+.fu-pro .grid-row.grid-row-cols-1 .grid-col {
+  width: 100%;
+}
+.fu-pro .grid-row.grid-row-cols-2 .grid-col {
+  width: 50%;
+}
+.fu-pro .grid-row.grid-row-cols-3 .grid-col {
+  width: 33.33333333%;
+}
+.fu-pro .grid-row.grid-row-cols-4 .grid-col {
+  width: 25%;
+}
+.fu-pro .grid-row.grid-row-cols-5 .grid-col {
+  width: 20%;
+}
+.fu-pro .grid-row.grid-row-cols-6 .grid-col {
+  width: 16.66666666%;
+}
+.fu-pro .grid-row.grid-row-cols-7 .grid-col {
+  width: 14.28571428%;
+}
+.fu-pro .grid-row.grid-row-cols-9 .grid-col {
+  width: 11.11111111%;
+}
+.fu-pro .grid-row.grid-row-cols-10 .grid-col {
+  width: 10%;
+}
+.fu-pro .grid-row.grid-row-cols-11 .grid-col {
+  width: 9.09090909%;
+}
+.fu-pro .grid-row.grid-row-cols-12 .grid-col {
+  width: 8.33333333%;
+}
+.fu-pro .grid-row .grid-col-1-12 {
+  width: 8.33333333%;
+}
+.fu-pro .grid-row .grid-col-2-12 {
+  width: 16.66666666%;
+}
+.fu-pro .grid-row .grid-col-3-12 {
+  width: 25%;
+}
+.fu-pro .grid-row .grid-col-4-12 {
+  width: 33.33333333%;
+}
+.fu-pro .grid-row .grid-col-5-12 {
+  width: 41.66666666%;
+}
+.fu-pro .grid-row .grid-col-6-12 {
+  width: 50%;
+}
+.fu-pro .grid-row .grid-col-7-12 {
+  width: 58.33333333%;
+}
+.fu-pro .grid-row .grid-col-8-12 {
+  width: 66.66666666%;
+}
+.fu-pro .grid-row .grid-col-9-12 {
+  width: 75%;
+}
+.fu-pro .grid-row .grid-col-10-12 {
+  width: 83.33333333%;
+}
+.fu-pro .grid-row .grid-col-11-12 {
+  width: 91.66666666%;
+}
+.fu-pro .grid-row .grid-col-12-12 {
+  width: 100%;
+}
+.fu-pro .layout {
+  display: flex;
+  flex-wrap: nowrap;
+  /*  //上下布局
+    //左右布局
+    &.layout-col2 {
+      > :first-child {
+
+      }
+      &.right-fixed {
+
+      }
+    }*/
+}
+.fu-pro .layout > * {
+  box-sizing: border-box;
+  overflow: auto;
+}
+.fu-pro .layout.rows-2 {
+  flex-direction: column;
+}
+.fu-pro .layout.rows-2 > :first-child {
+  flex: none;
+}
+.fu-pro .layout.rows-2 > :nth-child(2) {
+  flex: auto;
+}
+.fu-pro .layout.rows-2.bottom-fixed > :first-child {
+  flex: auto;
+}
+.fu-pro .layout.rows-2.bottom-fixed > :nth-child(2) {
+  flex: none;
+}
+.fu-pro .layout.rows-2.border > :first-child {
+  border-bottom: 1px solid #eeeeee;
+}
+.fu-pro .layout.cols-2 {
+  flex-direction: row;
+}
+.fu-pro .layout.cols-2 > :first-child {
+  flex: none;
+}
+.fu-pro .layout.cols-2 > :nth-child(2) {
+  flex: auto;
+}
+.fu-pro .layout.cols-2.right-fixed > :first-child {
+  flex: auto;
+}
+.fu-pro .layout.cols-2.right-fixed > :nth-child(2) {
+  flex: none;
+}
+.fu-pro .layout.cols-2.border > :first-child {
+  border-right: 1px solid #eeeeee;
+}
+.fu-pro .card {
+  border: 1px solid #dee2e6;
+  border-radius: 0.2rem;
+  background-color: #fff;
+}
+.fu-pro .card > .header {
+  padding: 0.5rem 0.8rem;
+  margin-bottom: 0;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+.fu-pro .card > .header:first-child {
+  border-radius: calc(0.2rem - 1px) calc(0.2rem - 1px) 0 0;
+}
+.fu-pro .card > .body {
+  padding: 0.8rem;
+}
+.fu-pro .card > .footer {
+  padding: 0.5rem 0.8rem;
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+}
+.fu-pro .card > .footer:last-child {
+  border-radius: 0 0 calc(0.2rem - 1px) calc(0.2rem - 1px);
+}

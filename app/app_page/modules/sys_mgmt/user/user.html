@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>用户列表</title>
+    <link rel="stylesheet" href="../../../libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../libs/project/proj.css">
+
+    <script src="../../../libs/focus-ui/focus-ui.min.js"></script>
+    <script src="../../../libs/focus-ui/fu-pro.js"></script>
+    <script src="../../../libs/project/proj.js"></script>
+
+    <script src="./user.js"></script>
+</head>
+<body class="fu-pro">
+<div class="module">
+    <div class="toolbar controls">
+        <button id="addBtn" class="btn btn-primary" ac_permission="update">添加</button>
+        <input id="filterInput" placeholder="过滤" autofocus name="user_filter">
+    </div>
+    <div id="gridDiv" class="content"></div>
+    <div class="modal-form">
+        <div id="modalDiv" class="zw-modal drawer controls label-align-right">
+            <div class="content">
+                <div class="header">
+                    <span id="titleDiv" ze-model="modal_title" class="title"></span>
+                    <span class="close" data-dismiss="modal">×</span>
+                </div>
+                <div class="body">
+                    <input type="hidden" ze-model="id" ze-model-type="integer">
+                    <input type="hidden" ze-model="editType">
+                    <div class="grid-row">
+                        <label class="grid-col-3-12 required" for-ze-model="role_id">用户角色</label>
+                        <div class="grid-col-9-12">
+                            <select ze-model="role_id" ze-model-type="integer"
+                                    v-rules="required" v-message="请选择用户角色"
+                                    ze-reset="false"
+                                    class="form-control"> </select>
+                        </div>
+                    </div>
+                    <div class="grid-row">
+                        <label class="grid-col-3-12 required" for-ze-model="username">账号</label>
+                        <div class="grid-col-9-12">
+                            <input ze-model="username" ze-disabled="[editType]!=='add'"
+                                   v-rules="required|alphanumeric_dash" v-message="请输入账号"
+                                   class="form-control" autofocus>
+                        </div>
+                    </div>
+                    <div class="grid-row">
+                        <label class="grid-col-3-12 required" for-ze-model="password">密码</label>
+                        <div class="grid-col-9-12">
+                            <input ze-model="password" v-rules="required" v-message="请输入密码" class="form-control" type="password" autofocus>
+                        </div>
+                    </div>
+                    <div class="grid-row">
+                        <label class="grid-col-3-12 required" for-ze-model="email">Email</label>
+                        <div class="grid-col-9-12">
+                            <input ze-model="email" v-rules="email" class="form-control">
+                        </div>
+                    </div>
+                    <div class="grid-row">
+                        <label class="grid-col-3-12" for-ze-model="name">姓名</label>
+                        <div class="grid-col-9-12">
+                            <input ze-model="name" class="form-control">
+                        </div>
+                    </div>
+                    <div class="grid-row">
+                        <label class="grid-col-3-12" for-ze-model="phone">电话</label>
+                        <div class="grid-col-9-12">
+                            <input ze-model="phone" class="form-control">
+                        </div>
+                    </div>
+                    <div class="grid-row">
+                        <label class="grid-col-3-12" for-ze-model="description">描述</label>
+                        <div class="grid-col-9-12">
+                            <textarea ze-model="description" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button type="button" id="modalOkBtn" class="btn btn-primary" autofocus>确认</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

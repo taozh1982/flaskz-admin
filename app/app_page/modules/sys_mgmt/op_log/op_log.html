@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>操作日志</title>
+    <link rel="stylesheet" href="../../../libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../libs/project/proj.css">
+
+    <script src="../../../libs/focus-ui/focus-ui.min.js"></script>
+    <script src="../../../libs/focus-ui/fu-pro.js"></script>
+    <script src="../../../libs/project/proj.js"></script>
+
+    <style>
+        #modalDiv pre {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .z-grid button {
+            white-space: nowrap;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+    </style>
+    <script src="./op_log.js"></script>
+</head>
+<body class="fu-pro">
+<div class="module">
+    <div class="toolbar controls">
+        <label class="col-form-label">模块:</label>
+        <select id="moduleSelect"></select>
+
+        <label class="col-form-label">操作:</label>
+        <select id="actionSelect"> </select>
+
+        <label class="col-form-label">操作结果:</label>
+        <select id="resultSelect">
+            <option value="">全部</option>
+            <option value="success">成功</option>
+            <option value="fail">失败</option>
+        </select>
+
+        <!--<<label class="col-form-label">时间:</label>
+        select id="dateRangeSelect">
+            <option></option>
+            <option value="previous_24_hours">过去24小时</option>
+            <option value="previous_7_days">过去7天</option>
+            <option value="previous_30_days">过去30天</option>
+            <option disabled="true">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</option>
+            <option value="previous_month">上个月</option>
+            <option value="previous_2_months">上2个月</option>
+            <option value="previous_3_months">上3个月</option>
+        </select>-->
+    </div>
+    <div id="gridDiv" class="content"></div>
+
+    <div class="modal-form">
+        <div id="modalDiv" class="zw-modal drawer controls">
+            <div class="content">
+                <div class="header">
+                    <span id="titleDiv" ze-model="modal_title" class="title"></span>
+                    <span class="close" data-dismiss="modal">×</span>
+                </div>
+                <div class="body">
+                    <pre ze-model="detail"></pre>
+                </div>
+                <div class="footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

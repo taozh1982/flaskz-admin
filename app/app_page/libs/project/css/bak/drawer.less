@@ -1,0 +1,49 @@
+@drawer-size: 39em;
+
+.drawer {
+  position: absolute !important;
+  margin: 0 !important;
+  > .content {
+    height: 100% !important;
+    max-height: 100% !important;
+  }
+  //default in right
+
+  &.right, &.left {
+    top: 0;
+    width: @drawer-size;
+    max-width: 80%;
+    height: 100%;
+  }
+  &.right {
+    right: 0;
+    left: auto;
+  }
+  &.left {
+    left: 0;
+    right: auto;
+  }
+  &.top, &.bottom {
+    width: 100%;
+    max-width: none;
+    height: @drawer-size;
+    max-height: 80%;
+  }
+  &.top {
+    top: 0;
+    bottom: auto;
+  }
+  &.bottom {
+    bottom: 0;
+    top: auto;
+  }
+  &:not(.right):not(.left):not(.top):not(.bottom) {
+    top: 0;
+    width: @drawer-size;
+    max-width: 80%;
+    height: 100%;
+
+    right: 0;
+    left: auto;
+  }
+}

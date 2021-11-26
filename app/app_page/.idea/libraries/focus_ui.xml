@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="focus-ui" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://D:/Dev/WorkSpace/focus-ui/core/api/js_doc.js" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://D:/Dev/WorkSpace/focus-ui/core/api/js_doc.js" />
+    </CLASSES>
+    <SOURCES />
+  </library>
+</component>
