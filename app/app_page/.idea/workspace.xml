@@ -2,111 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3a795ccf-20a8-4ef7-aa19-0aa1eda5dc73" name="Default" comment="" />
-    <ignored path="$PROJECT_DIR$/.tmp/" />
-    <ignored path="$PROJECT_DIR$/temp/" />
-    <ignored path="$PROJECT_DIR$/tmp/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
-    <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="role.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/sys_mgmt/role/role.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="660">
-              <caret line="22" column="65" lean-forward="false" selection-start-line="22" selection-start-column="65" selection-end-line="22" selection-end-column="65" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="user.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/sys_mgmt/user/user.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="570">
-              <caret line="19" column="10" lean-forward="false" selection-start-line="19" selection-start-column="10" selection-end-line="19" selection-end-column="10" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="template.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/template/template/template.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="12" column="26" lean-forward="false" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="template.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/template/template/template.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="12" column="50" lean-forward="false" selection-start-line="12" selection-start-column="50" selection-end-line="12" selection-end-column="50" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="page.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/libs/project/js/page.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="7" column="48" lean-forward="false" selection-start-line="7" selection-start-column="48" selection-end-line="7" selection-end-column="48" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="admin_pro.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/homepage/admin_pro.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="600">
-              <caret line="20" column="9" lean-forward="false" selection-start-line="20" selection-start-column="9" selection-end-line="20" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="proj.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/libs/project/proj.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="98" column="11" lean-forward="true" selection-start-line="98" selection-start-column="11" selection-end-line="98" selection-end-column="11" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AjaxUrl.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/libs/project/js/AjaxUrl.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="226">
-              <caret line="18" column="46" lean-forward="false" selection-start-line="18" selection-start-column="46" selection-end-line="18" selection-end-column="46" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="fu-pro.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/libs/focus-ui/fu-pro.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="32940">
-              <caret line="1098" column="8" lean-forward="false" selection-start-line="1098" selection-start-column="8" selection-end-line="1098" selection-end-column="8" />
-              <folding>
-                <marker date="1630210024800" expanded="false" signature="0:50" ph="/*...*/" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -160,6 +59,14 @@
       <replace>grid-col-9-12</replace>
       <replace>grid-col-8-12</replace>
     </replaceStrings>
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -220,12 +127,6 @@
   </component>
   <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
   <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsFlowSettings">
-    <service-enabled>true</service-enabled>
-    <exe-path />
-    <other-services-enabled>true</other-services-enabled>
-    <auto-save>true</auto-save>
-  </component>
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
@@ -236,6 +137,7 @@
     <option name="width" value="1938" />
     <option name="height" value="1048" />
   </component>
+  <component name="ProjectId" id="27SWb9rIzpUj56ugrDWKyfZMLQ8" />
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
@@ -300,52 +202,44 @@
       <pane id="Scratches" />
     </panes>
   </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
-    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
-    <property name="settings.editor.selected.configurable" value="settings.javascript.linters.eslint" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="D:/Dev/WorkSpace/focus-ui/core/api/js_doc.js" />
-    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://D:/PyDev/WorkSpace/flasky/app/flasky_page/libs/project/js/page.js&#10;byDev&#9;FILE&#9;file://D:/PyDev/WorkSpace/flasky/app/page/modules/acl/network_object/ByDevice.js&#10;by&#9;FILE&#9;file://D:/PyDev/WorkSpace/flasky/app/page/modules/acl/network_object/ByDevice.js" />
-    <property name="NewWatcherDialog.advanced.open" value="true" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
-    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="NewWatcherDialog.advanced.open" value="true" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://D:/PyDev/WorkSpace/flasky/app/flasky_page/libs/project/js/page.js&#10;byDev&#9;FILE&#9;file://D:/PyDev/WorkSpace/flasky/app/page/modules/acl/network_object/ByDevice.js&#10;by&#9;FILE&#9;file://D:/PyDev/WorkSpace/flasky/app/page/modules/acl/network_object/ByDevice.js" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/libs/project/js" />
     <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.selected.package.eslint" value="C:\Users\taozh\AppData\Roaming\npm\node_modules\eslint" />
-    <property name="node.js.path.for.package.standard" value="project" />
     <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.standard" value="project" />
+    <property name="node.js.selected.package.eslint" value="C:/Users/taozh/AppData/Roaming/npm/node_modules/eslint" />
     <property name="node.js.selected.package.standard" value="" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="Settings.JavaScript" />
+    <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/libs/project/js" />
+      <recent name="$PROJECT_DIR$/libs/focus-ui" />
+      <recent name="$PROJECT_DIR$/libs/project/css" />
+      <recent name="$PROJECT_DIR$/homepage" />
+      <recent name="$PROJECT_DIR$/homepage/_bak" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/homepage/_bak" />
       <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\libs\project\js\bak" />
       <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\libs\project" />
       <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\libs\project\css" />
       <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\libs\project\css\page" />
-      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\libs\focus-ui" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\homepage" />
-      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\modules\test\for_test" />
-      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\libs\focus-ui" />
-      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\libs\focus-ui\theme" />
-      <recent name="D:\PyDev\WorkSpace\flasky\app\flasky_page\modules\sys\user" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
-  <component name="ShelveChangesManager" show_recycled="false">
-    <option name="remove_strategy" value="false" />
-  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -436,6 +330,8 @@
       <workItem from="1624611834131" duration="1479000" />
       <workItem from="1625109151393" duration="442000" />
       <workItem from="1636021772348" duration="613000" />
+      <workItem from="1649314037433" duration="884000" />
+      <workItem from="1649873575855" duration="6270000" />
     </task>
     <servers />
   </component>
@@ -488,16 +384,14 @@
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <option name="time" value="2" />
-    </breakpoint-manager>
-    <watches-manager />
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/modules/f5/f5_pool/f5_pool.js" />

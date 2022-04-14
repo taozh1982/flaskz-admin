@@ -1,4 +1,4 @@
-/*! Focus Pro v2.0 | http://focus-ui.com/ | 2021-08-29 */
+/*! Focus Pro v2.1 | http://focus-ui.com/ | 2022-04-07 */
 /*
 轻量级style
 ref: pure+bootstrap
@@ -19,6 +19,7 @@ ref: pure+bootstrap
   background-color: #e0e0e0;
 }
 ::-webkit-scrollbar-thumb {
+  border-radius: 3px;
   background-color: #bcbcbc;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -630,7 +631,7 @@ body {
 }
 .fu-pro .controls .invalid-feedback,
 .fu-pro span.invalid-feedback {
-  font-size: .8rem;
+  font-size: 0.8rem;
   color: #ca3c3c;
 }
 .fu-pro .controls input[type='checkbox'],
@@ -674,7 +675,7 @@ body {
 .fu-pro .controls input.check-input[type='checkbox']:disabled,
 .fu-pro input.check-input[type='checkbox'].control:disabled {
   pointer-events: none;
-  opacity: .5;
+  opacity: 0.5;
 }
 .fu-pro .controls input.check-input[type='checkbox']:checked,
 .fu-pro input.check-input[type='checkbox'].control:checked {
@@ -702,7 +703,7 @@ body {
 .fu-pro .controls input.switch-input[type='checkbox']:disabled,
 .fu-pro input.switch-input[type='checkbox'].control:disabled {
   pointer-events: none;
-  opacity: .5;
+  opacity: 0.5;
 }
 .fu-pro .controls input.switch-input[type='checkbox']:checked,
 .fu-pro input.switch-input[type='checkbox'].control:checked {
@@ -866,3 +867,4 @@ body {
 .fu-pro .card > .footer:last-child {
   border-radius: 0 0 calc(0.2rem - 1px) calc(0.2rem - 1px);
 }
+/*# sourceMappingURL=fu-pro.css.map */

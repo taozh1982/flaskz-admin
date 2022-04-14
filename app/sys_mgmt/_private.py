@@ -27,10 +27,11 @@ def _sys_sys_log():
     :return:
     """
     date = request.args.get('date', '').strip()
+    file_path = get_app_config('FLASKZ_LOGGER_FILEPATH')
     file_name = get_app_config('FLASKZ_LOGGER_FILENAME')
     flaskz_logger.debug('query app log:' + str(file_name))
-    if file_name:
-        file_name = get_app_path('./_log', file_name)
+    if file_path and file_name:
+        file_name = get_app_path(file_path, file_name)
 
         if date != '':
             file_name += '.' + date

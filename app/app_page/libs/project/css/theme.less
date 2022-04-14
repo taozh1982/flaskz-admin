@@ -1,0 +1,99 @@
+@grid_head_bg_color: #d9e5f7;
+@grid_head_color: #1b3b74;
+@grid_head_th_border_color: #e2eef7;
+@grid_body_strip_bg_color: #e9f0fa;
+@grid_body_hover_bg_color: rgba(40, 230, 230, 0.02);
+@modal_title_color: #4099ff;
+@page_padding: 8px;
+@page_bg_color: #eee;
+@module_padding: 3px;
+@header_height:3.2em;
+/******************************************************************框架******************************************************************/
+header {
+  flex: 0 0 @header_height!important;
+  background-image: url("../../homepage/header_bg.png");
+  background-position: center;
+  background-size: cover;
+
+  .right .icon-item:hover {
+    background-color: rgba(40, 90, 150, 0.3)!important;
+  }
+}
+
+/******************************************************************组件******************************************************************/
+.z-grid {
+  .head {
+    thead {
+      background-color: @grid_head_bg_color;
+      color: @grid_head_color;
+      th {
+        font-weight: bold;
+        border-color: @grid_head_th_border_color;
+      }
+    }
+  }
+  &:not(.no-striped):not(.stripped) //设置不使用间隔色,默认间隔色
+  {
+    .body .z-tbody tbody tr {
+      &[v_index_oe=even] {
+        background-color: @grid_body_strip_bg_color;
+      }
+      &:hover {
+        background-color: @grid_body_hover_bg_color;
+      }
+    }
+  }
+}
+
+.z-modal {
+  > .mask {
+    opacity: 0.26;
+  }
+  .zw-modal {
+    padding: 2px;
+    > .content > .header {
+      background-color: #fff;
+      > .title {
+        color: @modal_title_color;
+        font-weight: normal;
+      }
+      > .close {
+        padding: 0.3em 0.5em;
+      }
+    }
+
+    &.modal-fl {
+      left: @page_padding;
+      right: @page_padding;
+      top: @page_padding;
+      bottom: @page_padding;
+      height: auto;
+      width: auto;
+    }
+  }
+  .drawer:not(.right):not(.left):not(.top):not(.bottom),
+  .drawer.right {
+    height: auto;
+    top: @page_padding;
+    bottom: @page_padding;
+    right: @page_padding;
+  }
+}
+
+.z-pagination {
+  text-align: right;
+}
+
+/******************************************************************整体页面******************************************************************/
+body {
+  padding: @page_padding;
+  box-sizing: border-box;
+  background-color: @page_bg_color;
+  overflow: hidden;
+  .module {
+    padding: @module_padding;
+    background-color: #fff;
+    overflow: auto;
+  }
+}
+

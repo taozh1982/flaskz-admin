@@ -1,4 +1,5 @@
-.\init.js
-.\AjaxUrl.js
-.\AjaxCache.js
-.\page.js
+./init.js
+./AjaxUrl.js
+./AjaxCache.js
+./page.js
+

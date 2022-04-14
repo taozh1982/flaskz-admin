@@ -1,4 +1,4 @@
-/*! Focus Pro v2.0 | http://focus-ui.com/ | 2021-08-29 */
+/*! Focus Pro v2.1 | http://focus-ui.com/ | 2022-04-07 */
 (function(window, undefined) {
     z.setDefault({
         PRO_GRID_OPERATE_CLASS: "btn btn-link",
@@ -22,7 +22,7 @@
         PRO_AJAX_CREATE_TIPS: "Create",
         PRO_AJAX_READ_METHOD: "GET",
         PRO_AJAX_READ_TIPS: "Read",
-        PRO_AJAX_UPDATE_METHOD: "PUT",
+        PRO_AJAX_UPDATE_METHOD: "PATCH",
         PRO_AJAX_UPDATE_TIPS: "Update",
         PRO_AJAX_DELETE_METHOD: "DELETE",
         PRO_AJAX_DELETE_TIPS: "Delete",
@@ -90,7 +90,12 @@
                 fail_class: z.getDefault("PRO_GRID_RESULT_FAIL_CLASS"),
                 fail_label: z.getDefault("PRO_GRID_RESULT_FAIL_LABEL")
             }, opts);
-            var result = data.get(opts.key);
+            var result;
+            if (opts.hasOwnProperty("value")) {
+                result = opts.value;
+            } else {
+                result = data.get(opts.key);
+            }
             if (result != null) {
                 var cls = "";
                 var label = result;
@@ -201,14 +206,17 @@
             option = z.util.mergeObject({
                 className: z.getDefault("PRO_GRID_OPERATE_CLASS")
             }, option);
-            return $GridUtil.renderCell(grid, data, columnOrField, td, function() {
+            var btn = $GridUtil.renderCell(grid, data, columnOrField, td, function() {
                 var btn = z.dom.create("button", option.className || z.getDefault("PRO_GRID_OPERATE_CLASS"));
-                btn.innerHTML = option.label || "";
                 if (onclick) {
                     z.dom.event.onclick(btn, onclick, option.this);
                 }
                 return btn;
             }, option);
+            if (btn) {
+                btn.innerHTML = option.label || "";
+            }
+            return btn;
         },
         renderUpdateOperateButton: function(grid, data, columnOrField, td, onclick, option) {
             return $GridUtil.renderOperateButton(grid, data, columnOrField, td, onclick, z.util.mergeObject({
@@ -678,6 +686,62 @@
             return z.util.mergeObject({}, defaultOptions, options);
         }
     };
+    var $AjaxCache = {
+        _ajaxQueryCBMap: {},
+        query: function(cacheKey, ajaxOption, callback, thisArg, resultParser, cbArgsParser) {
+            var data = z.bom.getSessionStorage(cacheKey);
+            if (data) {
+                var args = [ data ];
+                if (cbArgsParser) {
+                    args = cbArgsParser(data);
+                }
+                callback.apply(thisArg, args);
+                return;
+            }
+            $AjaxCache._queryAndCache.apply($AjaxCache, arguments);
+        },
+        refresh: function(cacheKey, ajaxOption, callback, thisArg, resultParser, cbArgsParser) {
+            $AjaxCache._queryAndCache.apply($AjaxCache, arguments);
+        },
+        _queryAndCache: function(cacheKey, ajaxOption, callback, thisArg, resultParser, cbArgsParser) {
+            var cbArray = $AjaxCache._ajaxQueryCBMap[cacheKey] = $AjaxCache._ajaxQueryCBMap[cacheKey] || [];
+            cbArray.push({
+                callback: callback,
+                context: thisArg
+            });
+            if (cbArray.length > 1) {
+                return;
+            }
+            pro.AjaxCRUD.query(z.util.mergeObject({
+                success: function(result) {
+                    var data = result.data;
+                    if (resultParser) {
+                        data = resultParser(result, result.data);
+                    }
+                    z.bom.setSessionStorage(cacheKey, data, 30);
+                    var args = [ data ];
+                    if (cbArgsParser) {
+                        args = cbArgsParser(data);
+                    }
+                    cbArray.forEach(function(item) {
+                        if (item.callback) {
+                            item.callback.apply(item.context, args);
+                        }
+                    });
+                    delete $AjaxCache._ajaxQueryCBMap[cacheKey];
+                }
+            }, ajaxOption));
+        },
+        clear: function(obj, args) {
+            if (arguments.length === 1) {
+                z.bom.removeSessionStorage(function(key) {
+                    return key.startsWith(obj._key);
+                });
+            } else {
+                z.bom.removeSessionStorage(obj._getKey(args));
+            }
+        }
+    };
     var $FileUtil = {
         download: function(url, urlParameters, attrs) {
             var link = $FileUtil._getDownloadLink();
@@ -1108,27 +1172,26 @@
         },
         getACPermissions: function() {
             if (window._acPermissions_$ == null) {
-                window._acPermissions_$ = (z.bom.getSessionStorage("module_permissions") || {})[this.getPageModule()] || [];
+                var all_module_permissions = z.bom.getSessionStorage("module_permissions") || {};
+                var module = this.getPageModule();
+                var module_permissions = all_module_permissions[module];
+                if (module_permissions == null) {
+                    module = module.replace(/_/g, "-");
+                    module_permissions = all_module_permissions[module];
+                }
+                window._acPermissions_$ = module_permissions || [];
             }
             return window._acPermissions_$;
         },
-        _getControls: function() {
-            var acEles = this._acEles;
-            if (!acEles) {
-                acEles = this._acEles = z.dom.queryAll("[ac_permission]");
-                acEles.forEach(function(ele) {
-                    var parentNode = ele.parentNode;
-                    var parentChildNodes = z.util.mergeArray([], parentNode.childNodes);
-                    ele._ac_opt_$ = {
-                        ac_permission: ele.getAttribute("ac_permission"),
-                        parentNode: parentNode,
-                        parentChildNodes: parentChildNodes,
-                        index: parentChildNodes.indexOf(ele)
-                    };
-                    ele.removeAttribute("ac_permission");
-                });
+        getPageModule: function() {
+            var page_module = window.ac_module || z.bom.getURLQuery("module");
+            if (page_module == null) {
+                page_module = z.util.findArray(window.location.pathname.split("/").reverse(), function(item) {
+                    return item !== "";
+                }) || "";
+                page_module = page_module.split(".")[0];
             }
-            return acEles;
+            return page_module;
         },
         updateControls: function() {
             var acPermissions = this.getACPermissions();
@@ -1157,15 +1220,23 @@
                 }
             });
         },
-        getPageModule: function() {
-            var page_module = window.ac_module || z.bom.getURLQuery("module");
-            if (page_module == null) {
-                page_module = z.util.findArray(window.location.pathname.split("/").reverse(), function(item) {
-                    return item !== "";
-                }) || "";
-                page_module = page_module.split(".")[0];
+        _getControls: function() {
+            var acEles = this._acEles;
+            if (!acEles) {
+                acEles = this._acEles = z.dom.queryAll("[ac_permission]");
+                acEles.forEach(function(ele) {
+                    var parentNode = ele.parentNode;
+                    var parentChildNodes = z.util.mergeArray([], parentNode.childNodes);
+                    ele._ac_opt_$ = {
+                        ac_permission: ele.getAttribute("ac_permission"),
+                        parentNode: parentNode,
+                        parentChildNodes: parentChildNodes,
+                        index: parentChildNodes.indexOf(ele)
+                    };
+                    ele.removeAttribute("ac_permission");
+                });
             }
-            return page_module;
+            return acEles;
         }
     };
     z.ready(function() {
@@ -1257,9 +1328,11 @@
         },
         renderUpdateColumn: function(td, data, column) {
             var _this = this;
-            pro.GridUtil.renderUpdateDeleteOperateButton(this.grid, data, column, td, function() {
+            pro.GridUtil.renderUpdateDeleteOperateButton(this.grid, data, column, td, function(evt) {
+                evt.stopImmediatePropagation();
                 _this.handleClickUpdate(data);
-            }, function() {
+            }, function(evt) {
+                evt.stopImmediatePropagation();
                 _this.handleClickDelete(data);
             });
         },
@@ -1304,25 +1377,26 @@
                 }, this);
             }
             if (z.dom.query(this.page_options.modal_ok_btn)) {
-                z.dom.event.onclick(this.page_options.modal_ok_btn, function() {
-                    var value = this.getFormValue();
-                    if (value == null) {
-                        return;
-                    }
-                    if (this.validateFormValue(value) === false) {
-                        return;
-                    }
-                    if (this.handleModelOk(this._editType, value) === false) {
-                        return;
-                    }
-                    if (this._editType === "add") {
-                        this.handleModelAdd(value);
-                    } else if (this._editType === "update") {
-                        this.handleModelUpdate(value);
-                    }
-                }, this);
+                z.dom.event.onclick(this.page_options.modal_ok_btn, this.handleClickModalOK, this);
             }
             this.initController();
+        },
+        handleClickModalOK: function() {
+            var value = this.getFormValue();
+            if (value == null) {
+                return;
+            }
+            if (this.validateFormValue(value) === false) {
+                return;
+            }
+            if (this.handleModelOk(this._editType, value) === false) {
+                return;
+            }
+            if (this._editType === "add") {
+                this.handleModelAdd(value);
+            } else if (this._editType === "update") {
+                this.handleModelUpdate(value);
+            }
         },
         handleClickAdd: function() {
             this.showFormModal("add");
@@ -1562,17 +1636,17 @@
     });
     var $TemplatePageUtil = {
         getPrefixKey: function(str, prefix) {
-            if (prefix === "") {
+            if (prefix == null || prefix === "") {
                 str = str.replace(/\$_/g, "");
             } else {
-                str = str.replace(/(?<=\$)[a-z]/g, function(substring) {
+                str = str.replace(/\$[a-z]/g, function(substring) {
                     return substring.toUpperCase();
                 });
             }
             str = str.replace(/\$/g, function(substring, index) {
                 var pChar = str[index - 1];
                 var nChar = str[index + 1];
-                if (pChar != null && pChar != null && pChar.match(/[a-zA-Z]/) && nChar.match(/[a-zA-Z]/)) {
+                if (pChar != null && nChar != null && pChar.match(/[a-zA-Z]/) && nChar.match(/[a-zA-Z]/)) {
                     return prefix.charAt(0).toUpperCase() + prefix.substring(1);
                 }
                 return prefix;
@@ -1940,7 +2014,7 @@
             if (this._isPropertyVisible(data) === false) {
                 return false;
             }
-            return $PropertySheet.superClass.isVisible(data);
+            return $PropertySheet.superClass.isVisible.apply(this, arguments);
         },
         _isPropertyVisible: function(propertyRowData) {
             if (propertyRowData.isVisible) {
@@ -2536,6 +2610,7 @@
         _getTooltip: function(option) {
             if (!$GVUtil._tooltip) {
                 $GVUtil._tooltip = new z.widget.Tooltip(z.util.mergeObject({
+                    class: "gv-tooltip",
                     direction: "screen_center"
                 }, option.tooltip_props));
             }
@@ -2550,118 +2625,286 @@
             return tt;
         }
     });
-    var $GVEditorUtil = {
-        initEditor: function(gView, propertySheet, options) {
-            $GVEditorUtil._rewriteEditMethod(gView);
-            $GVEditorUtil._initEditController(gView, propertySheet, options);
+    var $GVEditController = function(gView, propertySheet, options) {
+        this.gView = gView;
+        this.propertySheet = propertySheet;
+        this._init(options);
+    };
+    z.util.extendClass($GVEditController, Object, z.util.mergeObject({
+        _init: function(options) {
+            options = options || {};
+            this._value = {};
+            this._current = {
+                obj: null,
+                type: null,
+                props: null
+            };
+            this._type_property_kv_map = {};
+            this._changed_value = {};
+            this._is_updating = false;
+            this._is_setting = false;
+            z.util.eachObject(options, function(key, value) {
+                if (z.type.isFunction(value)) {
+                    this[key] = value;
+                }
+            }, this);
+            this._updateGViewGetProps();
+            this._initListener();
         },
-        _rewriteEditMethod: function(gView) {
-            gView.getDataViewProperty = function(data, property) {
-                var editProps = $GVEditorUtil.getEditProps(gView) || {};
-                var allDataEditProps = editProps.data || {};
-                var dataEditProps = allDataEditProps[data.get("edit_id")] || {};
-                if (dataEditProps.hasOwnProperty(property)) {
-                    return dataEditProps[property];
+        getGView: function() {
+            return this.gView;
+        },
+        getPropertySheet: function() {
+            return this.propertySheet;
+        },
+        getValue: function() {
+            return z.util.mergeObject({}, this._value);
+        },
+        setValue: function(value) {
+            this._is_setting = true;
+            var gView = this.getGView();
+            gView.clearSelect();
+            this._current = {};
+            this._changed_value = {};
+            value = z.util.mergeObject({}, value);
+            this._value = value;
+            gView.eachData(function(data) {
+                var editID = this.getEditID(data);
+                if (editID == null) {
+                    return;
                 }
-                var viewEditProps = editProps.view || {};
-                if (viewEditProps.hasOwnProperty(property)) {
-                    return viewEditProps[property];
+                var objectValue = value[editID] || {};
+                var type = this.getEditType(data);
+                var setProps = this.getPropertiesOfData(data, type) || {};
+                z.util.eachObject(setProps, function(key, value) {
+                    if (objectValue.hasOwnProperty(key)) {
+                        setProps[key] = objectValue[key];
+                    }
+                });
+                data.set(setProps);
+            }, this);
+            gView.resetTransform();
+            this._setCurrentEditObject(gView);
+            this._is_setting = false;
+        },
+        _getObjectEditValue: function(object) {
+            return z.util.mergeObject({}, this._value[this.getEditID(object)]);
+        },
+        getObjectEditValue: function(object, objValue, data) {
+            return objValue;
+        },
+        isChanged: function() {
+            return Object.keys(this._changed_value).length > 0;
+        }
+    }, {
+        _updateGViewGetProps: function() {
+            var gView = this.getGView();
+            var getDataProperties = gView.getDataProperties;
+            var gViewGetProperty = gView.getProperty;
+            var _this = this;
+            gView.getDataProperties = function(data) {
+                var editID = _this.getEditID(data);
+                if (editID == null) {
+                    return getDataProperties.apply(gView, arguments);
                 }
-                return gView.constructor.superClass.getDataViewProperty.apply(gView, arguments);
+                var viewValue = _this.getObjectEditValue(gView, _this._getObjectEditValue(gView), data);
+                var dataValue = _this.getObjectEditValue(data, _this._getObjectEditValue(data), data);
+                return z.util.mergeObject({}, viewValue, dataValue || {}, getDataProperties.apply(gView, arguments));
             };
             gView.getProperty = function(key) {
-                var editProps = $GVEditorUtil.getEditProps(gView) || {};
-                var viewEditProps = editProps.view || {};
-                if (viewEditProps.hasOwnProperty(key)) {
-                    return viewEditProps[key];
+                var objectValue = _this.getObjectEditValue(gView, _this._getObjectEditValue(gView));
+                if (objectValue.hasOwnProperty(key)) {
+                    return objectValue[key];
                 }
-                return gView.constructor.superClass.getProperty.apply(gView, arguments);
+                return gViewGetProperty.apply(gView, arguments);
             };
         },
-        _initEditController: function(gView, propertySheet, options) {
+        _initListener: function() {
+            var gView = this.getGView();
+            var _this = this;
             gView.onDataChange(function(evt) {
-                var data = evt.data;
-                $GVEditorUtil._updateEditProps(gView, data, evt.event);
-                if (data === propertySheet._current_object) {
-                    propertySheet.setValue($GVEditorUtil._getObjectSheetValue(data, propertySheet.getProperties()));
+                if (_this._is_setting) {
+                    return;
                 }
+                var data = evt.data;
+                _this._updateObjectEditValue(data, evt.event);
+                _this._updateSheetValue(data);
             });
             gView.onViewChange(function(evt) {
-                $GVEditorUtil._updateEditProps(gView, evt);
+                if (_this._is_setting) {
+                    return;
+                }
+                _this._updateObjectEditValue(gView, evt);
+                _this._updateSheetValue(gView);
             });
             gView.onSelectBatchChange(function() {
-                $GVEditorUtil._updateCurrentEditObject(gView, propertySheet, gView.getLastSelected() || gView, options);
+                _this._setCurrentEditObject(gView.getLastSelected() || gView);
             });
+            var propertySheet = this.getPropertySheet();
+            if (!propertySheet) {
+                return;
+            }
             propertySheet.onValueChange(function(evt) {
-                $GVEditorUtil._updateEditProps(gView, propertySheet._current_object, evt);
+                if (_this._is_setting) {
+                    return;
+                }
+                _this._updateObjectEditValue(_this._current.obj, evt);
+                gView.update(true);
             });
         },
-        _updateCurrentEditObject: function(gView, sheet, currentObject, option) {
-            var sheet_filter_input = option.sheet_filter_input;
-            if (sheet_filter_input && z.dom.query(sheet_filter_input)) {
-                if (z.dom.getValue(sheet_filter_input) !== "") {
-                    sheet.updateInputFilter("");
+        _setCurrentEditObject: function(currentObject) {
+            if (this._current.obj === currentObject) {
+                return;
+            }
+            var newType = this.getEditType(currentObject);
+            this._current.obj = currentObject;
+            if (this._current.type !== newType) {
+                this._current.type = newType;
+                var newSheetProps = this.getEditProperties(newType, currentObject);
+                this._current.props = newSheetProps;
+                var propertySheet = this.getPropertySheet();
+                if (propertySheet) {
+                    propertySheet.setProperties(newSheetProps);
+                    propertySheet.expand(propertySheet.getRootDataArray());
                 }
             }
-            var getEditProperties = option.getEditProperties;
-            var getObjectType = option.getObjectType;
-            var sheetProps = getEditProperties(currentObject);
-            if (sheet._current_object !== currentObject) {
-                var typeChanged = true;
-                if (sheet._current_object) {
-                    typeChanged = getObjectType(sheet._current_object) !== getObjectType(currentObject);
-                }
-                sheet._current_object = currentObject;
-                if (typeChanged) {
-                    sheet.setProperties(sheetProps);
-                    sheet.expand(sheet.getRootDataArray());
-                }
-            }
-            sheet.setValue($GVEditorUtil._getObjectSheetValue(currentObject, sheetProps));
+            this._updateSheetValue(currentObject);
         },
-        _getObjectSheetValue: function(currentObject, sheetProps, values) {
-            values = values || {};
-            sheetProps.forEach(function(item) {
-                var property = item.property;
-                if (property) {
-                    if (currentObject.hasProperty(property)) {
-                        values[property] = currentObject.getProperty(property);
+        _updateObjectEditValue: function(object, evt) {
+            if (this._is_setting === true || this._is_updating === true) {
+                return;
+            }
+            var property = evt.property;
+            if (!this._isEditProperty(object, property)) {
+                return;
+            }
+            this._is_updating = true;
+            var editID = this.getEditID(object);
+            var newValue = this.getPropertyEditValue(object, property, evt.new_value);
+            var changedKey = editID + "-" + property;
+            var changedMap = this._changed_value;
+            if (changedMap.hasOwnProperty(changedKey)) {
+                if (changedMap[changedKey] === newValue) {
+                    delete changedMap[changedKey];
+                }
+            } else {
+                changedMap[changedKey] = this.getPropertyEditValue(object, property, evt.old_value);
+            }
+            var objectValue = this._value[editID] = this._value[editID] || {};
+            var isNull = this._isNullValue(newValue);
+            if (isNull) {
+                delete objectValue[property];
+            } else {
+                objectValue[property] = newValue;
+            }
+            this.onValueChange(object, evt);
+            if (z.type.isNode(object)) {
+                if (property === "x" || property === "y") {
+                    object.set(property, newValue);
+                } else if (property === "image") {
+                    if (isNull) {
+                        object.remove(property);
+                    } else {
+                        object.set(property, newValue);
                     }
+                }
+            }
+            this._is_updating = false;
+        },
+        _isNullValue: function(value) {
+            if (z.type.isNumber(value) && isNaN(value)) {
+                return true;
+            }
+            return value == null || value === "";
+        },
+        _isEditProperty: function(object, property) {
+            var typeProps = this._getEditProperties(object) || {};
+            return typeProps.hasOwnProperty(property);
+        },
+        _getEditProperties: function(object) {
+            var type = this.getEditType(object);
+            if (!this._type_property_kv_map.hasOwnProperty(type)) {
+                this._type_property_kv_map[type] = this._getPropertyKVMap(this.getEditProperties(type, object));
+            }
+            return this._type_property_kv_map[type];
+        },
+        _getPropertyKVMap: function(editProps, map) {
+            map = map || {};
+            (editProps || []).forEach(function(item) {
+                var prop = item.property;
+                if (prop) {
+                    map[prop] = item;
                 }
                 var children = item.children;
                 if (children) {
-                    $GVEditorUtil._getObjectSheetValue(currentObject, children, values);
+                    this._getPropertyKVMap(children, map);
                 }
-            });
-            return values;
-        },
-        getEditProps: function(gView) {
-            return gView._edit_props;
-        },
-        _updateEditProps: function(gView, obj, evt) {
-            var editProps = gView._edit_props = gView._edit_props || {
-                view: {},
-                data: {}
-            };
-            if (z.type.isData(obj)) {
-                var dataEditProps = editProps.data[obj.get("edit_id")] = editProps.data[obj.get("edit_id")] || {};
-                dataEditProps[evt.property] = evt.new_value;
-            } else {
-                editProps.view[evt.property] = evt.new_value;
-            }
-            gView.update();
-        },
-        _getEditProps: function(gView, obj) {
-            var editProps = gView._edit_props = gView._edit_props || {
-                view: {},
-                data: {}
-            };
-            if (z.type.isData(obj)) {
-                return editProps.data[obj.get("edit_id")];
-            }
-            return editProps.view;
+            }, this);
+            return map;
         }
-    };
+    }, {
+        _updateSheetValue: function(object) {
+            var propertySheet = this.getPropertySheet();
+            if (!propertySheet) {
+                return;
+            }
+            if (this._current.obj === object) {
+                propertySheet.setValue(this._getObjectSheetValue(object, this._current.props));
+            }
+        },
+        _getObjectSheetValue: function(object, edit_props, values) {
+            values = values || {};
+            var objectEditValue = this._getObjectEditValue(object);
+            edit_props.forEach(function(item) {
+                var property = item.property;
+                if (property) {
+                    if (objectEditValue.hasOwnProperty(property)) {
+                        values[property] = objectEditValue[property];
+                    } else {}
+                }
+                var children = item.children;
+                if (children) {
+                    this._getObjectSheetValue(object, children, values);
+                }
+            }, this);
+            return values;
+        }
+    }, {
+        onValueChange: function(object, evt) {},
+        getPropertyEditValue: function(object, property, value) {
+            return value;
+        },
+        getEditID: function(object) {
+            if (z.type.isData(object)) {
+                return object.get("edit_id");
+            }
+            return "view";
+        },
+        getEditType: function(data) {
+            if (z.type.isNode(data)) {
+                if (z.type.isGroup(data)) {
+                    return "group";
+                }
+                return "node";
+            }
+            if (z.type.isLink(data)) {
+                return "link";
+            }
+            if (z.type.isView(data)) {
+                return "view";
+            }
+        },
+        getEditProperties: function(data, type) {},
+        getPropertiesOfData: function(data, type) {
+            if (z.type.isNode(data)) {
+                return {
+                    x: 0,
+                    y: 0,
+                    image: null
+                };
+            }
+        }
+    }));
     var $GridLayout = z.util.newClass(z.gv.layout.Layout, function() {
         $GridLayout.superClass.constructor.apply(this, arguments);
     }, {
@@ -3155,9 +3398,68 @@
             });
         }
     });
+    var $GVPathCalc = {
+        calcShortestPathsBetween: function(srcNode, dstNode, filerFun, sortCmp, directed) {
+            var paths = $GVPathCalc.calcPathsBetween(srcNode, dstNode, filerFun, sortCmp, directed);
+            if (paths.length > 1) {
+                var path1 = paths[0];
+                if (path1) {
+                    var shortestArr = [ path1 ];
+                    paths.forEach(function(path, index) {
+                        if (index > 0 && sortCmp(path1, path) === 0) {
+                            shortestArr.push(path);
+                        }
+                    });
+                    paths = shortestArr;
+                }
+            }
+            return paths;
+        },
+        calcPathsBetween: function(fromNode, toNode, filerFun, sortCmp, directed) {
+            var pathArr = [];
+            $GVPathCalc._calcPathsBetween(fromNode, toNode, pathArr, directed);
+            if (filerFun) {
+                pathArr = z.util.filterArray(pathArr, filerFun);
+            }
+            if (sortCmp) {
+                pathArr.sort(sortCmp);
+            }
+            return pathArr;
+        },
+        _calcPathsBetween: function(fromNode, toNode, pathArr, directed, containedDataArr) {
+            var toLinks;
+            if (directed !== true) {
+                toLinks = fromNode.getLinks();
+            } else {
+                toLinks = fromNode.getFromLinks();
+            }
+            var size = toLinks.length;
+            for (var i = 0; i < size; i++) {
+                var link = toLinks[i];
+                var linkToNode = link.get("to");
+                if (directed !== true) {
+                    if (linkToNode === fromNode) {
+                        linkToNode = link.get("from");
+                    }
+                }
+                var currentPathArr = z.util.mergeArray([], containedDataArr);
+                currentPathArr.push(fromNode);
+                if (currentPathArr.indexOf(linkToNode) < 0) {
+                    currentPathArr.push(link);
+                    if (linkToNode === toNode) {
+                        currentPathArr.push(toNode);
+                        pathArr.push(currentPathArr);
+                    } else {
+                        $GVPathCalc._calcPathsBetween(linkToNode, toNode, pathArr, directed, currentPathArr);
+                    }
+                }
+            }
+        }
+    };
     var pro = {
         Util: $Util,
         AjaxCRUD: $AjaxCRUD,
+        AjaxCache: $AjaxCache,
         FileUtil: $FileUtil,
         GridUtil: $GridUtil,
         ModalUtil: $ModalUtil,
@@ -3175,6 +3477,8 @@
             CrudPage: $CrudPage
         },
         GVUtil: $GVUtil,
+        GVPathCalc: $GVPathCalc,
+        GVEditController: $GVEditController,
         gv: {
             layout: {
                 GridLayout: $GridLayout,

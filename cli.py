@@ -35,13 +35,13 @@ def init_admin_cli(app):
 
 # flask admin db ?
 def _db_operate(db_operate_type):
-    if db_operate_type == '?' or db_operate_type == '--help':
+    if db_operate_type == 'help' or db_operate_type == 'hp':
         return _db_operate_help()
 
     if db_operate_type not in ['upgrade', 'init', 'radmin']:
         click.echo('Error: no such option: ' + db_operate_type)
         return
-
+    count = 0
     while True:
         pwd = input('Please enter admin password: ')
         # now = datetime.now()
@@ -49,6 +49,9 @@ def _db_operate(db_operate_type):
         #     break
         if 'taozh' == pwd:
             break
+        count += 1
+        if count > 2:
+            return
 
     click.echo(('db:' + db_operate_type).center(60, '-'))
     if db_operate_type == 'upgrade':

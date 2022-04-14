@@ -3,26 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Flaskz Admin</title>
-    <script src="./libs/focus-ui/monitor.js"></script>
-    <link rel="stylesheet" href="./libs/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="./libs/project/proj.css">
-    <link rel="stylesheet" href="./homepage/admin.css">
-
     <script src="./libs/focus-ui/focus-ui.min.js"></script>
     <script src="./libs/focus-ui/fu-pro.js"></script>
     <script src="./libs/project/proj.js"></script>
 
-    <style>
-        .header-popover a {
-            color: #007bff !important;
-        }
-    </style>
-    <script src="./homepage/menu_items.js"></script>
+    <link rel="stylesheet" href="./homepage/admin.css">
     <script src="./homepage/admin.js"></script>
     <script src="./homepage/admin_pro.js"></script>
-    <script>
-        console.log("Flaskz & Focus UI");
-    </script>
+
 </head>
 <body class="fu-pro">
 <header>
@@ -39,17 +28,24 @@
         </svg>
     </a>
     <div class="right">
+        <div class="icon-item refresh-page">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+        </div>
         <div class="icon-item" data-toggle="zw-popover" data-content="element:#userDiv" data-direction="down_left">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
             </svg>
-            <label id="usernameLabel"></label>
+            <label id="accountLabel"></label>
             <div id="userDiv" class="header-popover">
-                <a id="profileA">My Profile</a>
+                <a id="profileA">账户设置</a>
                 <br>
-                <a id="logoutA">Logout</a>
+                <a id="signOutA">退出</a>
             </div>
         </div>
     </div>
@@ -62,7 +58,7 @@
     <div id="modalDiv" class="zw-modal">
         <div class="content">
             <div class="header">
-                <span id="titleDiv" class="title">My Profile</span>
+                <span id="titleDiv" class="title">账户设置</span>
                 <span class="close" data-dismiss="modal">×</span>
             </div>
             <div class="body controls label-align-right">

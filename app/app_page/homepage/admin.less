@@ -2,6 +2,7 @@
 @header_bg: #254151;
 @header_color: #fff;
 @header_padding: 0.3em;
+@svg_size: 1.6em;
 
 @aside_bg: 14em;
 @aside_width: 14em;
@@ -20,6 +21,12 @@ body {
   display: flex;
   flex-flow: column nowrap;
   box-sizing: border-box;
+
+  &.full-screen {
+    > header, > .body-main > .aside {
+      display: none;
+    }
+  }
 }
 
 header {
@@ -33,7 +40,6 @@ header {
   padding-left: @header_padding;
   padding-right: @header_padding;
 
-  //white-space: nowrap;
   .logo {
     flex: none;
     img {
@@ -51,31 +57,32 @@ header {
     transition: @toggle_menu_transition_time;
     svg {
       display: block;
-      width: @header_height*0.5;
-      height: @header_height*0.5;
+      width: @svg_size;
+      height: @svg_size;
     }
   }
   .right {
     margin-left: auto;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
     .icon-item {
-      height: 100%;
-      position: relative;
-      display: inline-block;
       cursor: pointer;
-      padding: @header_height*0.25 0.6em 0;
-      box-sizing: border-box;
+      padding: 0.3em;
       transition: @toggle_menu_transition_time;
+      display: flex;
+      align-items: center;
       svg {
         display: inline-block;
-        width: @header_height*0.45;
-        height: @header_height*0.45;
-        vertical-align: middle;
+        padding: 0.1em;
+        width: @svg_size;
+        height: @svg_size;
       }
       .badge {
-        position: absolute;
-        top: 0.3em;
-        right: 0.3em;
         padding: 0.1em 0.3em;
+        margin-top: -1.7em;
+        margin-left: -0.3em;
+
         font-size: 70%;
         border-radius: 0.2em;
         background: #42b8dd;
@@ -112,6 +119,7 @@ header {
     .z-menu {
       background-color: transparent;
       display: none;
+      margin: 0.3em 0.5em;
       .items {
         > .item {
           > .node {
@@ -212,8 +220,11 @@ header {
   }
   .body-main {
     > .aside {
-      flex-basis: @aside_collapsed_width;
+      //flex-basis: @aside_collapsed_width;
+      margin-left: @aside_collapsed_width - @aside_width;
       overflow: hidden;
+      display: flex;
+      justify-content: flex-end;
       .z-tree {
         display: none;
         overflow: hidden;

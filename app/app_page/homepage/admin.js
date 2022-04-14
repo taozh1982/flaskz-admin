@@ -1,42 +1,48 @@
+// {name: "Menu 1", path: "main", font_icon: "<i class='fa fa-home'></i>", url: "./page/main.html"}
+//path is the primary key  url = url|path
 var NavTree = function () {
     NavTree.superClass.constructor.apply(this, arguments);
     this.onSelectBatchChange(this.showPage, this);
 };
 z.util.extendClass(NavTree, z.widget.Tree, z.util.mergeObject({
-        showPage: function () {
-            var lastSelect = this.getLastSelected();
-            if (lastSelect) {
-                if (this.get("cache_page") === false) {
-                    this.clearDataContent();
-                }
-                this.setCurrentDataContent(lastSelect);
-                z.bom.setSessionStorage("selected_menu", {
-                    name: lastSelect.get("name"),
-                    url: lastSelect.get("url")
-                })
+    showPage: function () {
+        var lastSelect = this.getLastSelected();
+        if (lastSelect) {
+            if (this.get("cache_page") === false) {
+                this.clearDataContent();
             }
-        },
-        isSelectable: function (data) {
-            return data.get("url") != null;
-        },
-        getContentContainer: function () {
-            return this.get("content_container");
+            if (this.get("update_hash") === true) {
+                window.location.hash = lastSelect.get("path");
+            }
+            this.setCurrentDataContent(lastSelect);
+            z.bom.setSessionStorage("selected_menu", {
+                name: lastSelect.get("name"),
+                path: lastSelect.get("path")
+            })
         }
-    }, z.widget.$interface.DataContentInterface(NavTree))
-);
+    },
+    isSelectable: function (data) {
+        return data.get("path") != null;
+    },
+    getContentContainer: function () {
+        return this.get("content_container");
+    }
+}, z.widget.$interface.DataContentInterface(NavTree)));
 
 var Admin = {
     init: function () {
         z.widget.popover.init();
-        this.initListener();
-        this.initMenu();
-        this._init();
+        this.initController();
+        this.initView();
+        this.initModel();
+        this.initCustom();
     },
-    initMenu: function () {
+    initView: function () {
         this.tree = new NavTree({
             expand_on_click: true,
             model_select: true,
             // cache_page:false,
+            update_hash: true,
             content_container: z.dom.query(".content", ".body-main"),
             getLabel: function (data) {
                 return (data.get("font_icon") || "") + data.get("name");
@@ -55,21 +61,19 @@ var Admin = {
                 return font_icon + data.get("name");
             },
             isSelectable: function (data) {
-                return data.get("url") != null;
+                return data.get("path") != null;
             }
         });
-
-        // this._initMenuItems(MenuItems);
     },
-    _initMenuItems: function (items) {
+    initMenuItems: function (items) {
         this.tree.setData(items);
-        var firstUrlData;
-        this.tree.hEachData(function (data) {
-            var url = data.get("url");
+        var firstPathData;
+        this.tree.eachData(function (data) {
+            var url = data.get("url") || data.get("path");
             if (url) {
                 data.set("content", "url:" + url);
-                if (!firstUrlData) {
-                    firstUrlData = data;
+                if (!firstPathData) {
+                    firstPathData = data;
                 }
             }
         });
@@ -84,7 +88,6 @@ var Admin = {
             }) || this.tree.findData({
                 name: decodeURI(selected_menu)
             }) || null;
-
         }
         if (!selected_menu) {
             selected_menu = z.bom.getSessionStorage("selected_menu");
@@ -92,27 +95,75 @@ var Admin = {
                 selected_menu = this.tree.findData(selected_menu);
             }
         }
-        this.tree.setSelect(selected_menu || firstUrlData);
+        this.tree.setSelect(selected_menu || firstPathData);
     },
-
-    initListener: function () {
-        z.dom.event.onclick(z.dom.query(".toggle-menu", "header"), function () {
-            z.dom.toggleClass("body", "aside-collapsed");
-        });
+    initAccountProfile: function (profile) {
+        z.dom.setValue("#accountLabel", profile.name);
+    },
+    initController: function () {
+        if (z.dom.query(z.dom.query(".toggle-menu", "header"))) {
+            z.dom.event.onclick(z.dom.query(".toggle-menu", "header"), function () {
+                z.dom.toggleClass("body", "aside-collapsed");
+            });
+        }
+        if (z.dom.query(".refresh-page", "header")) {
+            z.dom.event.onclick(z.dom.query(".refresh-page", "header"), function () {
+                this.refreshMenu();
+            }, this);
+        }
+        this._initProfileController();
+    },
+    _initProfileController: function () {
+        if (z.dom.query("#signOutA")) {
+            z.dom.event.onclick("#signOutA", this.handleSignOut, this);
+        }
+        if (z.dom.query("#profileA")) {
+            z.dom.event.onclick("#profileA", this.showProfileModal, this);
+        }
+    },
+    fullScreen: function (full) {
+        if (full === false) {
+            z.dom.removeClass(document.body, "full-screen")
+        } else {
+            z.dom.toggleClass(document.body, "full-screen");
+        }
     }
 };
+//menu
 z.util.mergeObject(Admin, {
+    selectMenu: function (path) {
+        var selected_menu;
+        if (z.type.isString(path)) {
+            selected_menu = this.tree.findData({
+                path: path
+            });
+        } else if (z.type.isObject(path)) {
+            selected_menu = this.tree.findData(path);
+        }
+        if (selected_menu) {
+            this.tree.setSelect(selected_menu);
+        }
+    },
     refreshMenu: function (menuItems) {
-        if (!z.util.isArray(menuItems)) {
+        var lastSelected = this.tree.getLastSelected();
+        if (arguments.length === 0) {//refresh current page
+            if (lastSelected) {
+                menuItems = [lastSelected.get("path")];
+            }
+        }
+        if (!z.type.isArray(menuItems)) {
             menuItems = [menuItems]
         }
         menuItems.forEach(function (item) {
-            if (z.util.isString(item)) {
-                item = {url: item}
+            if (z.type.isString(item)) {
+                item = {path: item}
             }
             var menuData = this.tree.findData(item);
             if (menuData) {
                 this.tree.removeDataContent(menuData);
+                if (lastSelected === menuData) {
+                    this.tree.setCurrentDataContent(lastSelected);
+                }
             }
         }, this);
     },
@@ -130,7 +181,20 @@ z.util.mergeObject(Admin, {
     }
 });
 
-
+//custom
+z.util.mergeObject(Admin, {
+    initModel: function () {
+        this.initMenuItems(MenuItems);
+        this.initAccountProfile({name: "admin"});
+    },
+    handleSignOut: function () {
+        alert("Sign out");
+    },
+    showProfileModal: function () {
+        z.widget.popover.close();
+        alert("Show profile modal");
+    }
+});
 z.ready(function () {
     Admin.init();
 });

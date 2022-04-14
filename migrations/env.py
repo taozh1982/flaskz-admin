@@ -22,9 +22,10 @@ import os
 import sys
 
 sys.path.append(os.getcwd())
-from app.common.models import Base
 
-target_metadata = Base.metadata
+# migrations/venv.py
+from app.modules import ModelBase # 从app.modules导入ModelBase，而不是从flaskz.models导入
+target_metadata = ModelBase.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

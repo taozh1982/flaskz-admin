@@ -1,4 +1,4 @@
-var FontIconMap = {
+var FontIconMapping = {
     100: "<i class='fa fa-server'></i>",
     200: "<i class='fa fa-ioxhost'></i>",
     300: "<i class='fa fa-cubes'></i>",
@@ -7,47 +7,75 @@ var FontIconMap = {
     default_folder: "",
     default_leaf: ""
 };
-//server跳转 > client映射
-var URLMap = {
+//url mapping
+var URLMapping = {
     /*user: "./modules/sys_mgmt/user/user.html",
     role: "./modules/sys_mgmt/role/role.html",
     op_log: "./modules/sys_mgmt/op_log/op_log.html"*/
 };
 z.util.mergeObject(Admin, {
-    getMenuIcon: function (item) {
-        var icon = FontIconMap[item.id];
-        if (icon) {
-            return icon
-        }
-        if (item.parent_id == null) {
-            return FontIconMap.default_root_folder;
-        }
-        if (item.children && item.children.length > 0) {
-            return FontIconMap.default_folder;
-        }
-        return FontIconMap.default_leaf
-    },
-    getURL: function (url) {
-        return URLMap[url] || url;
-    },
-    _init: function () {
+    initCustom: function () {
         this.initProfileController();
+    },
+    initModel: function () {
         pro.AjaxCRUD.query({
             url: AjaxUrl.sys_auth.query,
-            tips: "加载账户信息",
+            tips: "Load account info",
             success_notify: false,
             success: function (result) {
                 this._initAccountMenus(result.data.menus);
-                this.initAccountProfile(result.data.profile);
-
+                this._initAccountProfile(result.data.profile);
             },
             context: this
         })
     },
-    initAccountProfile: function (profile) {
+    _initAccountProfile: function (profile) {
         this._account_profile = profile;
-        z.dom.setValue("#usernameLabel", profile.name || profile.username);
+        this.initAccountProfile(profile);
+    }
+});
+z.util.mergeObject(Admin, {
+    initProfileController: function () {
+        this.profileForm = z.form.Form("#modalDiv");
+        z.dom.event.onclick("#modalOkBtn", function () {
+            var value = this.profileForm.getValue();
+            if (value == null) {
+                return;
+            }
+            pro.AjaxCRUD.update({
+                url: AjaxUrl.sys_auth.update,
+                data: value,
+                success: function (result) {
+                    this._initAccountProfile(result.data);
+                    z.widget.modal("#modalDiv", false);
+                },
+                context: this
+            });
+        }, this)
     },
+    handleSignOut: function () {
+        if (AjaxUrl.sys_auth.logout) {
+            pro.AjaxCRUD.ajax({
+                url: AjaxUrl.sys_auth.logout,
+                tips: "退出登录",
+                success_notify: false,
+                complete: function () {
+                    window.location.href = "/login";
+                }
+            });
+        } else {
+            window.location.href = "/login";
+        }
+        z.bom.removeLocalStorage("auth-token");
+        z.bom.clearSessionStorage();
+    },
+    showProfileModal: function () {
+        z.widget.popover.close();
+        this.profileForm.setValue(this._account_profile);
+        z.widget.modal("#modalDiv");
+    }
+});
+z.util.mergeObject(Admin, {
     _initAccountMenus: function (menus) {
         var _this = this;
         var map = {};
@@ -69,17 +97,17 @@ z.util.mergeObject(Admin, {
             }
         });
         menus.forEach(function (item) {
-            var font_icon = _this.getMenuIcon(item);
+            var font_icon = _this._getMenuIcon(item);
             if (font_icon) {
                 item.font_icon = font_icon;
             }
             var path = item.path;
             if (path) {
-                item.url = _this.getURL(path);
+                item.url = _this._getURL(path);
             }
         });
 
-        this._initMenuItems(rootMenus);
+        this.initMenuItems(rootMenus);
         z.bom.clearSessionStorage();
 
         var path_ops = {};
@@ -90,49 +118,21 @@ z.util.mergeObject(Admin, {
             }
         });
         z.bom.setSessionStorage("module_permissions", path_ops);
-    }
-});
-z.util.mergeObject(Admin, {
-    initProfileController: function () {
-        this.profileForm = z.form.Form("#modalDiv");
-
-        z.dom.event.onclick("#logoutA", this.handleLogout, this);
-        z.dom.event.onclick("#profileA", this.showProfileModal, this);
-
-        z.dom.event.onclick("#modalOkBtn", function () {
-            var value = this.profileForm.getValue();
-            if (value == null) {
-                return;
-            }
-            pro.AjaxCRUD.update({
-                url: AjaxUrl.sys_auth.update,
-                data: value,
-                success: function (result) {
-                    this.initAccountProfile(result.data);
-                    z.widget.modal("#modalDiv", false);
-                },
-                context: this
-            });
-        }, this)
     },
-    handleLogout: function () {
-        if (AjaxUrl.sys_auth.logout) {
-            pro.AjaxCRUD.ajax({
-                url: AjaxUrl.sys_auth.logout,
-                tips: "退出登录",
-                success_notify: false,
-                complete: function () {
-                    window.location.href = "/login";
-                }
-            });
-        } else {
-            window.location.href = "/login";
+    _getMenuIcon: function (item) {
+        var icon = FontIconMapping[item.id];
+        if (icon) {
+            return icon
         }
-        z.bom.removeLocalStorage("auth-token");
-        z.bom.clearSessionStorage();
+        if (item.parent_id == null) {
+            return FontIconMapping.default_root_folder;
+        }
+        if (item.children && item.children.length > 0) {
+            return FontIconMapping.default_folder;
+        }
+        return FontIconMapping.default_leaf
     },
-    showProfileModal: function () {
-        this.profileForm.setValue(this._account_profile);
-        z.widget.modal("#modalDiv");
+    _getURL: function (path) {
+        return URLMapping[path] || path;
     }
 });

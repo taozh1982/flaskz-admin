@@ -34,7 +34,7 @@ class Config:
 
     # 系统日志相关配置，请参考 -http://zhangyiheng.com/blog/articles/py_flaskz_api.html
     FLASKZ_LOGGER_FILENAME = None
-    FLASKZ_LOGGER_FILEPATH = os.path.join(os.getcwd(), './syslog')
+    FLASKZ_LOGGER_FILEPATH = '_syslog'
     FLASKZ_LOGGER_LEVEL = 'INFO'  # 'DEBUG'/'INFO'/'WARNING'/'WARN'/'ERROR'/'FATAL'/'CRITICAL'
     FLASKZ_LOGGER_FORMAT = '%(asctime)s %(filename)16s[line:%(lineno)-3d] %(levelname)8s: \n%(message)s\n'
     FLASKZ_LOGGER_WHEN = 'midnight'  # 每天midnight，将当日志文件按日期重命名保存，并生成一个新的日志文件
@@ -46,6 +46,14 @@ class Config:
     FLASKZ_RES_SUCCESS_STATUS = "success"
     FLASKZ_RES_FAIL_STATUS = "fail"
 
+    # redis相关配置, 按需配置
+    REDIS_URL = None
+    # websocket配置, 按需配置
+    WEBSOCKET_HOST = None  # 如果为None, host=0.0.0.0
+    WEBSOCKET_PORT = 3667  # websocket端口号
+    REDIS_WEBSOCKET_DEFAULT_CHANNEL = "ws:channel"  # redis websocket订阅的默认channel
+    REDIS_WEBSOCKET_MESSAGE_TIMEOUT = 1  # redis websocket消息等待时间
+
     @staticmethod
     def init_app(app):
         pass
@@ -56,8 +64,10 @@ class DevelopmentConfig(Config):
     开发环境相关配置
     """
     SEND_FILE_MAX_AGE_DEFAULT = 0
-    FLASKZ_LOGGER_FILENAME = 'syslog.txt'
-    FLASKZ_DATABASE_URI = 'sqlite:///D:/PyDev/WorkSpace/flaskz-admin/_sqlite/flaskz-admin.db'
+    # FLASKZ_LOGGER_FILENAME = 'syslog.txt'
+    REDIS_URL = 'redis://localhost'
+    FLASKZ_DATABASE_URI = 'sqlite:///./_sqlite/flaskz-admin.db'
+    # '/Users/taozh/Codes/PY/flaskz-admin/_sqlite/flaskz-admin.db'
 
 
 class TestConfig(Config):

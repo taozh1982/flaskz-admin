@@ -12,7 +12,10 @@ page_mapping = {
     'user': './modules/sys_mgmt/user/user.html',
     'op_log': './modules/sys_mgmt/op_log/op_log.html',
 
-    'template': './modules/template/template/template.html'
+    'template': './modules/template/template/template.html',
+
+    'ex-screen': './modules/example/screen/screen.html',
+    'ex-websocket': './modules/example/websocket/websocket.html',
     # 'op_log': './modules/sys/op_log/op_log.html?module=lop_op',
 }
 

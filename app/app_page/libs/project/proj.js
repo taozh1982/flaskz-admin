@@ -57,7 +57,8 @@ z.setDefault({
 
     PRO_CRUDTABLEPAGE_MODAL_OPTIONS: {open_animation: "z-animation-fadeInLeft", close_animation: "z-animation-fadeOutRight"},
     PRO_CRUDTABLEPAGE_NESTED_MODAL_OPTIONS: {open_animation: "z-animation-fadeInUp", close_animation: "z-animation-fadeOutDown"}
-}); 
+});
+
 /**
  * ajax请求url
  */
@@ -94,7 +95,8 @@ var AjaxUrl = {
         update: "/sys_mgmt/auth/account/"
     }
 };
- 
+
+
 /**
  * ajax数据缓存
  */
@@ -132,7 +134,8 @@ var AjaxCache = {
     clear: function () {
         z.bom.clearSessionStorage();
     }
-}; 
+};
+
 var refreshMenuByPath = function (paths) {
     var admin = window.top.Admin;
     if (admin) {
@@ -189,4 +192,7 @@ z.ajax.setup({
         }
     }
 });*/
- 
+
+
+
+

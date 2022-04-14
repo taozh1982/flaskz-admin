@@ -11,6 +11,10 @@ body {
   flex-flow: column nowrap;
   box-sizing: border-box;
 }
+body.full-screen > header,
+body.full-screen > .body-main > .aside {
+  display: none;
+}
 header {
   display: flex;
   flex: 0 0 2.8em;
@@ -39,32 +43,32 @@ header .toggle-menu {
 }
 header .toggle-menu svg {
   display: block;
-  width: 1.4em;
-  height: 1.4em;
+  width: 1.6em;
+  height: 1.6em;
 }
 header .right {
   margin-left: auto;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
 }
 header .right .icon-item {
-  height: 100%;
-  position: relative;
-  display: inline-block;
   cursor: pointer;
-  padding: 0.7em 0.6em 0;
-  box-sizing: border-box;
+  padding: 0.3em;
   transition: 0.2s;
+  display: flex;
+  align-items: center;
 }
 header .right .icon-item svg {
   display: inline-block;
-  width: 1.26em;
-  height: 1.26em;
-  vertical-align: middle;
+  padding: 0.1em;
+  width: 1.6em;
+  height: 1.6em;
 }
 header .right .icon-item .badge {
-  position: absolute;
-  top: 0.3em;
-  right: 0.3em;
   padding: 0.1em 0.3em;
+  margin-top: -1.7em;
+  margin-left: -0.3em;
   font-size: 70%;
   border-radius: 0.2em;
   background: #42b8dd;
@@ -97,6 +101,7 @@ header .right .icon-item:hover {
 .body-main > .aside .z-menu {
   background-color: transparent;
   display: none;
+  margin: 0.3em 0.5em;
 }
 .body-main > .aside .z-menu .items > .item > .node {
   padding-right: 0;
@@ -173,8 +178,10 @@ body.aside-collapsed header .toggle-menu {
   transform: rotate(90deg);
 }
 body.aside-collapsed .body-main > .aside {
-  flex-basis: 3em;
+  margin-left: -11em;
   overflow: hidden;
+  display: flex;
+  justify-content: flex-end;
 }
 body.aside-collapsed .body-main > .aside .z-tree {
   display: none;
@@ -214,8 +221,10 @@ body.aside-collapsed .body-main > .aside .z-menu {
     transform: rotate(90deg);
   }
   .body-main > .aside {
-    flex-basis: 3em;
+    margin-left: -11em;
     overflow: hidden;
+    display: flex;
+    justify-content: flex-end;
   }
   .body-main > .aside .z-tree {
     display: none;

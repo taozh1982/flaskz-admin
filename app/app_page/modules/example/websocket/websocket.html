@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Websocket Example</title>
+    <link rel="stylesheet" href="../../../libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../libs/project/proj.css">
+
+    <script src="../../../libs/focus-ui/focus-ui.min.js"></script>
+    <script src="../../../libs/focus-ui/fu-pro.js"></script>
+    <script src="../../../libs/project/proj.js"></script>
+
+    <style>
+        #msgPre {
+            margin: 0;
+            border: 1px solid #eee;
+        }
+    </style>
+
+    <script src="./websocket.js"></script>
+</head>
+<body class="fu-pro">
+<div class="module layout rows-2">
+    <div class="toolbar controls">
+        <input id="urlInput" placeholder="ws://127.0.0.1:3667" autofocus value="ws://127.0.0.1:3667" style="width: 20em!important;">
+        <button id="openBtn" class="btn btn-success">Open</button>
+        <button id="closeBtn" class="btn btn-danger">Close</button>
+    </div>
+    <pre id="msgPre" style="width: 100%"></pre>
+</div>
+</body>
+</html>

@@ -19,6 +19,7 @@ from cli import init_cli
 app = create_app(os.getenv('APP_CONFIG', 'default'))
 
 # 初始化命令行
+
 init_cli(app)
 # shell工具
 # from shell import init_shell

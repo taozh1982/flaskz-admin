@@ -1,15 +1,12 @@
-import os
-
 from flask import Flask, session
 from flask_login import LoginManager
 from flaskz import log, models
 from flaskz.rest import ModelRestManager
 
 from config import config
-from . import sys_mgmt
-from .api import api_bp as api_blueprint
-from .main import main_bp as main_blueprint
-from .sys_mgmt import sys_mgmt_bp as sys_mgmt_blueprint, auth
+
+from . import sys_mgmt, main, api, redis_ws
+from .sys_mgmt import auth
 
 login_manager = LoginManager()
 login_manager.user_loader(auth.load_user_by_id)
@@ -30,6 +27,9 @@ def create_app(config_name):
     app.config.from_object(app_config)
     app_config.init_app(app)
 
+    # CORS(app) # 跨域支持, 按需使用
+    redis_ws.init_websocket(app)  # 初始化redis+websocket广播消息, 按需使用
+
     # 初始化
     log.init_log(app)
     log.flaskz_logger.info('-- start application with %s config --' % config_name)
@@ -38,9 +38,10 @@ def create_app(config_name):
     model_rest_manager.init_app(app)
 
     # 注册api
-    app.register_blueprint(main_blueprint, url_prefix='/')
-    app.register_blueprint(api_blueprint, url_prefix='/api/v1.0')
-    app.register_blueprint(sys_mgmt_blueprint, url_prefix='/sys_mgmt')
+    main.init_app(app)
+    app.register_blueprint(main.main_bp, url_prefix='/')
+    app.register_blueprint(api.api_bp, url_prefix='/api/v1.0')
+    app.register_blueprint(sys_mgmt.sys_mgmt_bp, url_prefix='/sys_mgmt')
 
     @app.before_request
     def before_request():
