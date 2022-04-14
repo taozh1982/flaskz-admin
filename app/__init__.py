@@ -28,7 +28,7 @@ def create_app(config_name):
     app_config.init_app(app)
 
     # CORS(app) # 跨域支持, 按需使用
-    redis_ws.init_websocket(app)  # 初始化redis+websocket广播消息, 按需使用
+    # redis_ws.init_websocket(app)  # 初始化redis+websocket广播消息, 按需使用
 
     # 初始化
     log.init_log(app)
