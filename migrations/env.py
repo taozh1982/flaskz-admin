@@ -24,7 +24,8 @@ import sys
 sys.path.append(os.getcwd())
 
 # migrations/venv.py
-from app.modules import ModelBase # 从app.modules导入ModelBase，而不是从flaskz.models导入
+from app.modules import ModelBase  # 从app.modules导入ModelBase，而不是从flaskz.models导入
+
 target_metadata = ModelBase.metadata
 
 # other values from the config, defined by the needs of env.py,
@@ -68,6 +69,7 @@ def run_migrations_offline():
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        render_as_batch=True
     )
 
     with context.begin_transaction():
@@ -90,7 +92,8 @@ def run_migrations_online():
     with connectable.connect() as connection:
         context.configure(
             connection=connection, target_metadata=target_metadata,
-            include_object=include_object
+            include_object=include_object,
+            render_as_batch=True
         )
 
         with context.begin_transaction():

@@ -43,13 +43,13 @@ z.setDefault({
     FORM_VALIDATE_MESSAGE_CLASS: "invalid-feedback",
 
     PRO_GRID_OPERATE_UPDATE_LABEL: "<i class='fa fa-edit'></i>编辑",
-    PRO_GRID_OPERATE_UPDATE_CLASS: "btn btn-link text-primary",
+    PRO_GRID_OPERATE_UPDATE_CLASS: "btn btn-link color-primary",
     PRO_GRID_OPERATE_DELETE_LABEL: "<i class='fa fa-trash-o'></i>删除",
-    PRO_GRID_OPERATE_DELETE_CLASS: "btn btn-link text-danger",
+    PRO_GRID_OPERATE_DELETE_CLASS: "btn btn-link color-danger",
 
     PRO_AJAX_NOTIFY_OPTIONS: {position: "bottom_right"},
 
-    PRO_MESSAGE_DELETE_CONFIRM: "<i class='fa fa-warning text-warning'></i> 确认删除?",
+    PRO_MESSAGE_DELETE_CONFIRM: "<i class='fa fa-warning color-warning'></i> 确认删除?",
 
     PRO_MODAL_UPDATE_TITLE: "<i class='fa fa-edit'></i> 编辑",
     PRO_MODAL_ADD_TITLE: "<i class='fa fa-plus-square'></i> 添加",

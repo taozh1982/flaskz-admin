@@ -1,21 +1,10 @@
 from flask import Flask, session
-from flask_login import LoginManager
 from flaskz import log, models
-from flaskz.rest import ModelRestManager
+from flaskz.utils import get_app_path
 
 from config import config
-
-from . import sys_mgmt, main, api, redis_ws
+from . import sys_mgmt, main, api, sys_init
 from .sys_mgmt import auth
-
-login_manager = LoginManager()
-login_manager.user_loader(auth.load_user_by_id)
-login_manager.request_loader(auth.load_user_by_token)
-
-model_rest_manager = ModelRestManager()
-model_rest_manager.login_check(auth.login_check)
-model_rest_manager.permission_check(auth.permission_check)
-model_rest_manager.logging(sys_mgmt.log_operation)
 
 
 def create_app(config_name):
@@ -26,16 +15,19 @@ def create_app(config_name):
     app_config = config[config_name]
     app.config.from_object(app_config)
     app_config.init_app(app)
+    sys_init.init_app(app)  # 系统初始化，中文message
 
-    # CORS(app) # 跨域支持, 按需使用
+    # CORS(app) # 跨域支持, 按需使用 pip install cors
     # redis_ws.init_websocket(app)  # 初始化redis+websocket广播消息, 按需使用
 
     # 初始化
     log.init_log(app)
     log.flaskz_logger.info('-- start application with %s config --' % config_name)
-    login_manager.init_app(app)
     models.init_model(app)
-    model_rest_manager.init_app(app)
+
+    _init_login(app)
+    _init_model_rest(app)
+    _init_license(app)
 
     # 注册api
     main.init_app(app)
@@ -48,9 +40,35 @@ def create_app(config_name):
         # refresh session life time and update client cookie,
         # if use session to store user information, please set it before every request.
         session.permanent = True
-        # 资源相关不过滤js/css/html
-        # 登录不过滤
-        # api请求过滤，跳转到license页面进行上传操作
-        # print(request)
 
     return app
+
+
+def _init_login(app):
+    """初始化login模块，按需使用"""
+    from flask_login import LoginManager
+    login_manager = LoginManager()
+    login_manager.user_loader(auth.load_user_by_id)
+    login_manager.request_loader(auth.load_user_by_token)
+    login_manager.init_app(app)
+
+
+def _init_model_rest(app):
+    """初始化model rest模块，按需使用"""
+    from flaskz.rest import ModelRestManager
+    model_rest_manager = ModelRestManager()
+    model_rest_manager.login_check(auth.login_check)
+    model_rest_manager.permission_check(auth.permission_check)
+    model_rest_manager.logging(sys_mgmt.log_operation)
+    model_rest_manager.init_app(app)
+
+
+def _init_license(app):
+    """初始化license模块，按需使用"""
+    from .sys_mgmt.license import LicenseManager
+    license_manager = LicenseManager()
+    license_manager.load_license(sys_mgmt.load_license)
+    license_manager.request_check(sys_mgmt.request_check_by_license)
+    with open(get_app_path("_license/public.key"), "r") as f:
+        public_key = f.read()
+        license_manager.init_app(app, public_key)

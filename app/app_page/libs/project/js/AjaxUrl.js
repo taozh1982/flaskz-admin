@@ -21,6 +21,10 @@ var AjaxUrl = {
         delete: "/sys_mgmt/user/[id]",
         update: "/sys_mgmt/user/"
     },
+    sys_license: {
+        query: "/sys_mgmt/license/",
+        add: {url: "/sys_mgmt/license/", method: "POST"}
+    },
     sys_op_log: {
         query: {url: "/sys_mgmt/op_log/query_pss/", method: "POST"},
         menu: "/sys_mgmt/op_log/menu/"

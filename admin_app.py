@@ -24,3 +24,9 @@ init_cli(app)
 # shell工具
 # from shell import init_shell
 # init_shell(app)
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=666, debug=True, threaded=False)
+
+__version__ = 'v0.9'

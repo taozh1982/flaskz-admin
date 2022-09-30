@@ -4,7 +4,7 @@
 """
 # static page route
 
-from flask import Blueprint
+from flask import Blueprint, Flask
 
 from werkzeug.routing import BaseConverter
 
@@ -14,6 +14,8 @@ main_bp = Blueprint('main', __name__, static_folder='../app_page', static_url_pa
 
 from . import errors
 from . import page
+
+APP_UPLOAD_FILE_ALLOWED_EXTENSIONS = {}
 
 
 def init_app(app):
@@ -31,3 +33,19 @@ def init_app(app):
             self.regex = regex
 
     app.url_map.converters['regex'] = RegexConverter
+
+    if isinstance(app, Flask):
+        app_config = app.config
+    else:
+        app_config = app
+    global APP_UPLOAD_FILE_ALLOWED_EXTENSIONS
+    APP_UPLOAD_FILE_ALLOWED_EXTENSIONS = app_config.get('APP_UPLOAD_FILE_ALLOWED_EXTENSIONS', set())
+
+
+def allowed_file(file):
+    if type(file) is str:
+        filename = file
+    else:
+        filename = file.filename
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in APP_UPLOAD_FILE_ALLOWED_EXTENSIONS

@@ -236,9 +236,15 @@ class User(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
 
     @classmethod
     def check_delete_data(cls, pk_value):
-        if current_user.id == int(pk_value):  # disable delete self
+        if current_user.id == int(pk_value):  # forbid to delete current user
             return res_status_codes.db_data_in_use
         return super().check_delete_data(pk_value)
+
+    @classmethod
+    def check_update_data(cls, data):
+        if current_user.id == int(data.get('id')) and data.get('status') != 'enable':  # forbid to disable current user
+            return res_status_codes.db_data_in_use
+        return super().check_update_data(data)
 
     def can(self, module, op_permission):  # permission check
         return self.role.has_menu_permission(module, op_permission)
@@ -277,6 +283,30 @@ class OPLog(ModelBase, ModelMixin):
         :return:
         """
         return desc(cls.created_at)
+
+
+class License(ModelBase, ModelMixin):
+    __tablename__ = 'sys_licenses'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    license = Column(Text(), unique=True, nullable=False)
+
+    user = Column(String(255))
+    type = Column(String(32))
+    start_date = Column(String(255))
+    end_date = Column(String(255))
+
+    created_user = Column(String(32))
+    description = Column(Text())
+    created_at = Column(DateTime(), default=datetime.now)
+
+    def to_dict(*args, **kwargs):
+        result = super(License, args[0]).to_dict(**kwargs)
+        licenses = result.get("license").split("Signature=")
+        if len(licenses) > 1:
+            result['license'] = licenses[0]
+            result['Signature'] = licenses[1]
+        return result
 
 
 def _get_app_cache_menus():

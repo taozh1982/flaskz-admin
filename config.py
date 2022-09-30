@@ -24,6 +24,9 @@ class Config:
     # 采用token管理用户登录时，token的过期时间
     APP_TOKEN_EXPIRES_IN = int(timedelta(hours=16).total_seconds())
 
+    # APP_UPLOAD_FOLDER = 'uploads'
+    APP_UPLOAD_FILE_ALLOWED_EXTENSIONS = {'txt', 'dat', 'xlsx', 'xls', 'csv', 'xml', 'json', 'yaml'}
+
     # 数据库相关配置，请参考 -http://zhangyiheng.com/blog/articles/py_flaskz_model_init.html
     FLASKZ_DATABASE_URI = None
     FLASKZ_DATABASE_ECHO = False
@@ -65,8 +68,8 @@ class DevelopmentConfig(Config):
     """
     SEND_FILE_MAX_AGE_DEFAULT = 0
     # FLASKZ_LOGGER_FILENAME = 'syslog.txt'
-    REDIS_URL = 'redis://localhost'
-    FLASKZ_DATABASE_URI = 'sqlite:///./_sqlite/flaskz-admin.db'
+    # REDIS_URL = 'redis://localhost'
+    FLASKZ_DATABASE_URI = os.environ.get('FLASKZ_DEV_DATABASE_URI') or'sqlite:///./_sqlite/flaskz-admin.db?check_same_thread=False'
     # '/Users/taozh/Codes/PY/flaskz-admin/_sqlite/flaskz-admin.db'
 
 
@@ -75,7 +78,7 @@ class TestConfig(Config):
     测试环境相关配置
     """
     SEND_FILE_MAX_AGE_DEFAULT = 0  # no cache
-    FLASKZ_DATABASE_URI = os.environ.get('FLASKZ_TEST_DATABASE_URI') or 'sqlite:///D:/PyDev/WorkSpace/flasky/_sqlite/flasky_test.db'  # sqlite memory database
+    FLASKZ_DATABASE_URI = os.environ.get('FLASKZ_TEST_DATABASE_URI') or 'sqlite:///./_sqlite/flaskz-admin-test.db?check_same_thread=False'
 
 
 class ProductionConfig(Config):

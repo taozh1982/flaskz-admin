@@ -1,4 +1,4 @@
-/*! Focus Pro v2.1 | http://focus-ui.com/ | 2022-04-07 */
+/*! Focus Pro v2.3.0 | http://focus-ui.com/ | 2022-10-01 */
 (function(window, undefined) {
     z.setDefault({
         PRO_GRID_OPERATE_CLASS: "btn btn-link",
@@ -72,6 +72,64 @@
     var $Util = {
         runCode: function(code, vars, var_regex) {
             return z.util.exec(code, vars, var_regex);
+        }
+    };
+    var $DomUtil = {
+        createTableHTML: function(values, columns, attributes, inner) {
+            var tt = "";
+            if (z.type.isArray(values) && z.type.isArray(columns)) {
+                var thead = "<tr>";
+                var fields = [];
+                columns.forEach(function(col) {
+                    fields.push(col.field || col.key);
+                    var name = col.title || col.name || col.label;
+                    if (name == null) {
+                        name = "";
+                    }
+                    thead += "<th " + (col.attributes || "") + ">" + name + "</th>";
+                });
+                thead += "</tr>";
+                tt += thead;
+                var tbody = "";
+                var colCount = fields.length;
+                values.forEach(function(rowData) {
+                    var tr = "<tr>";
+                    var tdList = [];
+                    fields.forEach(function(field) {
+                        var value = "";
+                        if (field) {
+                            value = rowData[field];
+                            if (value == null) {
+                                value = "";
+                            }
+                        }
+                        tdList.push("<td>" + value + "</td>");
+                    });
+                    var span = rowData.span;
+                    if (span > 0 && span <= colCount) {
+                        tdList = tdList.splice(0, colCount - span + 1);
+                        var lastTD = tdList.pop();
+                        lastTD = lastTD.replace("<td>", "<td colspan='" + span + "'>");
+                        tdList.push(lastTD);
+                    }
+                    tr += tdList.join("");
+                    tr += "</tr>";
+                    tbody += tr;
+                });
+                tt += tbody;
+            }
+            if (z.type.isObject(values)) {
+                z.util.eachObject(values, function(key, value) {
+                    if (value == null) {
+                        value = "";
+                    }
+                    tt += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
+                });
+            }
+            if (inner === true) {
+                return tt;
+            }
+            return "<table " + (attributes || "") + ">" + tt + "</table>";
         }
     };
     var $FormUtil = {
@@ -768,7 +826,7 @@
                     formData.append(filename + "_" + i, files[i]);
                 }
             }
-            return $AjaxCRUD.ajax($AjaxCRUD._getOption(options, {
+            return $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, {
                 method: z.getDefault("PRO_AJAX_UPLOAD_METHOD"),
                 tips: z.getDefault("PRO_AJAX_UPLOAD_TIPS"),
                 data: formData,
@@ -812,18 +870,18 @@
         }
     };
     var $TimeUtil = {
-        format: function(dateTime, strFormat) {
+        format: function(dateTime, outputFormat, dateFormat) {
             if (dateTime == null) {
                 return "";
             }
             if (!(dateTime instanceof Date)) {
-                dateTime = $TimeUtil._getDate(dateTime);
+                dateTime = $TimeUtil._getDate(dateTime, dateFormat);
             }
             if (!(dateTime instanceof Date) || isNaN(dateTime.getTime())) {
                 return "";
             }
-            if (strFormat == null) {
-                strFormat = z.getDefault("PRO_TIME_FORMAT");
+            if (outputFormat == null) {
+                outputFormat = z.getDefault("PRO_TIME_FORMAT");
             }
             var aDays = z.getDefault("PRO_TIME_WEEKS"), aMonths = z.getDefault("PRO_TIME_MONTHS");
             var nDay = dateTime.getDay(), nDate = dateTime.getDate(), nMonth = dateTime.getMonth(), nYear = dateTime.getFullYear(), nHour = dateTime.getHours(), aDayCount = [ 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 ], isLeapYear = function() {
@@ -836,7 +894,7 @@
             }, zeroPad = function(nNum, nPad) {
                 return ("" + (Math.pow(10, nPad) + nNum)).slice(1);
             };
-            return strFormat.replace(/%[a-z]/gi, function(sMatch) {
+            return outputFormat.replace(/%[a-z]/gi, function(sMatch) {
                 return {
                     "%a": aDays[nDay].slice(0, 3),
                     "%A": aDays[nDay],
@@ -890,15 +948,18 @@
             }
             return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), date.getUTCMilliseconds());
         },
-        _getDate: function(dateTime) {
+        _getDate: function(dateTime, dateFormat) {
             if (dateTime != null) {
                 if (z.type.isString(dateTime)) {
-                    dateTime = dateTime.replace(/-/g, "/");
-                    if (dateTime.endsWith("GMT")) {
-                        dateTime = $TimeUtil.utcToLocal(dateTime);
+                    if (dateFormat) {
+                        dateTime = $TimeUtil.parse(dateTime, dateFormat);
                     } else {
-                        dateTime = dateTime.replace("T", " ");
-                        dateTime = new Date(dateTime);
+                        if (dateTime.endsWith("GMT")) {
+                            dateTime = $TimeUtil.utcToLocal(dateTime);
+                        } else {
+                            dateTime = dateTime.replace("T", " ");
+                            dateTime = new Date(dateTime);
+                        }
                     }
                 } else if (z.type.isNumber(dateTime)) {
                     dateTime = new Date(dateTime);
@@ -910,6 +971,118 @@
             return null;
         }
     };
+    z.util.mergeObject({
+        _parseFormat: {
+            "%": [ "%", function() {} ],
+            a: [ "[a-z]+", function(matched) {} ],
+            A: [ "[a-z]+", function(matched) {} ],
+            b: [ "[a-z]+", function(matched) {
+                this.setUTCMonth($TimeUtil._parseMonthMap[matched]);
+            } ],
+            B: [ "[a-z]+", function(matched) {
+                this.setUTCMonth($TimeUtil._parseMonthMap[matched.slice(0, 3)]);
+            } ],
+            Y: [ "[0-9]{4}", function(matched) {
+                this.setUTCFullYear(+matched);
+            } ],
+            m: [ "[0-9]{0,2}", function(matched) {
+                this.setUTCMonth(+matched - 1);
+            } ],
+            d: [ "[0-9]{0,2}", function(matched) {
+                this.utcDay = +matched;
+            } ],
+            H: [ "[0-9]{0,2}", function(matched) {
+                this.setUTCHours(+matched);
+            } ],
+            M: [ "[0-9]{0,2}", function(matched) {
+                this.setUTCMinutes(+matched);
+            } ],
+            S: [ "[0-9]{0,2}", function(matched) {
+                this.setUTCSeconds(+matched);
+            } ],
+            s: [ "[0-9]+", function(matched) {
+                this.setUTCMilliseconds(+matched);
+            } ],
+            z: [ "[+-][0-9]{4}", function(matched) {
+                this.timezone = +matched.slice(0, 3) * (60 * 60) + +matched.slice(3, 5) * 60;
+            } ],
+            Z: [ "UTC|Z|[+-][0-9][0-9]:?[0-9][0-9]", function(matched) {
+                if (matched === "Z") {
+                    return;
+                }
+                if (matched === "UTC") {
+                    return;
+                }
+                matched = matched.replace(/:/, "");
+                this.timezone = +matched.slice(0, 3) * (60 * 60) + +matched.slice(3, 5) * 60;
+            } ],
+            I: [ "[0-9]{0,2}", function(matched) {
+                this.setUTCHours(+matched);
+            } ],
+            p: [ "AM|PM", function(matched) {
+                this.AMPM = matched;
+            } ]
+        },
+        _parseMonthMap: {
+            Jan: 0,
+            Feb: 1,
+            Mar: 2,
+            Apr: 3,
+            May: 4,
+            Jun: 5,
+            Jul: 6,
+            Aug: 7,
+            Sep: 8,
+            Oct: 9,
+            Nov: 10,
+            Dec: 11
+        },
+        parse: function(str, format) {
+            if (!format) {
+                return null;
+            }
+            var ff = [];
+            var null_fd = false;
+            var re = new RegExp(format.replace(/%(?:([a-zA-Z%])|('[^']+')|("[^"]+"))/g, function(_, a, b, c) {
+                var fd = a || b || c;
+                var d = $TimeUtil._parseFormat[fd];
+                if (!d) {
+                    null_fd = true;
+                } else {
+                    ff.push(d[1]);
+                    return "(" + d[0] + ")";
+                }
+            }), "i");
+            if (null_fd === true) {
+                return null;
+            }
+            var matched = str.match(re);
+            if (!matched) {
+                return null;
+            }
+            var date = new Date(0);
+            for (var i = 0, len = ff.length; i < len; i++) {
+                var fun = ff[i];
+                if (!fun) continue;
+                fun.call(date, matched[i + 1]);
+            }
+            if (date.utcDay) {
+                date.setUTCDate(date.utcDay);
+            }
+            if (date.timezone) {
+                date = new Date(date.getTime() - date.timezone * 1e3);
+            }
+            if (date.AMPM) {
+                if (date.getUTCHours() === 12) {
+                    date.setUTCHours(date.getUTCHours() - 12);
+                }
+                if (date.AMPM === "PM") {
+                    date.setUTCHours(date.getUTCHours() + 12);
+                }
+            }
+            return date;
+        }
+    });
     var $DataUtil = {
         parseLevelData: function(levelData, options) {
             options = z.util.mergeObject({
@@ -1468,6 +1641,9 @@
             this.onShowFormModal(editType, value);
             z.widget.modal(this.page_options.modal_form, this.page_options.modal_options);
         },
+        closeFormModal: function() {
+            z.widget.modal(this.page_options.modal_form, false);
+        },
         setFormValue: function(value) {
             this.form.setValue(value);
         },
@@ -1502,7 +1678,7 @@
                 url_params: value,
                 data: value,
                 success: function(result) {
-                    this.updateGridData(result, result.data);
+                    this.updateGridData(result, result.data, value);
                     this._onModelUpdate(value, result.data);
                     z.widget.modal(this.page_options.modal_form, false);
                 },
@@ -1518,35 +1694,42 @@
         _onModelUpdate: function(value, resultData) {
             this.onModelChange("update", resultData);
         },
-        handleModelDelete: function(modelDataArr) {
+        handleModelDelete: function(modelDataArr, confirm) {
             if (modelDataArr.length === 0) {
                 return;
             }
             var _this = this;
-            z.widget.confirm(z.getDefault("PRO_MESSAGE_DELETE_CONFIRM"), z.getDefault("PRO_MESSAGE_TIPS"), function(result) {
-                if (result) {
-                    var ids = [];
-                    modelDataArr.forEach(function(item) {
-                        ids.push(item.get("id"));
-                    });
-                    $AjaxCRUD.delete({
-                        url: _this.page_options.url.delete || _this.page_options.url.remove,
-                        url_params: {
-                            id: ids
-                        },
-                        data: _this.getModelDeleteData(modelDataArr),
-                        success: function(result) {
-                            _this.grid.removeData(modelDataArr);
-                            _this._onModelDelete(modelDataArr);
-                        }
-                    });
-                }
-            }, {
-                confirm_class: z.getDefault("PRO_MODAL_CONFIRM_CLASS"),
-                cancel_class: z.getDefault("PRO_MODAL_CANCEL_CLASS"),
-                confirm_text: z.getDefault("PRO_MODAL_CONFIRM_TEXT"),
-                cancel_text: z.getDefault("PRO_MODAL_CANCEL_TEXT")
-            });
+            var ajaxDelete = function() {
+                var ids = [];
+                modelDataArr.forEach(function(item) {
+                    ids.push(item.get("id"));
+                });
+                $AjaxCRUD.delete({
+                    url: _this.page_options.url.delete || _this.page_options.url.remove,
+                    url_params: {
+                        id: ids
+                    },
+                    data: _this.getModelDeleteData(modelDataArr),
+                    success: function(result) {
+                        _this.grid.removeData(modelDataArr);
+                        _this._onModelDelete(modelDataArr);
+                    }
+                });
+            };
+            if (confirm === false) {
+                ajaxDelete();
+            } else {
+                z.widget.confirm(z.getDefault("PRO_MESSAGE_DELETE_CONFIRM"), z.getDefault("PRO_MESSAGE_TIPS"), function(result) {
+                    if (result) {
+                        ajaxDelete();
+                    }
+                }, {
+                    confirm_class: z.getDefault("PRO_MODAL_CONFIRM_CLASS"),
+                    cancel_class: z.getDefault("PRO_MODAL_CANCEL_CLASS"),
+                    confirm_text: z.getDefault("PRO_MODAL_CONFIRM_TEXT"),
+                    cancel_text: z.getDefault("PRO_MODAL_CANCEL_TEXT")
+                });
+            }
         },
         _onModelDelete: function(modelDataArr) {
             this.setPageTotal(-modelDataArr.length);
@@ -1802,12 +1985,16 @@
                     return;
                 }
                 var editType = this[itfKeyMap.$_crud_edit_type];
+                if (this[itfKeyMap.handle$ModelOK](editType, value) === false) {
+                    return;
+                }
                 if (editType === "add") {
                     this[itfKeyMap.handle$ModelAdd](value);
                 } else if (editType === "update") {
                     this[itfKeyMap.handle$ModelUpdate](value);
                 }
-            }
+            },
+            handle$ModelOK: function(editType, value) {}
         }, {
             get$Form: function() {
                 return this[itfKeyMap.$crudForm];
@@ -1919,28 +2106,35 @@
                     }
                 }
             },
-            handle$ModelDelete: function(modelDataArr) {
+            handle$ModelDelete: function(modelDataArr, confirm) {
                 if (modelDataArr.length === 0) {
                     return;
                 }
                 var _this = this;
+                var modelDelete = function() {
+                    var ids = [];
+                    modelDataArr.forEach(function(item) {
+                        ids.push(item.get("id"));
+                    });
+                    $AjaxCRUD.delete({
+                        url: _this[itfKeyMap._get$URL]("delete", "remove"),
+                        url_params: {
+                            id: ids
+                        },
+                        data: _this[itfKeyMap.get$ModelDeleteData](modelDataArr),
+                        success: function(resResult) {
+                            _this[itfKeyMap.on$ModelDelete](modelDataArr, resResult, resResult.data);
+                            this[itfKeyMap.on$ModelChange]("delete", modelDataArr, resResult, resResult.data);
+                        }
+                    });
+                };
+                if (confirm === false) {
+                    modelDelete();
+                    return;
+                }
                 z.widget.confirm(z.getDefault("PRO_MESSAGE_DELETE_CONFIRM"), z.getDefault("PRO_MESSAGE_TIPS"), function(result) {
                     if (result) {
-                        var ids = [];
-                        modelDataArr.forEach(function(item) {
-                            ids.push(item.get("id"));
-                        });
-                        $AjaxCRUD.delete({
-                            url: _this[itfKeyMap._get$URL]("delete", "remove"),
-                            url_params: {
-                                id: ids
-                            },
-                            data: _this[itfKeyMap.get$ModelDeleteData](modelDataArr),
-                            success: function(resResult) {
-                                _this[itfKeyMap.on$ModelDelete](modelDataArr, resResult, resResult.data);
-                                this[itfKeyMap.on$ModelChange]("delete", modelDataArr, resResult, resResult.data);
-                            }
-                        });
+                        modelDelete();
                     }
                 }, {
                     confirm_class: z.getDefault("PRO_MODAL_CONFIRM_CLASS"),
@@ -2095,19 +2289,19 @@
         _convertValue: function(value, valueType) {
             switch (valueType) {
               case "number":
-                value = parseFloat(value);
+                value = parseFloat(value) || 0;
                 break;
 
               case "int":
-                value = parseInt(value);
+                value = parseInt(value) || 0;
                 break;
 
               case "float":
-                value = parseFloat(value);
+                value = parseFloat(value) || 0;
                 break;
 
               case "range":
-                value = parseFloat(value);
+                value = parseFloat(value) || 0;
                 break;
             }
             return value;
@@ -2537,6 +2731,9 @@
                             props[key] = value;
                         }
                     });
+                    if (Object.keys(props).length === 0) {
+                        return null;
+                    }
                     return "<pre>" + JSON.stringify(props, null, "  ") + "</pre>";
                 };
             }
@@ -2570,7 +2767,7 @@
             }
         },
         _showTooltip: function(gView, data, event, option) {
-            var whole = option.whole_bounds === true;
+            var body_only = option.body_only !== false;
             var content;
             if (gView.getTooltip) {
                 content = gView.getTooltip(data, event);
@@ -2600,7 +2797,7 @@
                     tt._tooltip_data = data;
                     var bounds;
                     if (z.type.isNode(data)) {
-                        bounds = gView.getDataPageBounds(data, whole);
+                        bounds = gView.getDataPageBounds(data, body_only);
                     }
                     tt.open(bounds || event);
                 }
@@ -2617,12 +2814,42 @@
             return $GVUtil._tooltip;
         },
         getTableTooltipStr: function(values) {
-            var tt = "<table class='tooltip'>";
+            var tt = "<table class='tooltip-table'>";
             z.util.eachObject(values, function(key, value) {
                 tt += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
             });
             tt += "</table>";
             return tt;
+        }
+    });
+    z.util.mergeObject($GVUtil, {
+        getHTMLImageData: function(element, width, height) {
+            if (element == null) {
+                return null;
+            }
+            if (z.$.DomType.isElement(element)) {
+                var size = z.$.DomGeom.getElementWindowBounds(element);
+                if (width == null || width <= 0) {
+                    width = size.width;
+                }
+                if (height == null || height <= 0) {
+                    height = size.height;
+                }
+                element = element.outerHTML;
+            }
+            var xml = $GVUtil._htmlToXML(element);
+            xml = xml.replace(/\#/g, "%23");
+            return "data:image/svg+xml;charset=utf-8," + '<svg xmlns="http://www.w3.org/2000/svg" width="' + width + '" height="' + height + '">' + '<foreignObject width="100%" height="100%">' + xml + "</foreignObject>" + "</svg>";
+        },
+        _htmlToXML: function(htmlTxt) {
+            var doc = document.implementation.createHTMLDocument("");
+            doc.write(htmlTxt);
+            doc.documentElement.setAttribute("xmlns", doc.documentElement.namespaceURI);
+            z.dom.setStyle(doc.body, {
+                margin: 0
+            });
+            htmlTxt = new XMLSerializer().serializeToString(doc.body);
+            return htmlTxt;
         }
     });
     var $GVEditController = function(gView, propertySheet, options) {
@@ -2643,6 +2870,7 @@
             this._changed_value = {};
             this._is_updating = false;
             this._is_setting = false;
+            this.data_property_first = false;
             z.util.eachObject(options, function(key, value) {
                 if (z.type.isFunction(value)) {
                     this[key] = value;
@@ -2659,6 +2887,17 @@
         },
         getValue: function() {
             return z.util.mergeObject({}, this._value);
+        },
+        clearValue: function() {
+            this._value = {};
+            this.gView.update();
+        },
+        getObjectValue: function(object) {
+            return z.util.mergeObject({}, this._value[this.getEditID(object)]);
+        },
+        removeObjectValue: function(object) {
+            delete this._value[this.getEditID(object)];
+            this.gView.update();
         },
         setValue: function(value) {
             this._is_setting = true;
@@ -2709,7 +2948,14 @@
                 }
                 var viewValue = _this.getObjectEditValue(gView, _this._getObjectEditValue(gView), data);
                 var dataValue = _this.getObjectEditValue(data, _this._getObjectEditValue(data), data);
-                return z.util.mergeObject({}, viewValue, dataValue || {}, getDataProperties.apply(gView, arguments));
+                var props = z.util.mergeObject({}, viewValue, dataValue || {}, getDataProperties.apply(gView, arguments));
+                if (_this.data_property_first === true) {
+                    var dataProps = data.gets(false);
+                    props = z.util.filterObject(props, function(key, value) {
+                        return !dataProps.hasOwnProperty(key);
+                    });
+                }
+                return props;
             };
             gView.getProperty = function(key) {
                 var objectValue = _this.getObjectEditValue(gView, _this._getObjectEditValue(gView));
@@ -2740,6 +2986,7 @@
             gView.onSelectBatchChange(function() {
                 _this._setCurrentEditObject(gView.getLastSelected() || gView);
             });
+            _this._setCurrentEditObject(gView.getLastSelected() || gView);
             var propertySheet = this.getPropertySheet();
             if (!propertySheet) {
                 return;
@@ -2758,11 +3005,14 @@
             }
             var newType = this.getEditType(currentObject);
             this._current.obj = currentObject;
+            var propertySheet = this.getPropertySheet();
+            if (propertySheet) {
+                propertySheet.edit_object = currentObject;
+            }
             if (this._current.type !== newType) {
                 this._current.type = newType;
                 var newSheetProps = this.getEditProperties(newType, currentObject);
                 this._current.props = newSheetProps;
-                var propertySheet = this.getPropertySheet();
                 if (propertySheet) {
                     propertySheet.setProperties(newSheetProps);
                     propertySheet.expand(propertySheet.getRootDataArray());
@@ -2800,6 +3050,7 @@
             this.onValueChange(object, evt);
             if (z.type.isNode(object)) {
                 if (property === "x" || property === "y") {
+                    newValue = parseFloat(newValue) || 0;
                     object.set(property, newValue);
                 } else if (property === "image") {
                     if (isNull) {
@@ -2860,7 +3111,14 @@
                 if (property) {
                     if (objectEditValue.hasOwnProperty(property)) {
                         values[property] = objectEditValue[property];
-                    } else {}
+                    } else {
+                        var currentObj = this._current.obj;
+                        if (z.type.isData(currentObj)) {
+                            values[property] = this.getGView().getDataViewProperty(currentObj, property);
+                        } else if (z.type.isView(currentObj)) {
+                            values[property] = currentObj.get(property);
+                        }
+                    }
                 }
                 var children = item.children;
                 if (children) {
@@ -2894,7 +3152,7 @@
                 return "view";
             }
         },
-        getEditProperties: function(data, type) {},
+        getEditProperties: function(type, data) {},
         getPropertiesOfData: function(data, type) {
             if (z.type.isNode(data)) {
                 return {
@@ -3458,11 +3716,13 @@
     };
     var pro = {
         Util: $Util,
+        DomUtil: $DomUtil,
         AjaxCRUD: $AjaxCRUD,
         AjaxCache: $AjaxCache,
         FileUtil: $FileUtil,
         GridUtil: $GridUtil,
         ModalUtil: $ModalUtil,
+        AccessControl: $AccessControl,
         FormUtil: $FormUtil,
         TimeUtil: $TimeUtil,
         DataUtil: $DataUtil,
@@ -3470,7 +3730,6 @@
         NetworkUtil: $NetworkUtil,
         SheetUtil: $SheetUtil,
         VisibleUtil: $VisibleUtil,
-        AccessControl: $AccessControl,
         PropertySheet: $PropertySheet,
         template: {
             CRUDTablePage: $CRUDTablePage,

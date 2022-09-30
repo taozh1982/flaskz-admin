@@ -11,6 +11,7 @@ page_mapping = {
     'role': './modules/sys_mgmt/role/role.html',
     'user': './modules/sys_mgmt/user/user.html',
     'op_log': './modules/sys_mgmt/op_log/op_log.html',
+    'license': './modules/sys_mgmt/license/license.html',
 
     'template': './modules/template/template/template.html',
 

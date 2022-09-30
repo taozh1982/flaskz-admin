@@ -5,14 +5,20 @@ from flask_login import login_user, logout_user, current_user
 from flaskz.log import flaskz_logger, get_log_data
 from flaskz.models import model_to_dict, query_multiple_model
 from flaskz.rest import get_rest_log_msg, rest_login_required, init_model_rest_blueprint, rest_permission_required
-from flaskz.utils import create_response, get_wrap_str
+from flaskz.utils import create_response, get_wrap_str, get_app_path, find_list, get_dict_mapping
 
 from . import sys_mgmt_bp, log_operation
 from .auth import generate_token
-from .model import User, Role, Menu, RoleMenu, OPLog
+from .license.util import parse_license
+from .model import User, Role, Menu, RoleMenu, OPLog, License
+from ..main import allowed_file
+from ..sys_init import status_codes
+from ..utils import get_app_license
 
 
 # -------------------------------------------auth-------------------------------------------
+
+
 @sys_mgmt_bp.route('/auth/login/', methods=['POST'])
 def sys_auth_login():
     """
@@ -77,9 +83,9 @@ def sys_auth_account_query():
         return abort(401, response='forbidden')
         # return create_response(False, app_status_codes.uri_unauthorized)
 
-    menus = model_to_dict(role.get_menus())
+    role_menus = model_to_dict(role.get_menus())
     menu_map = {}
-    for item in menus:
+    for item in role_menus:
         item['op_permissions'] = []
         menu_map[item.get('id')] = item
 
@@ -92,8 +98,31 @@ def sys_auth_account_query():
     del profile['role_id']
     res_data = {
         'profile': profile,
-        'menus': menus
+        'menus': role_menus
     }
+    current_license = get_app_license()
+    if current_license:
+        res_data['license'] = {
+            'User': current_license.get('User'),
+            'Type': current_license.get('Type'),
+            'StartDate': current_license.get('StartDate'),
+            'EndDate': current_license.get('EndDate'),
+            'ExpireDays': current_license.get('ExpireDays', 0)
+        }
+    else:
+        no_license_menus = []
+        license_menu = find_list(role_menus, lambda menu: menu.get('path') == 'license')
+        if license_menu:
+            menu_id_map = get_dict_mapping(role_menus)
+            parent_id = license_menu.get('parent_id')
+            while parent_id:
+                parent_menu = menu_id_map.get(parent_id)
+                parent_id = None
+                if parent_menu:
+                    no_license_menus.append(parent_menu)
+                    parent_id = parent_menu.get('parent_id')
+            no_license_menus.append(license_menu)
+        res_data['menus'] = no_license_menus
 
     flaskz_logger.debug(get_rest_log_msg('Query the account profile and menus', None, True, res_data))
     return create_response(True, res_data)
@@ -248,6 +277,59 @@ def sys_role_menu_query():
 
 
 init_model_rest_blueprint(OPLog, sys_mgmt_bp, '/op_log', 'op_log', routers=['query_pss'])
+
+
+# -------------------------------------------license-------------------------------------------
+@sys_mgmt_bp.route('/license/', methods=['POST'])
+@rest_permission_required('license')
+def sys_license_upload():
+    file = request.files.get('file')
+    license_txt = ''
+    if file is None or file.filename == '':
+        success = False
+        res_data = 'License file not exist'
+    else:
+        if allowed_file(file):
+            license_txt = file.stream.read().decode("utf-8")
+            with open(get_app_path("_license/public.key"), "r") as f:
+                public_key = f.read()
+            license_result = parse_license(public_key, license_txt)
+            if license_result is False:
+                success, res_data = False, status_codes.license_parse_error
+            else:
+                success, res_data = License.add({
+                    'license': license_txt,
+                    'user': license_result.get('User'),
+                    'type': license_result.get('Type'),
+                    'start_date': license_result.get('StartDate'),
+                    'end_date': license_result.get('EndDate'),
+                })
+                res_data = model_to_dict(res_data)
+        else:
+            success, res_data = False, status_codes.file_format_not_allowed
+    log_operation('license', 'add', success, license_txt, get_log_data(res_data))
+    return create_response(success, res_data)
+
+
+@sys_mgmt_bp.route('/license/', methods=['GET'])
+@rest_permission_required('license')
+def license_query():
+    """
+    Query the role list and the full menu list with operation permissions
+    :return:
+    """
+    result = License.query_all()
+    success = result[0]
+    res_data = model_to_dict(result[1])
+
+    current_license = get_app_license()
+    for data in res_data:
+        signature = data.pop('Signature')
+        if current_license and signature == current_license.get('Signature'):
+            data['in_use'] = True
+
+    flaskz_logger.debug(get_rest_log_msg('Query license', None, success, res_data))
+    return create_response(success, res_data)
 
 
 # -------------------------------------------monitor-------------------------------------------

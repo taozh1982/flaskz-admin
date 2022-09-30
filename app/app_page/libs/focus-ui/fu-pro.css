@@ -1,4 +1,4 @@
-/*! Focus Pro v2.1 | http://focus-ui.com/ | 2022-04-07 */
+/*! Focus Pro v2.3.0 | http://focus-ui.com/ | 2022-10-01 */
 /*
 轻量级style
 ref: pure+bootstrap
@@ -6,24 +6,24 @@ ref: pure+bootstrap
 
 */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 7px;
 }
 ::-webkit-scrollbar:horizontal {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  border-radius: 3px;
-  background-color: #efefef;
+  border-radius: 7px;
+  background-color: #f6f6f6;
 }
 ::-webkit-scrollbar-track:hover {
-  background-color: #e0e0e0;
+  background-color: #e7e7e7;
 }
 ::-webkit-scrollbar-thumb {
-  border-radius: 3px;
-  background-color: #bcbcbc;
+  border-radius: 7px;
+  background-color: #ababab;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #939393;
+  background-color: #787878;
 }
 @-moz-document url-prefix() {
   * {

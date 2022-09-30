@@ -2,29 +2,31 @@ from flaskz.models import db_session
 
 from app.sys_mgmt.model import OPPermission, Menu, Role, User
 
-# 权限列表
+# Permission List
 _sys_op_permissions = [
-    {'permission': 'add', 'label': '添加', },
-    {'permission': 'update', 'label': '修改', },
-    {'permission': 'delete', 'label': '删除', }]
+    {'permission': 'add', 'label': 'Add', },
+    {'permission': 'update', 'label': 'Update', },
+    {'permission': 'delete', 'label': 'Delete', }]
 
-# 菜单列表
+# Menu List
 _sys_menus = [
-    {'id': 100, 'name': '菜单1'},
-    {'id': 101, 'parent_id': 100, 'name': '模板', 'path': 'template'},
-    {'id': 102, 'parent_id': 100, 'name': '菜单1-2', 'path': 'menu12'},
-    {'id': 103, 'parent_id': 100, 'name': '菜单1_3', 'path': 'menu13'},
-    {'id': 200, 'name': '菜单2'},
-    {'id': 201, 'parent_id': 200, 'name': '菜单2_1', 'path': 'menu21'},
-    {'id': 202, 'parent_id': 200, 'name': '菜单2_2', 'path': 'menu22'},
-    {'id': 900, 'name': '系统管理'},
-    {'id': 901, 'parent_id': 900, 'name': '用户列表', 'path': 'user'},
-    {'id': 902, 'parent_id': 900, 'name': '角色管理', 'path': 'role'},
-    {'id': 903, 'parent_id': 900, 'name': '操作日志', 'path': 'op_log'}]
+    {'id': 1000, 'name': 'Menu1'},
+    {'id': 1010, 'parent_id': 1000, 'name': 'Template', 'path': 'template'},
+    {'id': 1020, 'parent_id': 1000, 'name': 'Menu1-2', 'path': 'menu12'},
+    {'id': 1030, 'parent_id': 1000, 'name': 'Menu1-3', 'path': 'menu13'},
+    {'id': 2000, 'name': 'Examples'},
+    {'id': 2010, 'parent_id': 2000, 'name': 'Screen', 'path': 'ex-screen'},
+    {'id': 2020, 'parent_id': 2000, 'name': 'Websocket', 'path': 'ex-websocket'},
+    {'id': 9000, 'name': 'System'},
+    {'id': 9010, 'parent_id': 9000, 'name': 'User', 'path': 'user'},
+    {'id': 9020, 'parent_id': 9000, 'name': 'Role', 'path': 'role'},
+    {'id': 9030, 'parent_id': 9000, 'name': 'License', 'path': 'license'},
+    {'id': 9040, 'parent_id': 9000, 'name': 'OP Log', 'path': 'op_log'}
+]
 
-# 管理员角色
+# Admin Role
 _sys_roles = [
-    {'id': 1, 'name': 'Manager', 'menus': []}]
+    {'id': 1, 'name': 'Administrator', 'menus': []}]
 
 # 管理员帐户
 _sys_users = [

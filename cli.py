@@ -6,8 +6,13 @@ import click
 from flask.cli import AppGroup
 
 
-# > flask test
-# > flask admin db ?
+# > set FLASK_APP=admin_app.py      # windows
+# > export FLASK_APP=admin_app.py   # mac/linux
+
+# > flask admin db help
+# > flask admin db upgrade      # update database tables
+# > flask admin db init         # init database data
+# > flask admin db radmin       # add admin user and role
 
 def init_cli(app):
     init_test_cli(app)

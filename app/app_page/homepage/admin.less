@@ -42,42 +42,50 @@ header {
 
   .logo {
     flex: none;
+
     img {
       height: @header_height*0.8;
     }
   }
+
   .title {
     margin: 0 0.6em 0 0.3em;
     cursor: default;
     font-size: 1.68em;
     white-space: nowrap;
   }
+
   .toggle-menu {
     cursor: pointer;
     transition: @toggle_menu_transition_time;
+
     svg {
       display: block;
       width: @svg_size;
       height: @svg_size;
     }
   }
+
   .right {
     margin-left: auto;
     height: 100%;
     display: flex;
     align-items: stretch;
+
     .icon-item {
       cursor: pointer;
       padding: 0.3em;
       transition: @toggle_menu_transition_time;
       display: flex;
       align-items: center;
+
       svg {
         display: inline-block;
         padding: 0.1em;
         width: @svg_size;
         height: @svg_size;
       }
+
       .badge {
         padding: 0.1em 0.3em;
         margin-top: -1.7em;
@@ -86,19 +94,28 @@ header {
         font-size: 70%;
         border-radius: 0.2em;
         background: #42b8dd;
+
         &.error {
           background: #ca3c3c;
         }
+
         &.warning {
           background: #df7514;
         }
       }
+
       label {
         cursor: pointer;
       }
+
       &:hover {
         background-color: lighten(@header_bg, 10%);
       }
+    }
+
+    .license {
+      align-self: center;
+      padding: 0.2em 0.6em;
     }
   }
 }
@@ -120,18 +137,21 @@ header {
       background-color: transparent;
       display: none;
       margin: 0.3em 0.5em;
+
       .items {
         > .item {
           > .node {
             padding-right: 0;
             padding-left: 0;
             text-align: center;
+
             .fa {
               margin-right: 0;
             }
           }
         }
       }
+
       .children {
         .item {
           > .node {
@@ -144,36 +164,45 @@ header {
     .z-tree {
       background-color: transparent;
       overflow-x: hidden;
+
       .items {
         > li {
           margin-left: 0;
         }
+
         li {
           > .node {
             display: block;
             cursor: pointer;
             color: rgba(0, 0, 0, .65);
+
             .expand {
               float: right;
               padding: 0.3em;
             }
+
             .in {
               cursor: pointer;
+
               &:hover {
                 background-color: transparent;
               }
             }
+
             &:hover {
               color: rgba(0, 0, 0, .85);
             }
           }
+
           &.selected {
             > .node {
               font-weight: bolder;
               color: rgba(0, 0, 0, .85);
+
               .in {
                 background: none;
                 color: rgba(0, 0, 0, .85);
+
                 &:hover {
                   background-color: transparent;
                 }
@@ -183,9 +212,11 @@ header {
         }
       }
     }
+
     .fa {
       margin-right: 0.3em;
     }
+
     .children .fa {
       font-size: 80%;
     }
@@ -197,6 +228,7 @@ header {
     box-sizing: border-box;
     //padding: 0.2em;
     transition: @toggle_menu_transition_time;
+
     iframe {
       position: absolute;
       left: 0;
@@ -225,10 +257,12 @@ header {
       overflow: hidden;
       display: flex;
       justify-content: flex-end;
+
       .z-tree {
         display: none;
         overflow: hidden;
       }
+
       .z-menu {
         display: block;
         //not overflow***
@@ -245,20 +279,24 @@ body.aside-collapsed {
   display: none;
   padding: 0.2em;
   min-width: 6em;
+
   .summary {
     border-bottom: 1px solid #eee;
     padding-bottom: 0.3em;
   }
+
   a {
     cursor: pointer;
     margin: 0.3em 0;
     display: inline-block;
     color: #007bff;
     text-decoration: none;
+
     &:hover {
       text-decoration: underline;
     }
   }
+
   ul {
     list-style: none;
     padding: 0;

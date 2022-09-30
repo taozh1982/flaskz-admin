@@ -5,7 +5,7 @@
 from flask import current_app
 from flask_login import current_user
 from flaskz.utils import get_app_config
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flaskz.auth import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.exceptions import abort
 
 

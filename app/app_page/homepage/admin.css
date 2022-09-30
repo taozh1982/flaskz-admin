@@ -85,6 +85,10 @@ header .right .icon-item label {
 header .right .icon-item:hover {
   background-color: #355d74;
 }
+header .right .license {
+  align-self: center;
+  padding: 0.2em 0.6em;
+}
 .body-main {
   flex: auto;
   display: flex;
@@ -261,3 +265,4 @@ body.aside-collapsed .body-main > .aside .z-menu {
     scrollbar-width: thin;
   }
 }
+/*# sourceMappingURL=admin.css.map */

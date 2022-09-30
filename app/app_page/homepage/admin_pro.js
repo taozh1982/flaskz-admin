@@ -1,8 +1,8 @@
 var FontIconMapping = {
-    100: "<i class='fa fa-server'></i>",
-    200: "<i class='fa fa-ioxhost'></i>",
-    300: "<i class='fa fa-cubes'></i>",
-    900: "<i class='fa fa-user'></i>",
+    1000: "<i class='fa fa-server'></i>",
+    2000: "<i class='fa fa-ioxhost'></i>",
+    3000: "<i class='fa fa-cubes'></i>",
+    9000: "<i class='fa fa-gears'></i>",
     default_root_folder: "<i class='fa fa-file-text-o'></i>",
     default_folder: "",
     default_leaf: ""
@@ -25,9 +25,38 @@ z.util.mergeObject(Admin, {
             success: function (result) {
                 this._initAccountMenus(result.data.menus);
                 this._initAccountProfile(result.data.profile);
+                this._initLicense(result.data.license);
             },
             context: this
         })
+    },
+    _initLicense: function (license) {
+        var cls = null;
+        var info = null;
+        if (license) {
+            var ExpireDays = license.ExpireDays;
+            if (ExpireDays < 10) {
+                cls = "bg-color-danger"
+            } else if (ExpireDays < 30) {
+                cls = "bg-color-warning"
+            }
+            if (cls) {
+                // info = "到期提示 系统授权还有" + ExpireDays + "天到期";
+                info = "License expires in " + ExpireDays + " days";
+            }
+        } else {
+            cls = "bg-color-danger"
+            // info = "系统未授权";
+            info = "No Authorized License";
+        }
+        if (cls) {
+            z.dom.removeStyle("#licenseDiv", "display")
+            z.dom.removeClass("#licenseDiv", "bg-color-danger bg-color-warning")
+            z.dom.addClass("#licenseDiv", cls);
+            z.dom.setValue("#licenseDiv", "<i class='fa fa-warning'></i> " + info)
+        } else {
+            z.dom.setStyle("#licenseDiv", "display", "none");
+        }
     },
     _initAccountProfile: function (profile) {
         this._account_profile = profile;
@@ -57,7 +86,7 @@ z.util.mergeObject(Admin, {
         if (AjaxUrl.sys_auth.logout) {
             pro.AjaxCRUD.ajax({
                 url: AjaxUrl.sys_auth.logout,
-                tips: "退出登录",
+                tips: "Sign Out",
                 success_notify: false,
                 complete: function () {
                     window.location.href = "/login";
@@ -77,6 +106,12 @@ z.util.mergeObject(Admin, {
 });
 z.util.mergeObject(Admin, {
     _initAccountMenus: function (menus) {
+        if (menus == null || menus.length === 0) {
+            z.dom.empty("body>.body-main");
+            z.dom.setValue("body>.body-main", "No Menus Available")
+            z.dom.addClass('body>.body-main', "color-danger")
+            return;
+        }
         var _this = this;
         var map = {};
         var rootMenus = [];

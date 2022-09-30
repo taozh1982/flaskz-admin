@@ -1,5 +1,6 @@
 """
 redis+websocket广播功能
+pip install websockets
 """
 import asyncio
 import multiprocessing
