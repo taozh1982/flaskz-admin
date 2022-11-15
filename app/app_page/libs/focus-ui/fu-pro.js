@@ -1,4 +1,4 @@
-/*! Focus Pro v2.3.0 | http://focus-ui.com/ | 2022-10-01 */
+/*! Focus Pro v2.3.0 | http://focus-ui.com/ | 2022-10-02 */
 (function(window, undefined) {
     z.setDefault({
         PRO_GRID_OPERATE_CLASS: "btn btn-link",
@@ -971,7 +971,7 @@
             return null;
         }
     };
-    z.util.mergeObject({
+    z.util.mergeObject($TimeUtil, {
         _parseFormat: {
             "%": [ "%", function() {} ],
             a: [ "[a-z]+", function(matched) {} ],

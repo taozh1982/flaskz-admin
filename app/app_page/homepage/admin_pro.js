@@ -44,7 +44,7 @@ z.util.mergeObject(Admin, {
                 // info = "到期提示 系统授权还有" + ExpireDays + "天到期";
                 info = "License expires in " + ExpireDays + " days";
             }
-        } else {
+        } else if (license !== false) { //
             cls = "bg-color-danger"
             // info = "系统未授权";
             info = "No Authorized License";

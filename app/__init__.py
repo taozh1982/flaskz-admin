@@ -1,6 +1,5 @@
 from flask import Flask, session
 from flaskz import log, models
-from flaskz.utils import get_app_path
 
 from config import config
 from . import sys_mgmt, main, api, sys_init
@@ -15,10 +14,9 @@ def create_app(config_name):
     app_config = config[config_name]
     app.config.from_object(app_config)
     app_config.init_app(app)
-    sys_init.init_app(app)  # 系统初始化，中文message
+    sys_init.init_app(app)  # 系统初始化，中文message等
 
     # CORS(app) # 跨域支持, 按需使用 pip install cors
-    # redis_ws.init_websocket(app)  # 初始化redis+websocket广播消息, 按需使用
 
     # 初始化
     log.init_log(app)
@@ -27,7 +25,8 @@ def create_app(config_name):
 
     _init_login(app)
     _init_model_rest(app)
-    _init_license(app)
+    # _init_license(app)
+    # _init_redis_ws(app)
 
     # 注册api
     main.init_app(app)
@@ -65,10 +64,19 @@ def _init_model_rest(app):
 
 def _init_license(app):
     """初始化license模块，按需使用"""
-    from .sys_mgmt.license import LicenseManager
-    license_manager = LicenseManager()
-    license_manager.load_license(sys_mgmt.load_license)
-    license_manager.request_check(sys_mgmt.request_check_by_license)
-    with open(get_app_path("_license/public.key"), "r") as f:
-        public_key = f.read()
-        license_manager.init_app(app, public_key)
+    # from flaskz.utils import get_app_path
+    # from .sys_mgmt.license import LicenseManager
+    # license_manager = LicenseManager()
+    # license_manager.load_license(sys_mgmt.load_license)
+    # license_manager.request_check(sys_mgmt.request_check_by_license)
+    # with open(get_app_path("_license/public.key"), "r") as f:
+    #     public_key = f.read()
+    #     license_manager.init_app(app, public_key)
+    pass
+
+
+def _init_redis_ws(app):
+    """初始化redis+websocket广播消息模块, 按需使用"""
+    # from . import redis_ws
+    # redis_ws.init_websocket(app)
+    pass

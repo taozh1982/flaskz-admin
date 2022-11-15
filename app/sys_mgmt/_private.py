@@ -1,8 +1,9 @@
 from flask import request, make_response
 from flaskz.log import flaskz_logger
-from flaskz.utils import clear_app_cache, get_app_config, get_app_path
+from flaskz.utils import clear_app_cache,  get_app_path
 
 from . import sys_mgmt_bp
+from ..sys_init import get_app_config
 
 
 @sys_mgmt_bp.route('/_/clear_cache/', methods=['GET'])

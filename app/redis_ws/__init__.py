@@ -5,12 +5,11 @@ pip install websockets
 import asyncio
 import multiprocessing
 
+import websockets
+from flask import Flask
 from flaskz import log
 from flaskz.log import flaskz_logger
 from redis import asyncio as aioredis
-
-import websockets
-from flask import Flask
 from redis.asyncio import Redis
 
 ws_conn: Redis
@@ -21,7 +20,6 @@ def init_websocket(app):
     """
     初始化redis websocket
     """
-
     if isinstance(app, Flask):
         app_config = app.config
     else:

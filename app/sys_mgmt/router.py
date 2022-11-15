@@ -56,12 +56,11 @@ def sys_auth_get_token():
     :return:
     """
     request_json = request.json
-    result = User.verify_password(request_json.get('username'), request_json.get('password'))
-    success = result[0]
+    success, result = User.verify_password(request_json.get('username'), request_json.get('password'))
     if success is False:
-        res_data = model_to_dict(result[1])
+        res_data = model_to_dict(result)
     else:
-        res_data = {'token': generate_token({'id': result[1].get_id()})}
+        res_data = {'token': generate_token({'id': result.get_id()})}
 
     flaskz_logger.info(get_rest_log_msg('User get login token', {'username': request_json.get('username')}, success, res_data))
     return create_response(success, res_data)
@@ -110,19 +109,22 @@ def sys_auth_account_query():
             'ExpireDays': current_license.get('ExpireDays', 0)
         }
     else:
-        no_license_menus = []
-        license_menu = find_list(role_menus, lambda menu: menu.get('path') == 'license')
-        if license_menu:
-            menu_id_map = get_dict_mapping(role_menus)
-            parent_id = license_menu.get('parent_id')
-            while parent_id:
-                parent_menu = menu_id_map.get(parent_id)
-                parent_id = None
-                if parent_menu:
-                    no_license_menus.append(parent_menu)
-                    parent_id = parent_menu.get('parent_id')
-            no_license_menus.append(license_menu)
-        res_data['menus'] = no_license_menus
+        if current_license is False:
+            res_data['license'] = False
+        else:
+            no_license_menus = []
+            license_menu = find_list(role_menus, lambda menu: menu.get('path') == 'license')
+            if license_menu:
+                menu_id_map = get_dict_mapping(role_menus)
+                parent_id = license_menu.get('parent_id')
+                while parent_id:
+                    parent_menu = menu_id_map.get(parent_id)
+                    parent_id = None
+                    if parent_menu:
+                        no_license_menus.append(parent_menu)
+                        parent_id = parent_menu.get('parent_id')
+                no_license_menus.append(license_menu)
+            res_data['menus'] = no_license_menus
 
     flaskz_logger.debug(get_rest_log_msg('Query the account profile and menus', None, True, res_data))
     return create_response(True, res_data)

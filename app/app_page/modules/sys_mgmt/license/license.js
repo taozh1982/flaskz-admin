@@ -36,7 +36,8 @@ var License = z.util.mergeObject(pro.template.CRUDTablePage, {
     handleModelOk: function () {
         var _this = this;
         pro.FileUtil.upload({
-            files: z.dom.getValue("#fileInput"), url: AjaxUrl.sys_license.add,
+            files: z.dom.getValue("#fileInput"),
+            url: AjaxUrl.sys_license.add,
             success: function () {
                 z.widget.modal("#modalDiv", false);
                 _this.reloadData();

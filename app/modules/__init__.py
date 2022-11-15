@@ -4,9 +4,11 @@ template为实例，需删除
 """
 # app/modules/__init__.py
 from flaskz.models import ModelBase
+
 # 避免IDE自动删除未引用导入
 if ModelBase:
     pass
+
 
 # custom modules, include model and logic
 class AutoModelMixin:

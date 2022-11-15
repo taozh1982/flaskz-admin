@@ -1,0 +1,317 @@
+# yang patch demo
+
+from ..apply import NSOApply
+
+
+def _get_condition_obj(key, value, items):
+    obj = {
+        key: 'true' if value is True else 'false'
+    }
+    if value is True:
+        obj.update(items)
+    return obj
+
+
+class SRPolicyNSOApply(NSOApply):
+    """
+    Policy配置下发
+    """
+
+    @classmethod
+    def to_nso_data(cls, value, op_type):
+        if op_type == 'delete':
+            return value
+
+        preference_items = []
+        for c_path_item in value.get('candidate_paths'):
+            type_ = c_path_item.get('type')
+            path_info_items = []
+            preference_item = {
+                'preference-index': c_path_item.get('preference'),
+            }
+            if type_ == 'explicit':
+                for seg_list_item in c_path_item.get('explicit_segment_lists', []):
+                    path_info_items.append({
+                        'path-type': 'explicit',
+                        'explicit-path-name': seg_list_item.get('segment_list_name'),
+                        'weight': seg_list_item.get('weight')
+                    })
+                preference_item['path-infos'] = {
+                    'path-info': path_info_items
+                }
+            elif type_ == 'dynamic':
+                metric = {
+                    'metric-type': c_path_item.get('dynamic_metric_type'),
+                }
+                if c_path_item.get('dynamic_metric_sid_limit_enable') is True:
+                    metric['sid-limit'] = c_path_item.get('dynamic_metric_sid_limit')
+                if c_path_item.get('dynamic_metric_margin_enable') is True:
+                    margin_type = c_path_item.get('dynamic_metric_margin_type')
+                    metric['metric-margin'] = {
+                        'value-type': margin_type,
+                        margin_type + '-value': c_path_item.get('dynamic_metric_margin_value')
+                    }
+
+                path_info_items.append({
+                    'path-type': 'dynamic',
+                    'explicit-path-name': 'dynamic',
+                    'metric': metric
+                })
+                preference_item['path-infos'] = {
+                    'path-info': path_info_items
+                }
+            elif type_ == 'perflow':
+                for perflow_forward in c_path_item.get('perflow_forward_lists', []):
+                    path_info_items.append({
+                        'forward-class': perflow_forward.get('forward_class'),
+                        'color': perflow_forward.get('color')
+                    })
+                preference_item['per-flow'] = {
+                    "default-forward-class": c_path_item.get('perflow_default_forward'),
+                    "forward-class": path_info_items
+                }
+                preference_item['per-flow-enable'] = True
+
+            constraints_item = None
+            if c_path_item.get('constraints_segment_rules_enable') is True:
+                constraints_item = constraints_item or {}
+                constraints_item['segment-rules'] = {
+                    'segment-rules-enable': 'true',
+                    'sid-algorithm': c_path_item.get('constraints_segment_rules_sid_algorithm')
+                }
+            if c_path_item.get('constraints_affinity_map_rules_enable') is True:
+                constraints_item = constraints_item or {}
+                constraints_affinity_map_rules = c_path_item.get('constraints_affinity_map_rules')
+                afm_names = []
+                for afm in constraints_affinity_map_rules:
+                    afm_names.append({
+                        "affinity-name": afm.get('affinity_map_name')
+                    })
+                constraints_item['affinity-rules'] = {
+                    'affinity-rules-enable': 'true',
+                    'affinity-rule': [{
+                        'rule': 'affinity-' + c_path_item.get('constraints_affinity_map_rules_type'),
+                        'affinity-name': afm_names
+                    }]
+                }
+
+            if constraints_item:
+                preference_item['constraints'] = constraints_item
+
+            preference_items.append(preference_item)
+        return {
+            'sr-policy': [
+                {
+                    'policy-name': value.get('name'),
+                    'device': value.get('device_name'),
+                    'policy-color-endpoint': {
+                        'color': value.get('color'),
+                        'end-point-type': 'end-point-type-ipv4',
+                        'end-point-address': value.get('end_point')
+                    },
+                    'binding-sid': _get_condition_obj('binding-explicit-enable',
+                                                      value.get('binding_sid_binding_explicit_enable'), {
+                                                          'mpls-label': value.get('binding_sid_mpls_label')
+                                                      }),
+                    'path-bandwidth': {
+                        'path-bandwidth-enable': 'false'
+                    },
+                    'shutdown-enable': 'true' if value.get('shutdown_enable') is True else 'false',
+                    'candidate-paths': {
+                        'preferences': {
+                            'preference': preference_items
+                        }
+                    }
+                }
+            ]
+        }
+
+    @classmethod
+    def to_nso_patch_data(cls, value, op_type):
+        data_list = [super().to_nso_patch_data(value, op_type)]
+        candidate_paths = value.get('candidate_paths', [])
+        for path in candidate_paths:
+            if path.get('type') == 'explicit':
+                explicit_segment_lists = path.get('explicit_segment_lists', [])
+                for seg in explicit_segment_lists:
+                    if seg.get('new') is True:
+                        seg['device_name'] = value.get('device_name')
+                        data_list.append(SRSegmentListNSOApply.to_nso_patch_data(seg, 'add'))
+        return data_list
+
+    @classmethod
+    def get_patch_target(cls, value, op_type):
+        return '/srte:sr-policies/sr-policy={name},{device_name}'.format(**value)
+
+    @classmethod
+    def get_patch_value_key(cls, value, op_type):
+        return 'srte:sr-policy'
+
+
+class SRSegmentListNSOApply(NSOApply):
+    """
+    Segment List配置下发
+    """
+
+    @classmethod
+    def to_nso_data(cls, value, op_type):
+        if op_type == 'delete':
+            return value
+
+        items = []
+        for item in value.get('items'):
+            seg_type = item.get('type')
+            _item = {
+                'segment-index': item.get('index'),
+                'segment-type': seg_type
+            }
+            if seg_type == 'ipv4-address':
+                _item['address'] = item.get('address')
+            elif seg_type == 'mpls-label':
+                _item['mpls-label'] = item.get('label')
+            items.append(_item)
+
+        return {
+            'sr-list': [{
+                'path-name': value.get('name'),
+                'device': value.get('device_name'),
+                'segments': {
+                    'segment': items
+                }
+            }]}
+
+    @classmethod
+    def get_url(cls, value):
+        pass
+
+    @classmethod
+    def get_patch_target(cls, value, op_type):
+        return '/srte:sr-lists/sr-list={name},{device_name}'.format(**value)
+
+    @classmethod
+    def get_patch_value_key(cls, value, op_type):
+        return 'srte:sr-list'
+
+
+"""
+# create
+{
+    "ietf-yang-patch:yang-patch": {
+        "patch-id": "patch-1646500738",
+        "edit": [
+            {
+                "edit-id": "edit-1646500738072821_0",
+                "operation": "create",
+                "target": "/srte:sr-lists/sr-list=wxie_yang_test_1,P1",
+                "value": {
+                    "srte:sr-list": [
+                        {
+                            "path-name": "wxie_yang_test_1",
+                            "device": "P1",
+                            "segments": {
+                                "segment": [
+                                    {
+                                        "segment-index": 10,
+                                        "segment-type": "ipv4-address",
+                                        "address": "1.1.1.1"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
+
+# merge
+{
+    "ietf-yang-patch:yang-patch": {
+        "patch-id": "patch-1646500738",
+        "edit": [
+            {
+                "edit-id": "edit-1646500738072821_0",
+                "operation": "merge",
+                "target": "/srte:sr-lists/sr-list=wxie_yang_test_1,P1",
+                "value": {
+                    "srte:sr-list": [
+                        {
+                            "path-name": "wxie_yang_test_1",
+                            "device": "P1",
+                            "segments": {
+                                "segment": [
+                                    {
+                                        "segment-index": 10,
+                                        "segment-type": "ipv4-address",
+                                        "address": "1.1.1.2"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
+
+# replace
+{
+    "ietf-yang-patch:yang-patch": {
+        "patch-id": "patch-1646500738",
+        "edit": [
+            {
+                "edit-id": "edit-1646500738072821_0",
+                "operation": "replace",
+                "target": "/srte:sr-lists/sr-list=wxie_yang_test_1,P1",
+                "value": {
+                    "srte:sr-list": [
+                        {
+                            "path-name": "wxie_yang_test_1",
+                            "device": "P1",
+                            "segments": {
+                                "segment": [
+                                    {
+                                        "segment-index": 10,
+                                        "segment-type": "ipv4-address",
+                                        "address": "1.1.1.1"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
+
+# delete
+{
+    "ietf-yang-patch:yang-patch": {
+        "patch-id": "patch-1646500738",
+        "edit": [
+            {
+                "edit-id": "edit-1646500738072821_0",
+                "operation": "delete",
+                "target": "/srte:sr-lists/sr-list=wxie_yang_test_1,P1"
+            }
+        ]
+    }
+}
+
+#remove
+{
+    "ietf-yang-patch:yang-patch": {
+        "patch-id": "patch-1646500738",
+        "edit": [
+            {
+                "edit-id": "edit-1646500738072821_0",
+                "operation": "remove",
+                "target": "/srte:sr-lists/sr-list=wxie_yang_test_1,P1"
+            }
+        ]
+    }
+}
+"""

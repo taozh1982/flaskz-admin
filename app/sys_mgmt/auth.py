@@ -4,9 +4,11 @@
 
 from flask import current_app
 from flask_login import current_user
-from flaskz.utils import get_app_config
+
 from flaskz.auth import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.exceptions import abort
+
+from ..sys_init import get_app_config
 
 
 def load_user_by_id(user_id):

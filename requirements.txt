@@ -2,11 +2,10 @@ flaskz                  # 自动安装flask+sqlalchemy+requests
 Flask-Login             # 用户登录管理
 alembic                 # 数据库表结构维护
 
+# 以下package按需安装
 pycryptodome            # RSA&AES加密，用于license管理
 
-# 以下package按需安装
 # pymysql               # mysql驱动
-# flask-cors            # 服务跨域
-# celery                # 任务调度
 # redis                 # redis
 # websockets            # websocket
+# flask-cors            # 服务跨域访问
