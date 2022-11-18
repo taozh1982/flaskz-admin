@@ -98,7 +98,7 @@ var Admin = {
         this.tree.setSelect(selected_menu || firstPathData);
     },
     initAccountProfile: function (profile) {
-        z.dom.setValue("#accountLabel", profile.name);
+        z.dom.setValue("#accountLabel", profile.name || profile.username);
     },
     initController: function () {
         if (z.dom.query(z.dom.query(".toggle-menu", "header"))) {
