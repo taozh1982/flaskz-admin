@@ -21,7 +21,11 @@ def get_current_user_id():
     返回当前请求的用户id
     """
     if current_user:
-        return current_user.id
+        try:
+            return current_user.get_id()
+        except Exception:
+            pass
+    return None
 
 
 def is_admin_user():
@@ -29,7 +33,6 @@ def is_admin_user():
     Check if the current user is admin, Admin user can view all data
     :return:
     """
-    user = current_user
-    if user and user.username == 'admin':
+    if current_user and getattr(current_user, 'username') == 'admin':
         return True
     return False

@@ -58,26 +58,41 @@ class UserBaseModelMixin:
 
     @classmethod
     def query_all(cls):
-        success, result = super().query_all()
-        if success is True and not is_admin_user():
+        user_id_field = cls.get_user_id_field()
+        per_user = False
+        if user_id_field and not is_admin_user():
+            per_user = True
+
+        if per_user:
             current_user_id = get_current_user_id()
-            user_id_field = cls.get_user_id_field()
-            if user_id_field:
-                return success, filter_list(result, lambda item: getattr(item, user_id_field) == current_user_id)
+            if current_user_id is None:  # not logged in
+                return True, []
+
+        success, result = super().query_all()
+        if success is True and per_user:
+            return success, filter_list(result, lambda item: str(getattr(item, user_id_field)) == current_user_id)
         return success, result
 
     @classmethod
     def query_pss(cls, pss_option):
         user_id_field = cls.get_user_id_field()
+        per_user = False
         if user_id_field and not is_admin_user():
-            filter_ands = pss_option.get('filter_ands', [])
-            filter_ands.append(user_id_field + "='" + get_current_user_id() + "'")
-            pss_option['filter_ands'] = filter_ands
+            per_user = True
+
+        if per_user:
+            current_user_id = get_current_user_id()
+            if current_user_id is None:  # not logged in
+                return True, {'count': 0, 'data': []}
+            else:
+                filter_ands = pss_option.get('filter_ands', [])
+                filter_ands.append(user_id_field + "='" + str(current_user_id) + "'")
+                pss_option['filter_ands'] = filter_ands
         return super().query_pss(pss_option)
 
     @classmethod
     def _append_user_id(cls, data):
         user_id_field = cls.get_user_id_field()
         if user_id_field:
-            data[cls.get_user_id_field()] = get_current_user_id()
+            data[user_id_field] = get_current_user_id()
         return data
