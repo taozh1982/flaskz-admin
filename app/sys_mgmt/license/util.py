@@ -1,9 +1,57 @@
 import json
 import os
+from datetime import datetime
 
 from flaskz.ext.cypher import RSACipher, AESCipher
 
 
+# -------------------------------------------e-------------------------------------------
+def get_datetime(date):
+    """Parse date string to datetime.datetime"""
+    return datetime.strptime(date, "%Y/%m/%d")
+
+
+def license_cmp(i1, i2):
+    """
+    1.先通过StartData进行排序，找到最新的StartData
+    2.如果StartData相等，再通过EndDate进行排序，找到最长的EndDate
+    """
+    start_date1 = get_datetime(i1.get('StartDate'))
+    start_date2 = get_datetime(i2.get('StartDate'))
+    if start_date1 < start_date2:
+        return -1
+    if start_date1 > start_date2:
+        return 1
+
+    end_date1 = datetime.strptime(i1.get('EndDate'), "%Y/%m/%d")
+    end_date2 = datetime.strptime(i2.get('EndDate'), "%Y/%m/%d")
+    if end_date1 < end_date2:
+        return -1
+    if end_date1 > end_date2:
+        return 1
+
+    return 0
+
+
+def add_date_seg(date_segs, start_date, end_date):
+    """用于ExpireDays"""
+    for seg in date_segs:
+        seg_start = seg.get('start')
+        seg_end = seg.get('end')
+        if (seg_start <= start_date <= seg_end) or (seg_start <= end_date <= seg_end):
+            start = min(seg_start, start_date)
+            end = max(seg_end, end_date)
+            seg['start'] = start
+            seg['end'] = end
+            return
+
+    date_segs.append({
+        'start': start_date,
+        'end': end_date
+    })
+
+
+# -------------------------------------------parse-------------------------------------------
 def gen_license(private_key, public_dict, private_dict=None):
     """
     生成license，包含public和private两种信息

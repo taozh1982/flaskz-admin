@@ -63,12 +63,16 @@ def _init_model_rest(app):
 
 
 def _init_license(app):
-    """初始化license模块，按需使用"""
+    """
+    初始化license模块，按需使用
+    pip install pycryptodome
+    """
     # from flaskz.utils import get_app_path
-    # from .sys_mgmt.license import LicenseManager
-    # license_manager = LicenseManager()
-    # license_manager.load_license(sys_mgmt.load_license)
-    # license_manager.request_check(sys_mgmt.request_check_by_license)
+    # from .sys_mgmt import license
+    # from .sys_mgmt.license import router  # enable api
+    # license_manager = license.LicenseManager()
+    # license_manager.load_license(license.load_license)
+    # license_manager.request_check(license.request_check_by_license)
     # with open(get_app_path("_license/public.key"), "r") as f:
     #     public_key = f.read()
     #     license_manager.init_app(app, public_key)
@@ -76,7 +80,11 @@ def _init_license(app):
 
 
 def _init_redis_ws(app):
-    """初始化redis+websocket广播消息模块, 按需使用"""
+    """
+    初始化redis+websocket广播消息模块, 按需使用
+    pip install redis
+    pip install websockets
+    """
     # from . import redis_ws
     # redis_ws.init_websocket(app)
     pass

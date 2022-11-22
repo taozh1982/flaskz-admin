@@ -1,11 +1,10 @@
-flaskz                  # 自动安装flask+sqlalchemy+requests
-Flask-Login             # 用户登录管理
-alembic                 # 数据库表结构维护
+flaskz                  # deps: flask+sqlalchemy+requests
+Flask-Login             # for user login management
+alembic                 # for database migration
 
-# 以下package按需安装
-pycryptodome            # RSA&AES加密，用于license管理
-
-# pymysql               # mysql驱动
+## Install following packages as needed
+# pycryptodome          # RSA&AES encryption，For license management
+# pymysql               # mysql driver
 # redis                 # redis
 # websockets            # websocket
-# flask-cors            # 服务跨域访问
+# flask-cors            # for cross domain

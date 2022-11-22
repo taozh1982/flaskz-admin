@@ -285,30 +285,6 @@ class OPLog(ModelBase, ModelMixin):
         return desc(cls.created_at)
 
 
-class License(ModelBase, ModelMixin):
-    __tablename__ = 'sys_licenses'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    license = Column(Text(), unique=True, nullable=False)
-
-    user = Column(String(255))
-    type = Column(String(32))
-    start_date = Column(String(255))
-    end_date = Column(String(255))
-
-    created_user = Column(String(32))
-    description = Column(Text())
-    created_at = Column(DateTime(), default=datetime.now)
-
-    def to_dict(*args, **kwargs):
-        result = super(License, args[0]).to_dict(**kwargs)
-        licenses = result.get("license").split("Signature=")
-        if len(licenses) > 1:
-            result['license'] = licenses[0]
-            result['Signature'] = licenses[1]
-        return result
-
-
 def _get_app_cache_menus():
     """
     To improve performance, save the menu data(json) in the app cache.

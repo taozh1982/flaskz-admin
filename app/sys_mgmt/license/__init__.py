@@ -3,52 +3,65 @@ from datetime import datetime, timedelta
 
 from flask import request
 from flaskz.log import flaskz_logger
-
 # from app.sys_mgmt.license import util # for __main__ test
+from flaskz.models import ModelBase, ModelMixin
+from sqlalchemy import Column, Integer, Text, String, DateTime
+
 from . import util
+from ...main.errors import return_error
 
 
-def _get_date(date):
-    return datetime.strptime(date, "%Y/%m/%d")
+def load_license():
+    """license加载函数"""
+    license_result = License.query_all()
+    license_list = []
+    if license_result[0] is True:
+        for item in license_result[1]:
+            license_list.append(item.license)
+    return license_list
 
 
-def _license_cmp(i1, i2):
+def request_check_by_license(current_license, req):
     """
-    1.先通过StartData进行排序，找到最新的StartData
-    2.如果StartData相等，再通过EndDate进行排序，找到最长的EndDate
+    请求license校验
     """
-    start_date1 = _get_date(i1.get('StartDate'))
-    start_date2 = _get_date(i2.get('StartDate'))
-    if start_date1 < start_date2:
-        return -1
-    if start_date1 > start_date2:
-        return 1
-
-    end_date1 = datetime.strptime(i1.get('EndDate'), "%Y/%m/%d")
-    end_date2 = datetime.strptime(i2.get('EndDate'), "%Y/%m/%d")
-    if end_date1 < end_date2:
-        return -1
-    if end_date1 > end_date2:
-        return 1
-
-    return 0
+    path = req.path
+    # 页面静态资源不拦截
+    if path == '/' or path.startswith('/libs') or path.endswith(('.js', '.css', '.html', '.png', '.svg', '.jpg', '.ico')):
+        return
+    if 'api' in path:
+        # 根据具体项目进行定制
+        if current_license is None:
+            return return_error(('no_license', 'No License, Please Contact Cisco'), 555)
+        # modules = license.get('Modules', "")
+        # if 'template' in path:
+        #     if "template" not in modules:
+        #         return return_error(('no_license', 'No License, Please contact Cisco'), 555)
 
 
-def _add_date_seg(date_segs, start_date, end_date):
-    for seg in date_segs:
-        seg_start = seg.get('start')
-        seg_end = seg.get('end')
-        if (seg_start <= start_date <= seg_end) or (seg_start <= end_date <= seg_end):
-            start = min(seg_start, start_date)
-            end = max(seg_end, end_date)
-            seg['start'] = start
-            seg['end'] = end
-            return
+class License(ModelBase, ModelMixin):
+    """License database model"""
+    __tablename__ = 'sys_licenses'
 
-    date_segs.append({
-        'start': start_date,
-        'end': end_date
-    })
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    license = Column(Text(), unique=True, nullable=False)
+
+    user = Column(String(255))
+    type = Column(String(32))
+    start_date = Column(String(255))
+    end_date = Column(String(255))
+
+    created_user = Column(String(32))
+    description = Column(Text())
+    created_at = Column(DateTime(), default=datetime.now)
+
+    def to_dict(*args, **kwargs):
+        result = super(License, args[0]).to_dict(**kwargs)
+        licenses = result.get("license").split("Signature=")
+        if len(licenses) > 1:
+            result['license'] = licenses[0]
+            result['Signature'] = licenses[1]
+        return result
 
 
 class LicenseManager:
@@ -112,19 +125,19 @@ class LicenseManager:
                 today = datetime.today()
                 for item in license_list:
                     try:
-                        start_date = _get_date(item.get("StartDate"))
-                        end_date = _get_date(item.get("EndDate"))
+                        start_date = util.get_datetime(item.get("StartDate"))
+                        end_date = util.get_datetime(item.get("EndDate"))
                         end_date += timedelta(days=1)
-                        _add_date_seg(date_segs, start_date, end_date)
+                        util.add_date_seg(date_segs, start_date, end_date)
                         if start_date <= today <= end_date:
                             in_list.append(item)
                     except Exception as e:
                         flaskz_logger.exception(e)
 
                 if len(in_list) > 0:
-                    in_list.sort(key=functools.cmp_to_key(_license_cmp))
+                    in_list.sort(key=functools.cmp_to_key(util.license_cmp))
                     license_item = in_list[-1]
-                    start_date = _get_date(license_item.get("StartDate"))
+                    start_date = util.get_datetime(license_item.get("StartDate"))
                     for seg in date_segs:
                         if seg.get('start') <= start_date <= seg.get('end'):
                             license_item['ExtDate'] = seg.get('end').strftime('%Y/%m/%d')

@@ -9,9 +9,6 @@ import json
 from flask import Blueprint
 from flask_login import current_user
 
-from .model import License
-from ..main.errors import return_error
-
 sys_mgmt_bp = Blueprint('sys_mgmt', __name__)
 
 
@@ -47,34 +44,6 @@ def log_operation(module, action, result, req_data=None, res_data=None, descript
         'description': description,
     })
     model.OPLog.add(log_data)
-
-
-def request_check_by_license(current_license, req):
-    """
-    请求license校验
-    """
-    path = req.path
-    # 页面静态资源不拦截
-    if path == '/' or path.startswith('/libs') or path.endswith(('.js', '.css', '.html', '.png', '.svg', '.jpg', '.ico')):
-        return
-    if 'api' in path:
-        # 根据具体项目进行定制
-        if current_license is None:
-            return return_error(('no_license', 'No License, Please Contact Cisco'), 555)
-        # modules = license.get('Modules', "")
-        # if 'template' in path:
-        #     if "template" not in modules:
-        #         return return_error(('no_license', 'No License, Please contact Cisco'), 555)
-
-
-def load_license():
-    """license加载函数"""
-    license_result = License.query_all()
-    license_list = []
-    if license_result[0] is True:
-        for item in license_result[1]:
-            license_list.append(item.license)
-    return license_list
 
 
 def _get_user_info():
