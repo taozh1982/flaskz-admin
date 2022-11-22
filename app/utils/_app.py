@@ -7,9 +7,9 @@ from flask_login import current_user
 
 def get_app_license():
     """
-    返回当前license
-    -如果没有启用license功能，返回False
-    -如果没有符合条件的license，返回None
+    Return the current license
+    -Return False, if the license feature is not enabled
+    -Return None, if there is no eligible license(enabled but not eligible)
     """
     if hasattr(current_app, 'license_manager'):
         return current_app.license_manager.get_license()
@@ -18,7 +18,8 @@ def get_app_license():
 
 def get_current_user_id():
     """
-    返回当前请求的用户id
+    Get the id of the current user
+    Return None，If the user is anonymous or not logged in
     """
     if current_user:
         try:

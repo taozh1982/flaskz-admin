@@ -1,19 +1,19 @@
 """
+Custom modules, include model and logic
+
 业务模型类目录，请参考 -http://zhangyiheng.com/blog/articles/py_flaskz_model_mixin.html
 template为实例，需删除
 """
 # app/modules/__init__.py
 from flaskz.models import ModelBase
-# 避免IDE自动删除未引用导入
 from flaskz.utils import filter_list
 
 from ..utils import get_current_user_id, is_admin_user
 
+# 避免IDE自动删除未引用导入
 if ModelBase:
     pass
 
-
-# custom modules, include model and logic
 
 class AutoModelMixin:
     """
@@ -27,7 +27,7 @@ class UserBaseModelMixin:
     User-based data access control
     Users can only access their own data
 
-        class Customer(ModelBase, UserBaseModelMixin, ModelMixin, AutoModelMixin):
+        class Customer(ModelBase, UserBaseModelMixin, ModelMixin, AutoModelMixin): # Put UserBaseModelMixin before ModelMixin to enable
             __tablename__ = 'lic_customers'
 
             id = Column(Integer, primary_key=True, autoincrement=True)
@@ -54,7 +54,12 @@ class UserBaseModelMixin:
 
     @classmethod
     def get_update_data(cls, data):
-        return super().get_update_data(cls._append_user_id(data))
+        user_id_field = cls.get_user_id_field()
+        if user_id_field:
+            # After the data is modified by other users, whether to modify user_id, 1 or 2
+            data.pop(user_id_field, None)  # 1. not modify user_id
+            # cls._append_user_id(data)    # 2. modify user_id
+        return super().get_update_data(data)
 
     @classmethod
     def query_all(cls):
