@@ -69,7 +69,8 @@ def run_migrations_offline():
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
-        render_as_batch=True
+        render_as_batch=True,
+        compare_type=True  # 开启类型变化检测
     )
 
     with context.begin_transaction():
@@ -93,7 +94,8 @@ def run_migrations_online():
         context.configure(
             connection=connection, target_metadata=target_metadata,
             include_object=include_object,
-            render_as_batch=True
+            render_as_batch=True,
+            compare_type=True  # 开启类型变化检测
         )
 
         with context.begin_transaction():

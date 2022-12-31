@@ -5,9 +5,8 @@ Revises: dc510384ab51
 Create Date: 2020-11-19 17:21:43.552093
 
 """
-from alembic import op
 import sqlalchemy as sa
-
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = '5656baaceae2'
@@ -58,17 +57,6 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
-    op.create_table('templates',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('name', sa.String(length=32), nullable=False),
-    sa.Column('age', sa.Integer(), nullable=True),
-    sa.Column('email', sa.String(length=255), nullable=False),
-    sa.Column('description', sa.String(length=255), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
-    )
     op.create_table('sys_menu_op_permissions',
     sa.Column('menu_id', sa.Integer(), nullable=True),
     sa.Column('permission', sa.String(length=32), nullable=True),
@@ -104,6 +92,18 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('username')
     )
+
+    op.create_table('templates',  # TODO delete, just for test
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('name', sa.String(length=32), nullable=False),
+    sa.Column('age', sa.Integer(), nullable=True),
+    sa.Column('email', sa.String(length=255), nullable=False),
+    sa.Column('description', sa.String(length=255), nullable=True),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name')
+    )
     # ### end Alembic commands ###
 
 
@@ -112,10 +112,10 @@ def downgrade():
     op.drop_table('sys_users')
     op.drop_table('sys_role_menus')
     op.drop_table('sys_menu_op_permissions')
-    op.drop_table('templates')
     op.drop_table('sys_roles')
     op.drop_index(op.f('ix_sys_op_permissions_permission'), table_name='sys_op_permissions')
     op.drop_table('sys_op_permissions')
     op.drop_table('sys_op_logs')
     op.drop_table('sys_menus')
+    op.drop_table('templates') # TODO delete, just for test
     # ### end Alembic commands ###

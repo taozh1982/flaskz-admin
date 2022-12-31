@@ -1,10 +1,12 @@
 import functools
+import os
 from datetime import datetime, timedelta
 
 from flask import request
 from flaskz.log import flaskz_logger
 # from app.sys_mgmt.license import util # for __main__ test
 from flaskz.models import ModelBase, ModelMixin
+from flaskz.utils import get_app_path
 from sqlalchemy import Column, Integer, Text, String, DateTime
 
 from . import util
@@ -44,7 +46,8 @@ class License(ModelBase, ModelMixin):
     __tablename__ = 'sys_licenses'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    license = Column(Text(), unique=True, nullable=False)
+    license = Column(Text(), nullable=False)
+    license_hash = Column(String(255), nullable=False, unique=True)  # Text column cannot be unique in MySQL，MySQL error: key specification without a key length
 
     user = Column(String(255))
     type = Column(String(32))
@@ -80,6 +83,11 @@ class LicenseManager:
         self._public_key = public_key
 
     def init_app(self, app, public_key=None):
+        if public_key is None:
+            public_key_file = get_app_path(app.config.get('APP_LICENSE_PUBLIC_KEY_FILEPATH'))
+            if os.path.isfile(public_key_file):
+                with open(public_key_file, "r") as f:  # public key
+                    public_key = f.read()
         self._public_key = public_key
         app.license_manager = self
 

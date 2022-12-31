@@ -1,4 +1,4 @@
-/*! Focus Pro v2.3.0 | http://focus-ui.com/ | 2022-10-02 */
+/*! Focus Pro v2.3.2 | http://focus-ui.com/ | 2023-01-01 */
 (function(window, undefined) {
     z.setDefault({
         PRO_GRID_OPERATE_CLASS: "btn btn-link",
@@ -1357,7 +1357,7 @@
             return window._acPermissions_$;
         },
         getPageModule: function() {
-            var page_module = window.ac_module || z.bom.getURLQuery("module");
+            var page_module = window.ac_module || z.bom.getLocationSearchParam("module");
             if (page_module == null) {
                 page_module = z.util.findArray(window.location.pathname.split("/").reverse(), function(item) {
                     return item !== "";
@@ -2411,12 +2411,89 @@
     var $GVUtil = {};
     z.util.mergeObject($GVUtil, {
         getDefaultShapeTypes: function() {
-            return [ "rect", "circle", "ellipse", "roundrect", "triangle", "diamond", "pentagon", "hexagon", "star", "parallelogram", "cloud" ];
+            return [ "rect", "circle", "ellipse", "roundrect", "triangle", "right_triangle", "diamond", "pentagon", "hexagon", "star", "parallelogram", "cloud" ];
+        },
+        createColorStops: function(colors, no_gradient, start, end) {
+            if (start == null) {
+                start = 0;
+            }
+            if (end == null) {
+                end = 1;
+            }
+            var min = Math.min(start, end);
+            var max = Math.max(start, end);
+            start = Math.max(0, min);
+            end = Math.min(1, max);
+            var colorStops = {};
+            var count = colors.length;
+            if (count < 2) {
+                colorStops[start] = colors[0];
+                colorStops[end] = colors[0];
+            } else {
+                var step, i;
+                if (no_gradient === true) {
+                    step = (end - start) / count;
+                    for (i = 0; i < count; i++) {
+                        colorStops[start + i * step] = colors[i];
+                        colorStops[start + (i + 1) * step - .001] = colors[i];
+                    }
+                } else {
+                    step = (end - start) / (count - 1);
+                    for (i = 0; i < count; i++) {
+                        colorStops[start + i * step] = colors[i];
+                    }
+                }
+            }
+            return colorStops;
+        },
+        createArcBezierPoints: function(cx, cy, radius, startAngle, endAngle) {
+            startAngle = (startAngle % 360 + 360) % 360;
+            endAngle = (endAngle % 360 + 360) % 360;
+            if (endAngle < startAngle) {
+                endAngle += 360;
+            }
+            var angle = Math.abs(endAngle - startAngle);
+            if (angle === 0) {
+                return [];
+            }
+            var segAngle = 90;
+            var count = Math.ceil(angle / segAngle);
+            var points = [];
+            var start = Math.min(startAngle, endAngle);
+            var center = {
+                x: cx,
+                y: cy
+            };
+            for (var i = 0; i < count; i++) {
+                var end = Math.min(start + segAngle, endAngle);
+                var itemAngle = z.math.toRadians(Math.abs(end - start));
+                var cpLen = 4 * Math.tan(itemAngle / 4) / 3 * radius;
+                var cp1 = z.math.calcRotatedPoint(center, {
+                    x: radius + cx,
+                    y: cpLen + cy
+                }, start);
+                var cp2 = z.math.calcRotatedPoint(center, {
+                    x: radius + cx,
+                    y: -cpLen + cy
+                }, end);
+                if (i === 0) {
+                    var p1 = z.math.calcPointOnCircle(center, radius, start);
+                    p1.seg = "bezier_curve_to";
+                    points.push(p1);
+                }
+                var p2 = z.math.calcPointOnCircle(center, radius, end);
+                if (i < count - 1) {
+                    p2.seg = "bezier_curve_to";
+                }
+                points.push(cp1, cp2, p2);
+                start += segAngle;
+            }
+            return points;
         }
     });
-    z.util.mergeObject($GVUtil, {
-        _createData: function(item, class_key, defaultCls, params) {
-            var clazz = item[class_key];
+    var $GVDataParser = {
+        _createData: function(parseOption, item, defaultCls, params) {
+            var clazz = item[parseOption.class_key];
             if (z.type.isString(clazz)) {
                 var strCls;
                 switch (clazz.toLowerCase()) {
@@ -2432,7 +2509,7 @@
                     strCls = z.gv.Link;
                     break;
 
-                  case "linksubnet":
+                  case "linksubview":
                     strCls = z.gv.LinkSubview;
                     break;
                 }
@@ -2447,10 +2524,10 @@
             params = z.util.mergeArray([ clazz ], params || [ item ]);
             return new (clazz.bind.apply(clazz, params))();
         },
-        _getDataItem: function(item, optKeys) {
+        _getDataItem: function(parseOption, item) {
             var _item = z.util.mergeObject({}, item);
             var optValue = {};
-            optKeys.forEach(function(key) {
+            parseOption._keys.forEach(function(key) {
                 if (_item.hasOwnProperty(key)) {
                     delete _item[key];
                     optValue[key] = item[key];
@@ -2459,92 +2536,145 @@
             _item["_$_opt"] = optValue;
             return _item;
         },
-        _parseNode: function(item, optKeys, class_key, children_key, dataArr, parent) {
+        _parseNode: function(parseOption, item, allNodeKeyMap, parent, resultDataArr) {
             if (z.type.isString(item)) {
                 item = {
                     name: item
                 };
             }
-            dataArr = dataArr || [];
-            var dataItem = $GVUtil._getDataItem(item, optKeys);
-            var node = $GVUtil._createData(dataItem, class_key, z.gv.Node);
+            resultDataArr = resultDataArr || [];
+            var dataItem = $GVDataParser._getDataItem(parseOption, item);
+            var node = $GVDataParser._createData(parseOption, dataItem, z.gv.Node);
             if (parent) {
                 node.set("parent", parent);
             }
-            dataArr.push(node);
-            var children = item[children_key];
+            var keyValue = item[parseOption.node_key];
+            if (keyValue != null) {
+                allNodeKeyMap[keyValue] = node;
+            }
+            resultDataArr.push(node);
+            var children = item[parseOption.children_key];
             if (z.type.isArray(children)) {
                 children.forEach(function(child) {
-                    $GVUtil._parseNode(child, optKeys, class_key, children_key, dataArr, node);
+                    $GVDataParser._parseNode(parseOption, child, allNodeKeyMap, node, resultDataArr);
                 });
             }
-            return dataArr;
+            return resultDataArr;
         },
-        parseData: function(json_data, options) {
-            if (z.type.isString(json_data)) {
-                json_data = JSON.parse(json_data);
-            }
-            if (!z.type.isObject(json_data)) {
+        _parseNodes: function(parseOption, nodeItems, allNodeArr, allNodeKeyMap, parent) {
+            if (!nodeItems) {
                 return;
             }
-            options = options || {};
-            var nodes_key = options.nodes_key || "nodes";
-            var links_key = options.links_key || "links";
-            var data_key = options.data_key || "id";
-            var node_key = options.node_key || data_key;
-            var link_key = options.link_key || data_key;
-            var class_key = options.class_key || "class";
-            var parent_key = options.parent_key || "parent";
-            var children_key = options.children_key || "children";
-            var link_from_key = options.link_from_key || "from";
-            var link_to_key = options.link_to_key || "to";
-            var optKeys = [ parent_key, children_key, link_from_key, link_to_key ];
-            var nodeItems = json_data[nodes_key] || [];
-            var linkItems = json_data[links_key] || [];
-            var nodeArr = [];
-            var linkArr = [];
-            var nodeKeyMap = {};
-            var linkKeyMap = {};
             nodeItems.forEach(function(item) {
                 if (z.type.isString(item)) {
                     item = {
                         name: item
                     };
                 }
-                $GVUtil._parseNode(item, optKeys, class_key, children_key).forEach(function(node) {
-                    nodeArr.push(node);
-                    var keyValue = item[node_key];
-                    if (keyValue) {
-                        nodeKeyMap[keyValue] = node;
-                    }
-                });
+                z.util.mergeArray(allNodeArr, $GVDataParser._parseNode(parseOption, item, allNodeKeyMap, parent));
             });
+        },
+        _getParseOption: function(parseOption) {
+            parseOption = parseOption || {};
+            var data_key = parseOption.data_key || "id";
+            var opt = {
+                nodes_key: parseOption.nodes_key || "nodes",
+                links_key: parseOption.links_key || "links",
+                data_key: data_key,
+                node_key: parseOption.node_key || data_key,
+                link_key: parseOption.link_key || data_key,
+                class_key: parseOption.class_key || "class",
+                parent_key: parseOption.parent_key || "parent",
+                children_key: parseOption.children_key || "children",
+                link_from_key: parseOption.link_from_key || "from",
+                link_to_key: parseOption.link_to_key || "to"
+            };
+            opt._keys = [ opt.parent_key, opt.children_key, opt.link_from_key, opt.link_to_key ];
+            return opt;
+        },
+        parseJSON: function(json_data, parseOption) {
+            if (z.type.isString(json_data)) {
+                json_data = JSON.parse(json_data);
+            }
+            if (!z.type.isObject(json_data)) {
+                return;
+            }
+            parseOption = $GVDataParser._getParseOption(parseOption);
+            var nodeItems = json_data[parseOption.nodes_key] || [];
+            var linkItems = json_data[parseOption.links_key] || [];
+            var allNodeArr = [];
+            var allLinkArr = [];
+            var allNodeKeyMap = {};
+            var allLinkKeyMap = {};
+            $GVDataParser._parseNodes(parseOption, nodeItems, allNodeArr, allNodeKeyMap);
             linkItems.forEach(function(item) {
-                var fromNode = nodeKeyMap[item[link_from_key]];
-                var toNode = nodeKeyMap[item[link_to_key]];
+                var fromNode = allNodeKeyMap[item[parseOption.link_from_key]];
+                var toNode = allNodeKeyMap[item[parseOption.link_to_key]];
                 if (fromNode && toNode) {
-                    var dataItem = $GVUtil._getDataItem(item, optKeys);
-                    var link = $GVUtil._createData(dataItem, class_key, z.gv.Link, [ fromNode, toNode, dataItem ]);
-                    linkArr.push(link);
-                    var keyValue = item[link_key];
-                    if (keyValue) {
-                        linkKeyMap[keyValue] = link;
+                    var dataItem = $GVDataParser._getDataItem(parseOption, item);
+                    var link = $GVDataParser._createData(parseOption, dataItem, z.gv.Link, [ fromNode, toNode, dataItem ]);
+                    var clazz = item[parseOption.class_key];
+                    if (z.type.isString(clazz) && clazz.toLowerCase() === "linksubview" || clazz === z.gv.LinkSubview) {
+                        $GVDataParser._parseNodes(parseOption, item[parseOption.children_key] || [], allNodeArr, allNodeKeyMap, link);
+                    }
+                    allLinkArr.push(link);
+                    var keyValue = item[parseOption.link_key];
+                    if (keyValue != null) {
+                        allLinkKeyMap[keyValue] = link;
                     }
                 }
             });
-            nodeArr.forEach(function(deviceNode) {
+            allNodeArr.forEach(function(deviceNode) {
                 var opt = deviceNode.get("_$_opt");
-                var pkValue = opt[parent_key];
+                var pkValue = opt[parseOption.parent_key];
                 if (pkValue) {
-                    var parent = nodeKeyMap[pkValue] || linkKeyMap[pkValue];
+                    var parent = allNodeKeyMap[pkValue] || allLinkKeyMap[pkValue];
                     if (parent) {
                         deviceNode.set("parent", parent);
                     }
                 }
             });
-            return z.util.mergeArray(nodeArr, linkArr);
+            return z.util.mergeArray(allNodeArr, allLinkArr);
+        },
+        toJSON: function(gview, options) {
+            var dataArr = [];
+            if (z.type.isData(gview)) {
+                dataArr = [ gview ];
+            } else {
+                dataArr = gview.getDataArray();
+            }
+            var parseOption = $GVDataParser._getParseOption(options);
+            var nodeArr = [];
+            var nodeIDMap = {};
+            dataArr.forEach(function(data) {
+                if (z.type.isNode(data)) {
+                    nodeArr.push($GVDataParser._getDataProps(data, true));
+                }
+            });
+        },
+        _getDataClass: function(data) {
+            if (z.type.isLinkSubview(data)) {
+                return "linksubview";
+            }
+            if (z.type.isGroup(data)) {
+                return "group";
+            }
+            if (z.type.isSubview(data)) {
+                return "subview";
+            }
+        },
+        _getDataProps: function(data, withClass) {
+            var props = JSON.parse(JSON.stringify(data.gets()));
+            if (withClass === true) {
+                var cls = $GVDataParser._getDataClass();
+                if (cls) {
+                    props["class"] = cls;
+                }
+            }
+            return props;
         }
-    });
+    };
+    $GVUtil.parseData = $GVDataParser.parseJSON;
     z.util.mergeObject($GVUtil, {
         initSubviewNav: function(gView, option) {
             option = z.util.mergeObject({
@@ -2734,7 +2864,12 @@
                     if (Object.keys(props).length === 0) {
                         return null;
                     }
-                    return "<pre>" + JSON.stringify(props, null, "  ") + "</pre>";
+                    return "<pre>" + JSON.stringify(props, function(key, value) {
+                        if (z.type.isData(value)) {
+                            return gView.getLabel(value);
+                        }
+                        return value;
+                    }, "  ") + "</pre>";
                 };
             }
             gView.onViewChange(function(evt) {
@@ -2797,7 +2932,13 @@
                     tt._tooltip_data = data;
                     var bounds;
                     if (z.type.isNode(data)) {
-                        bounds = gView.getDataPageBounds(data, body_only);
+                        bounds = gView.getDataWindowBounds(data, body_only);
+                        if (option.in_node_center === true) {
+                            bounds = {
+                                x: bounds.x + bounds.width / 2,
+                                y: bounds.y + bounds.height / 2
+                            };
+                        }
                     }
                     tt.open(bounds || event);
                 }
@@ -3106,7 +3247,7 @@
         _getObjectSheetValue: function(object, edit_props, values) {
             values = values || {};
             var objectEditValue = this._getObjectEditValue(object);
-            edit_props.forEach(function(item) {
+            (edit_props || []).forEach(function(item) {
                 var property = item.property;
                 if (property) {
                     if (objectEditValue.hasOwnProperty(property)) {
@@ -3163,6 +3304,596 @@
             }
         }
     }));
+    var $GeoJSONParser = {
+        parse: function(geoJSON, screenBounds, option) {
+            if (z.type.isString(geoJSON)) {
+                geoJSON = JSON.parse(geoJSON);
+            }
+            var nameCenter = geoJSON.name_center;
+            option = option || {};
+            var areaTransform = option.area_transform;
+            var keyField = option["key"] || "name";
+            var arr = [], idMap = {};
+            (geoJSON.features || []).forEach(function(feature) {
+                var item = $GeoJSONParser._parseFeature(feature);
+                var id = item.properties[keyField];
+                var existItem = idMap[id];
+                if (item.points.length > 0) {
+                    if (existItem) {
+                        var existPoints = existItem.points;
+                        existPoints[existPoints.length - 1].seg = "move_to";
+                        existPoints.push.apply(existPoints, item.points);
+                    } else {
+                        idMap[id] = item;
+                        arr.push(item);
+                    }
+                }
+            });
+            if (areaTransform) {
+                z.util.eachObject(areaTransform, function(area, transform) {
+                    var item = idMap[area];
+                    if (!item) {
+                        return;
+                    }
+                    $GeoJSONParser._transformPoints(item.points, transform);
+                });
+            }
+            var minX, minY, maxX, maxY;
+            arr.forEach(function(item, index) {
+                item.points.forEach(function(point, pIndex) {
+                    var px = point.x, py = point.y;
+                    if (index === 0 && pIndex === 0) {
+                        minX = maxX = px;
+                        minY = maxY = py;
+                    } else {
+                        minX = Math.min(minX, px);
+                        minY = Math.min(minY, py);
+                        maxX = Math.max(maxX, px);
+                        maxY = Math.max(maxY, py);
+                    }
+                });
+            });
+            var pw = maxX - minX, ph = maxY - minY;
+            var x = screenBounds.x | 0, y = screenBounds.y | 0, width = screenBounds.width, height = screenBounds.height;
+            var zoom = 1, xOffset = 0, yOffset = 0;
+            if (width > 0 && height > 0) {
+                zoom = Math.min(width / pw, height / ph);
+                xOffset = (width - pw * zoom) / 2 + x | 0;
+                yOffset = (height - ph * zoom) / 2 + y | 0;
+            } else if (width > 0) {
+                zoom = width / pw;
+                xOffset = (width - pw * zoom) / 2 + x | 0;
+            } else if (height > 0) {
+                zoom = height / ph;
+                yOffset = (height - ph * zoom) / 2 + y | 0;
+            }
+            arr.forEach(function(item) {
+                var pointsCount = item.points.length;
+                if (pointsCount === 0) {
+                    return;
+                }
+                var sumX = 0, sumY = 0;
+                var itemMinX, itemMinY, itemMaxX, itemMaxY;
+                item.points.forEach(function(point, index) {
+                    var x = (point.x - minX) * zoom + xOffset;
+                    var y = (ph - (point.y - minY)) * zoom + yOffset;
+                    point.x = x;
+                    point.y = y;
+                    sumX += x;
+                    sumY += y;
+                    if (index === 0) {
+                        itemMinX = itemMaxX = x;
+                        itemMinY = itemMaxY = y;
+                    } else {
+                        itemMinX = Math.min(itemMinX, x);
+                        itemMinY = Math.min(itemMinY, y);
+                        itemMaxX = Math.max(itemMaxX, x);
+                        itemMaxY = Math.max(itemMaxY, y);
+                    }
+                });
+                var pointCenter = {
+                    x: sumX / pointsCount,
+                    y: sumY / pointsCount
+                };
+                var bounds = {
+                    x: itemMinX,
+                    y: itemMinY,
+                    width: itemMaxX - itemMinX,
+                    height: itemMaxY - itemMinY
+                };
+                var point_center_offset = {
+                    x: pointCenter.x - (bounds.x + bounds.width / 2),
+                    y: pointCenter.y - (bounds.y + bounds.height / 2)
+                };
+                if (item.properties.name_center === "points" || nameCenter === "points") {
+                    item.label_x_offset = point_center_offset.x;
+                    item.label_y_offset = point_center_offset.y;
+                }
+                item.coordinate = {
+                    points_center: pointCenter,
+                    bounds: bounds
+                };
+            });
+            return arr;
+        },
+        _calcBounds: function(points) {
+            var minX, minY, maxX, maxY, sumX = 0, sumY = 0;
+            if (points == null || points.length < 2) {
+                return null;
+            }
+            points.forEach(function(point, pIndex) {
+                var px = point.x, py = point.y;
+                sumX += px;
+                sumY += py;
+                if (pIndex === 0) {
+                    minX = maxX = px;
+                    minY = maxY = py;
+                } else {
+                    minX = Math.min(minX, px);
+                    minY = Math.min(minY, py);
+                    maxX = Math.max(maxX, px);
+                    maxY = Math.max(maxY, py);
+                }
+            });
+            return {
+                x: minX,
+                y: minY,
+                width: maxX - minX,
+                height: maxY - minY,
+                center_x: minX + (maxX - minX) / 2,
+                center_y: minY + (maxY - minY) / 2,
+                min_x: minX,
+                min_y: minY,
+                max_x: maxX,
+                max_y: maxY,
+                sum_x: sumX,
+                sum_y: sumY
+            };
+        },
+        _transformPoints: function(points, transform) {
+            var bounds = $GeoJSONParser._calcBounds(points);
+            if (!bounds) {
+                return;
+            }
+            var minX = bounds.min_x, minY = bounds.min_y;
+            var centerX = bounds.center_x, centerY = bounds.center_y;
+            var zoomX = 1, zoomY = 1;
+            var tZoom = transform.zoom;
+            if (tZoom) {
+                if (z.type.isArray(tZoom)) {
+                    if (tZoom.length > 1) {
+                        zoomX = tZoom[0];
+                        zoomY = tZoom[1];
+                    } else if (tZoom.length > 0) {
+                        zoomX = zoomY = tZoom[0];
+                    }
+                } else if (z.type.isObject(tZoom)) {
+                    if (tZoom.hasOwnProperty("x")) {
+                        zoomX = tZoom.x;
+                    }
+                    if (tZoom.hasOwnProperty("y")) {
+                        zoomY = tZoom.y;
+                    }
+                } else {
+                    zoomX = zoomY = parseFloat(tZoom);
+                }
+            }
+            if (zoomX !== 1 || zoomY !== 1) {
+                points.forEach(function(p) {
+                    p.x = minX + (p.x - minX) * zoomX;
+                    p.y = minY + (p.y - minY) * zoomY;
+                });
+                centerX = minX + (centerX - minX) * zoomX;
+                centerY = minY + (centerY - minY) * zoomY;
+            }
+            var tCenter = transform.center;
+            var xOffset = 0, yOffset = 0;
+            if (tCenter) {
+                if (z.type.isArray(tCenter)) {
+                    if (tCenter.length > 1) {
+                        xOffset = tCenter[0] - centerX;
+                        yOffset = tCenter[1] - centerY;
+                    }
+                } else if (z.type.isObject(tCenter)) {
+                    if (tCenter.hasOwnProperty("x")) {
+                        xOffset = tCenter.x - centerX;
+                    }
+                    if (tCenter.hasOwnProperty("y")) {
+                        yOffset = tCenter.y - centerY;
+                    }
+                }
+            }
+            if (xOffset !== 0 && yOffset !== 0) {
+                points.forEach(function(point) {
+                    point.x += xOffset;
+                    point.y += yOffset;
+                });
+            }
+        },
+        _parseFeature: function(feature) {
+            var properties = feature.properties || {};
+            var geometry = feature.geometry || {};
+            var points = [];
+            (geometry.coordinates || []).forEach(function(coordinate) {
+                var pointArr = [];
+                $GeoJSONParser._parseCoordinatePoints(pointArr, coordinate);
+                if (pointArr.length > 0 && points.length > 0) {
+                    points[points.length - 1].seg = "move_to";
+                }
+                points.push.apply(points, pointArr);
+            });
+            return {
+                properties: properties,
+                points: points
+            };
+        },
+        _parseCoordinatePoints: function(pointArr, coordinate) {
+            var first = coordinate[0];
+            if (z.type.isArray(first)) {
+                coordinate.forEach(function(child) {
+                    $GeoJSONParser._parseCoordinatePoints(pointArr, child);
+                });
+            } else {
+                pointArr.push({
+                    x: first,
+                    y: coordinate[1]
+                });
+            }
+        }
+    };
+    var $GifUtil = {
+        _loadingMap: {},
+        _cachedMap: {},
+        _errorMap: {},
+        register: function(name, imgSrc) {
+            if (imgSrc) {
+                if (z.type.isString(imgSrc)) {
+                    var loadingArr = $GifUtil._loadingMap[name];
+                    if (loadingArr == null) {
+                        loadingArr = [];
+                        $GifUtil._loadingMap[name] = loadingArr;
+                    }
+                    $GifUtil.load(name, imgSrc);
+                }
+            }
+        },
+        get: function(name, loadCallBack, context) {
+            if ($GifUtil._cachedMap.hasOwnProperty(name)) {
+                return z.util.mergeObject({}, $GifUtil._cachedMap[name]);
+            }
+            if ($GifUtil._errorMap[name] > 1) {
+                return false;
+            }
+            var callBackArray = $GifUtil._loadingMap[name];
+            var needLoad = callBackArray == null;
+            if (needLoad === true) {
+                callBackArray = [];
+                $GifUtil._loadingMap[name] = callBackArray;
+            }
+            if (loadCallBack) {
+                callBackArray.push({
+                    callBack: loadCallBack,
+                    context: context
+                });
+            }
+            if (needLoad === true) {
+                $GifUtil.load(name, name);
+            }
+        },
+        load: function(name, gif_src) {
+            z.ajax.ajax("GET", gif_src, {
+                responseType: "arraybuffer",
+                complete: function(status, result) {
+                    if ((status / 100 | 0) === 2) {
+                        var gifObj = $GifUtil.parse(result);
+                        $GifUtil.cache(name, gifObj);
+                    } else {
+                        console.error("Load Gif Image Error:" + gif_src);
+                        $GifUtil.cache(name, null);
+                    }
+                }
+            });
+        },
+        cache: function(name, gifObj) {
+            if (gifObj) {
+                $GifUtil._cachedMap[name] = gifObj;
+            } else {
+                $GifUtil._errorMap[name] = ($GifUtil._errorMap[name] | 0) + 1;
+            }
+            var callBackArray = $GifUtil._loadingMap[name];
+            if (callBackArray) {
+                callBackArray.forEach(function(item) {
+                    item.callBack.apply(item.context, [ z.util.mergeObject({}, gifObj) ]);
+                });
+                delete $GifUtil._loadingMap[name];
+            }
+        },
+        parse: function(binaryData) {
+            var gifParseObj = {
+                width: null,
+                height: null,
+                frames: [],
+                comment: "",
+                duration: 0,
+                currentFrame: 0,
+                lastFrame: null,
+                interlacedBufSize: null,
+                deInterlaceBuf: null,
+                pixelBufSize: null,
+                pixelBuf: null,
+                st: new $GifUtil.GifStream(binaryData),
+                image: null,
+                waitTillDone: true,
+                firstFrameOnly: false
+            };
+            var st = gifParseObj.st;
+            st.pos += 6;
+            gifParseObj.width = st.data[st.pos++] + (st.data[st.pos++] << 8);
+            gifParseObj.height = st.data[st.pos++] + (st.data[st.pos++] << 8);
+            var bitField = st.data[st.pos++];
+            gifParseObj.colorRes = (bitField & 112) >> 4;
+            gifParseObj.globalColourCount = 1 << (bitField & 7) + 1;
+            gifParseObj.bgColourIndex = st.data[st.pos++];
+            st.pos++;
+            if (bitField & 128) {
+                gifParseObj.globalColourTable = $GifUtil._parseColourTable(gifParseObj, gifParseObj.globalColourCount);
+            }
+            $GifUtil._parseBlock(gifParseObj);
+            return {
+                width: gifParseObj.width,
+                height: gifParseObj.height,
+                frames: gifParseObj.frames,
+                image: (gifParseObj.frames[0] || {}).image,
+                frame_count: gifParseObj.frames.length,
+                duration: gifParseObj.duration
+            };
+        },
+        _parseBlock: function(gifParseObj) {
+            var st = gifParseObj.st;
+            var blockId = st.data[st.pos++];
+            if (blockId === $GifUtil.GIF_SPECIFICATION_CONST.HEADERS.IMAGE) {
+                $GifUtil._parseBlockImg(gifParseObj);
+                if (gifParseObj.firstFrameOnly === true) {
+                    return;
+                }
+            } else if (blockId === $GifUtil.GIF_SPECIFICATION_CONST.HEADERS.EOF) {
+                return;
+            } else {
+                $GifUtil._parseBlockExt(gifParseObj);
+            }
+            $GifUtil._parseBlock(gifParseObj);
+        },
+        _parseBlockExt: function(gifParseObj) {
+            var st = gifParseObj.st;
+            var blockID = st.data[st.pos++];
+            if (blockID === $GifUtil.GIF_SPECIFICATION_CONST.HEADERS.GCExt) {
+                $GifUtil._parseBlockGCExt(gifParseObj);
+            } else if (blockID === $GifUtil.GIF_SPECIFICATION_CONST.HEADERS.COMMENT) {
+                gifParseObj.comment += st.readSubBlocks();
+            } else if (blockID === $GifUtil.GIF_SPECIFICATION_CONST.HEADERS.APPExt) {
+                $GifUtil._parseBlockAppExt(gifParseObj);
+            } else {
+                if (blockID === $GifUtil.GIF_SPECIFICATION_CONST.HEADERS.UNKNOWN) {
+                    st.pos += 13;
+                }
+                st.readSubBlocks();
+            }
+        },
+        _parseBlockGCExt: function(gifParseObj) {
+            var st = gifParseObj.st;
+            st.pos++;
+            var bitField = st.data[st.pos++];
+            gifParseObj.disposalMethod = (bitField & 28) >> 2;
+            gifParseObj.transparencyGiven = bitField & 1 ? true : false;
+            gifParseObj.delayTime = st.data[st.pos++] + (st.data[st.pos++] << 8);
+            gifParseObj.transparencyIndex = st.data[st.pos++];
+            st.pos++;
+        },
+        _parseBlockAppExt: function(gifParseObj) {
+            var st = gifParseObj.st;
+            st.pos += 1;
+            if ("NETSCAPE" === st.getString(8)) {
+                st.pos += 8;
+            } else {
+                st.pos += 3;
+                st.readSubBlocks();
+            }
+        },
+        _parseBlockImg: function(gifParseObj) {
+            var st = gifParseObj.st;
+            var deInterlace, frame, bitField;
+            deInterlace = function(width) {
+                var lines, fromLine;
+                lines = gifParseObj.pixelBufSize / width;
+                fromLine = 0;
+                if (gifParseObj.interlacedBufSize !== gifParseObj.pixelBufSize) {
+                    gifParseObj.deInterlaceBuf = new Uint8Array(gifParseObj.pixelBufSize);
+                    gifParseObj.interlacedBufSize = gifParseObj.pixelBufSize;
+                }
+                for (var pass = 0; pass < 4; pass++) {
+                    for (var toLine = $GifUtil.GIF_SPECIFICATION_CONST.INTERLACE_OFFSETS[pass]; toLine < lines; toLine += $GifUtil.GIF_SPECIFICATION_CONST.INTERLACE_STEPS[pass]) {
+                        gifParseObj.deInterlaceBuf.set(gifParseObj.pixelBuf.subarray(fromLine, fromLine + width), toLine * width);
+                        fromLine += width;
+                    }
+                }
+            };
+            frame = {};
+            gifParseObj.frames.push(frame);
+            frame.disposalMethod = gifParseObj.disposalMethod;
+            frame.start = gifParseObj.duration;
+            frame.delay = gifParseObj.delayTime * 10;
+            gifParseObj.duration += frame.delay;
+            if (gifParseObj.transparencyGiven) {
+                frame.transparencyIndex = gifParseObj.transparencyIndex;
+            } else {
+                frame.transparencyIndex = undefined;
+            }
+            frame.leftPos = st.data[st.pos++] + (st.data[st.pos++] << 8);
+            frame.topPos = st.data[st.pos++] + (st.data[st.pos++] << 8);
+            frame.width = st.data[st.pos++] + (st.data[st.pos++] << 8);
+            frame.height = st.data[st.pos++] + (st.data[st.pos++] << 8);
+            bitField = st.data[st.pos++];
+            frame.localColourTableFlag = bitField & 128 ? true : false;
+            if (frame.localColourTableFlag) {
+                frame.localColourTable = $GifUtil._parseColourTable(gifParseObj, 1 << (bitField & 7) + 1);
+            }
+            if (gifParseObj.pixelBufSize !== frame.width * frame.height) {
+                gifParseObj.pixelBuf = new Uint8Array(frame.width * frame.height);
+                gifParseObj.pixelBufSize = frame.width * frame.height;
+            }
+            $GifUtil._lzwDecode(gifParseObj, st.data[st.pos++], st.readSubBlocksB());
+            if (bitField & 64) {
+                frame.interlaced = true;
+                deInterlace(frame.width);
+            } else {
+                frame.interlaced = false;
+            }
+            $GifUtil._createFrameImg(gifParseObj, frame);
+        },
+        _createFrameImg: function(gifParseObj, frame) {
+            var pixel, pDat, col;
+            var img_cvs = frame.image = z.dom.create("canvas");
+            img_cvs.width = gifParseObj.width;
+            img_cvs.height = gifParseObj.height;
+            var img_cvs_ctx = img_cvs.getContext("2d");
+            var frameColorTable = frame.localColourTableFlag ? frame.localColourTable : gifParseObj.globalColourTable;
+            if (gifParseObj.lastFrame === null) {
+                gifParseObj.lastFrame = frame;
+            }
+            if (gifParseObj.lastFrame.disposalMethod === 1) {
+                img_cvs_ctx.drawImage(gifParseObj.lastFrame.image, 0, 0, gifParseObj.width, gifParseObj.height);
+            }
+            var useT = gifParseObj.lastFrame.disposalMethod === 2 || gifParseObj.lastFrame.disposalMethod === 3;
+            var cvsImageData = img_cvs_ctx.getImageData(frame.leftPos, frame.topPos, frame.width, frame.height);
+            var ti = frame.transparencyIndex;
+            var cvsImageDataArr = cvsImageData.data;
+            if (frame.interlaced) {
+                pDat = gifParseObj.deinterlaceBuf;
+            } else {
+                pDat = gifParseObj.pixelBuf;
+            }
+            var pixCount = pDat.length;
+            var index = 0;
+            for (var i = 0; i < pixCount; i++) {
+                pixel = pDat[i];
+                col = frameColorTable[pixel];
+                if (ti !== pixel) {
+                    cvsImageDataArr[index++] = col[0];
+                    cvsImageDataArr[index++] = col[1];
+                    cvsImageDataArr[index++] = col[2];
+                    cvsImageDataArr[index++] = 255;
+                } else if (useT) {
+                    cvsImageDataArr[index + 3] = 0;
+                    index += 4;
+                } else {
+                    index += 4;
+                }
+            }
+            img_cvs_ctx.putImageData(cvsImageData, frame.leftPos, frame.topPos);
+            gifParseObj.lastFrame = frame;
+        },
+        _parseColourTable: function(gifParseObj, count) {
+            var st = gifParseObj.st;
+            var colours = [];
+            for (var i = 0; i < count; i++) {
+                colours.push([ st.data[st.pos++], st.data[st.pos++], st.data[st.pos++] ]);
+            }
+            return colours;
+        },
+        _lzwDecode: function(gifParseObj, minSize, data) {
+            var i, pixelPos, pos, clear, eod, size, done, dic, code, last, d, len;
+            pos = pixelPos = 0;
+            dic = [];
+            clear = 1 << minSize;
+            eod = clear + 1;
+            size = minSize + 1;
+            done = false;
+            while (!done) {
+                last = code;
+                code = 0;
+                for (i = 0; i < size; i++) {
+                    if (data[pos >> 3] & 1 << (pos & 7)) {
+                        code |= 1 << i;
+                    }
+                    pos++;
+                }
+                if (code === clear) {
+                    dic = [];
+                    size = minSize + 1;
+                    for (i = 0; i < clear; i++) {
+                        dic[i] = [ i ];
+                    }
+                    dic[clear] = [];
+                    dic[eod] = null;
+                } else {
+                    if (code === eod) {
+                        done = true;
+                        return;
+                    }
+                    if (code >= dic.length) {
+                        dic.push(dic[last].concat(dic[last][0]));
+                    } else if (last !== clear) {
+                        dic.push(dic[last].concat(dic[code][0]));
+                    }
+                    d = dic[code];
+                    len = d.length;
+                    for (i = 0; i < len; i++) {
+                        gifParseObj.pixelBuf[pixelPos++] = d[i];
+                    }
+                    if (dic.length === 1 << size && size < 12) {
+                        size++;
+                    }
+                }
+            }
+        }
+    };
+    z.util.mergeObject($GifUtil, {
+        GIF_SPECIFICATION_CONST: {
+            HEADERS: {
+                GCExt: 249,
+                COMMENT: 254,
+                APPExt: 255,
+                UNKNOWN: 1,
+                IMAGE: 44,
+                EOF: 59,
+                EXT: 33
+            },
+            INTERLACE_OFFSETS: [ 0, 4, 2, 1 ],
+            INTERLACE_STEPS: [ 8, 8, 4, 2 ]
+        },
+        GifStream: function(data) {
+            this.data = new Uint8ClampedArray(data);
+            this.pos = 0;
+            var len = this.data.length;
+            this.getString = function(count) {
+                var s = "";
+                while (count--) {
+                    s += String.fromCharCode(this.data[this.pos++]);
+                }
+                return s;
+            };
+            this.readSubBlocks = function() {
+                var size, count, data = "";
+                do {
+                    count = size = this.data[this.pos++];
+                    while (count--) {
+                        data += String.fromCharCode(this.data[this.pos++]);
+                    }
+                } while (size !== 0 && this.pos < len);
+                return data;
+            };
+            this.readSubBlocksB = function() {
+                var size, count, data = [];
+                do {
+                    count = size = this.data[this.pos++];
+                    while (count--) {
+                        data.push(this.data[this.pos++]);
+                    }
+                } while (size !== 0 && this.pos < len);
+                return data;
+            };
+        }
+    });
     var $GridLayout = z.util.newClass(z.gv.layout.Layout, function() {
         $GridLayout.superClass.constructor.apply(this, arguments);
     }, {
@@ -3673,16 +4404,42 @@
             }
             return paths;
         },
-        calcPathsBetween: function(fromNode, toNode, filerFun, sortCmp, directed) {
+        calcPathsBetween: function(fromNode, toNode, filterFun, sortCmp, directed, disjoint) {
             var pathArr = [];
             $GVPathCalc._calcPathsBetween(fromNode, toNode, pathArr, directed);
-            if (filerFun) {
-                pathArr = z.util.filterArray(pathArr, filerFun);
+            if (filterFun) {
+                pathArr = z.util.filterArray(pathArr, filterFun);
             }
             if (sortCmp) {
                 pathArr.sort(sortCmp);
             }
+            if (disjoint === true) {
+                return $GVPathCalc.filterDisjointPaths(pathArr);
+            }
             return pathArr;
+        },
+        filterDisjointPaths: function(pathArr) {
+            var existMap = {};
+            var nrPathArr = [];
+            pathArr.forEach(function(path) {
+                var pathDataMap = {};
+                var joint = false;
+                var count = path.length;
+                path.forEach(function(data, index) {
+                    if (index !== 0 && index !== count - 1) {
+                        var did = data.id();
+                        pathDataMap[did] = true;
+                        if (existMap.hasOwnProperty(did)) {
+                            joint = true;
+                        }
+                    }
+                });
+                if (joint === false) {
+                    nrPathArr.push(path);
+                    existMap = z.util.mergeObject(existMap, pathDataMap);
+                }
+            });
+            return nrPathArr;
         },
         _calcPathsBetween: function(fromNode, toNode, pathArr, directed, containedDataArr) {
             var toLinks;
@@ -3714,6 +4471,86 @@
             }
         }
     };
+    var $GifNode = z.util.newClass(z.gv.Node, function() {}, {
+        _updateGifImage: function() {
+            var gifObj = this._gifObj;
+            if (!gifObj) {
+                return;
+            }
+            var current_index = this._gif_playing_current_index | 0;
+            var frame = gifObj.frames[current_index % gifObj.frame_count];
+            this.set("image", frame.image);
+            var delay = frame.delay;
+            if (this.has("gif_speed")) {
+                delay /= this.get("gif_speed");
+            }
+            this._gif_playing_current_index = current_index + 1;
+            this._gif_playing_calllater_id = z.util.callLater(this._updateGifImage, delay, this);
+        },
+        afterSetProperty: function(key, value, old) {
+            if (key === "image") {
+                if (z.type.isString(value)) {
+                    if (value.endsWith(".gif")) {
+                        this._updateGifPlayingStatus("stopped");
+                        pro.gv.GifUtil.get(value, function(gifObj) {
+                            this._gifObj = gifObj;
+                            this._updateGifPlayingStatus("playing");
+                        }, this);
+                    } else {
+                        if (this._gifObj) {
+                            this.pause();
+                            delete this._gifObj;
+                        }
+                    }
+                }
+            }
+            $GifNode.superClass.afterSetProperty.apply(this, arguments);
+        },
+        togglePlay: function() {
+            if (this._gif_playing_status === "playing") {
+                this.pause();
+            } else {
+                this.play();
+            }
+        },
+        _updateGifPlayingStatus: function(status) {
+            if (!this._gifObj) {
+                return;
+            }
+            var oldStatus = this._gif_playing_status;
+            if (oldStatus === status) {
+                return;
+            }
+            this._gif_playing_status = status;
+            if (status === "paused" || status === "stopped") {
+                if (this._gif_playing_calllater_id) {
+                    z.util.cancelCallLater(this._gif_playing_calllater_id);
+                    delete this._gif_playing_calllater_id;
+                }
+                if (status === "stopped") {
+                    delete this._gif_playing_current_index;
+                    this.set("image", this._gifObj.image);
+                }
+            } else if (status === "playing") {
+                this._updateGifImage();
+            }
+        },
+        play: function() {
+            this._updateGifPlayingStatus("playing");
+        },
+        pause: function() {
+            this._updateGifPlayingStatus("paused");
+        },
+        stop: function() {
+            this._updateGifPlayingStatus("stopped");
+        },
+        getGifStatus: function() {
+            return this._gif_playing_status;
+        },
+        getGif: function() {
+            return this._gifObj;
+        }
+    }, {});
     var pro = {
         Util: $Util,
         DomUtil: $DomUtil,
@@ -3739,6 +4576,9 @@
         GVPathCalc: $GVPathCalc,
         GVEditController: $GVEditController,
         gv: {
+            GifUtil: $GifUtil,
+            GifNode: $GifNode,
+            GeoJSONParser: $GeoJSONParser,
             layout: {
                 GridLayout: $GridLayout,
                 RingLayout: $RingLayout,

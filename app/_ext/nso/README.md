@@ -1,8 +1,8 @@
-## NSO 扩展
+## 关于
 
-将NSO操作从数据模型中解耦
+NSO扩展，用于将NSO操作从数据模型中解耦
 
-### 使用
+## 使用
 
 - `apply`用于NSO下发，通过创建继承自`NSOApply`的子类和重写方法实现对不同网络服务的NSO操作
     - 重写`get_url/get_url_params`方法指定请求url及查询参数
@@ -15,7 +15,7 @@
     - 重写`get_nso_apply`方法指定对应的apply(解耦)
     - 重写`get_nso_data`方法返回供apply使用的数据，
 
-###### apply.to_nso_data和model.get_nso_data的区别
+### apply.to_nso_data和model.get_nso_data的区别
 
 两者都用于返回参数，但是用途不太一样
 

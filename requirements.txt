@@ -5,6 +5,6 @@ alembic                 # for database migration
 ## Install following packages as needed
 # pycryptodome          # RSA&AES encryption，For license management
 # pymysql               # mysql driver
+# flask-cors            # for cross domain
 # redis                 # redis
 # websockets            # websocket
-# flask-cors            # for cross domain

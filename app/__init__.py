@@ -26,7 +26,6 @@ def create_app(config_name):
     _init_login(app)
     _init_model_rest(app)
     # _init_license(app)
-    # _init_redis_ws(app)
 
     # 注册api
     main.init_app(app)
@@ -47,17 +46,23 @@ def _init_login(app):
     """初始化login模块，按需使用"""
     from flask_login import LoginManager
     login_manager = LoginManager()
+    # 用户加载回调函数，可以通过id查找对应的用户
     login_manager.user_loader(auth.load_user_by_id)
+    # 根据token加载用户回调函数，可以通过token查找到对应的用户
     login_manager.request_loader(auth.load_user_by_token)
+    # 初始化flask应用的用户登录管理
     login_manager.init_app(app)
 
 
 def _init_model_rest(app):
-    """初始化model rest模块，按需使用"""
+    """初始化model rest api权限控制和操作日志记录，按需使用"""
     from flaskz.rest import ModelRestManager
     model_rest_manager = ModelRestManager()
+    # check current user login or not
     model_rest_manager.login_check(auth.login_check)
+    # 检查用户是否有菜单&操作权限
     model_rest_manager.permission_check(auth.permission_check)
+    # 日志记录函数
     model_rest_manager.logging(sys_mgmt.log_operation)
     model_rest_manager.init_app(app)
 
@@ -67,24 +72,10 @@ def _init_license(app):
     初始化license模块，按需使用
     pip install pycryptodome
     """
-    # from flaskz.utils import get_app_path
     # from .sys_mgmt import license
-    # from .sys_mgmt.license import router  # enable api
+    # from .sys_mgmt.license import router  # enable api, *放在当前文件顶部导入或者在sys_mgmt.router导入，否则alembic不能发现License模型类*
     # license_manager = license.LicenseManager()
-    # license_manager.load_license(license.load_license)
-    # license_manager.request_check(license.request_check_by_license)
-    # with open(get_app_path("_license/public.key"), "r") as f:
-    #     public_key = f.read()
-    #     license_manager.init_app(app, public_key)
-    pass
-
-
-def _init_redis_ws(app):
-    """
-    初始化redis+websocket广播消息模块, 按需使用
-    pip install redis
-    pip install websockets
-    """
-    # from . import redis_ws
-    # redis_ws.init_websocket(app)
+    # license_manager.load_license(license.load_license)  # load license callback
+    # license_manager.request_check(license.request_check_by_license)  # request check callback
+    # license_manager.init_app(app)
     pass

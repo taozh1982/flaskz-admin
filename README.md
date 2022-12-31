@@ -10,9 +10,3 @@ Flaskz-admin是基于 [Flaskz](https://pypi.org/project/flaskz/) 的管理系统
 4. [☞常用函数](http://zhangyiheng.com/blog/articles/py_flaskz_utils.html)
 5. [☞基于Flaskz的管理系统开发模板 Flaskz-admin](http://zhangyiheng.com/blog/articles/py_flaskz_admin.html)
 6. [☞使用手册](http://zhangyiheng.com/blog/articles/py_flaskz_manual.html)
-
-## 规范
-
-- 标准化/规范化/配置灵活
-- 写好注释和文档
-- 消除告警提示

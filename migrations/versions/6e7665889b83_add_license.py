@@ -1,8 +1,8 @@
 """add license
 
-Revision ID: 92ad21293203
+Revision ID: 6e7665889b83
 Revises: 5656baaceae2
-Create Date: 2022-09-16 18:01:45.106622
+Create Date: 2022-12-06 09:53:18.057171
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '92ad21293203'
+revision = '6e7665889b83'
 down_revision = '5656baaceae2'
 branch_labels = None
 depends_on = None
@@ -21,6 +21,7 @@ def upgrade():
     op.create_table('sys_licenses',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('license', sa.Text(), nullable=False),
+    sa.Column('license_hash', sa.String(length=255), nullable=False),
     sa.Column('user', sa.String(length=255), nullable=True),
     sa.Column('type', sa.String(length=32), nullable=True),
     sa.Column('start_date', sa.String(length=255), nullable=True),
@@ -29,7 +30,7 @@ def upgrade():
     sa.Column('description', sa.Text(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('license')
+    sa.UniqueConstraint('license_hash')
     )
     # ### end Alembic commands ###
 

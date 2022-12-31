@@ -7,11 +7,11 @@ from sqlalchemy import Column, Integer, String, DateTime
 from . import AutoModelMixin
 
 
-class TemplateModel(ModelBase, ModelMixin,AutoModelMixin):
+class TemplateModel(ModelBase, ModelMixin, AutoModelMixin):
     __tablename__ = 'templates'  # database table name
     # __table_args__ = (
     #     # this can be db.PrimaryKeyConstraint if you want it to be a primary key
-    #     UniqueConstraint('new_name', name="new_name"),
+    #     UniqueConstraint('new_name', name="new_name"), # for new unique column
     # )
 
     id = Column(Integer, primary_key=True, autoincrement=True)  # primary key

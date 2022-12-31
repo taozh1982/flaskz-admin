@@ -47,18 +47,20 @@ def log_operation(module, action, result, req_data=None, res_data=None, descript
 
 
 def _get_user_info():
-    if current_user.is_anonymous:
+    if current_user is None or current_user.is_anonymous:
         return {
             'user_ip': get_remote_addr(),
         }
     return {
-        'username': current_user.username,
-        'user_name': current_user.name,
+        'username': getattr(current_user, 'username'),
+        'user_name': getattr(current_user, 'name'),
         'user_ip': get_remote_addr()
     }
 
 
 def _get_module_name(module):
+    if module is None or module is False:
+        return None
     module_name_mapping = get_app_cache('op_module_name_mapping')
     if module_name_mapping is None:
         module_name_mapping = {}
@@ -70,7 +72,7 @@ def _get_module_name(module):
                     module_name_mapping[path] = item.name
             set_app_cache('op_module_name_mapping', module_name_mapping)
 
-    return module_name_mapping.get(module)
+    return module_name_mapping.get(module) or module
 
 
 from flaskz.utils import get_remote_addr, get_app_cache, set_app_cache, is_str

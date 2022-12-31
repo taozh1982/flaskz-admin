@@ -20,7 +20,7 @@ def init_app(app):
 def get_app_config(key=None):
     """
     返回当前app的config信息
-    还让flaskz.utils.get_app_config的区别是: 没有使用current_app，没有请求上下文时也可以使用
+    和flaskz.utils.get_app_config的区别是: 没有使用current_app，没有请求上下文时也可以使用
     """
     if key is None:
         return app_config

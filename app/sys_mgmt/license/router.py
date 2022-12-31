@@ -1,14 +1,18 @@
+import hashlib
+import os
+
 from flask import request
+from flaskz import res_status_codes
 from flaskz.log import flaskz_logger, get_log_data
 from flaskz.models import model_to_dict
 from flaskz.rest import get_rest_log_msg, rest_permission_required
-from flaskz.utils import create_response, get_app_path
+from flaskz.utils import create_response
 
 from . import License
 from .util import parse_license
 from ..router import sys_mgmt_bp, log_operation
 from ...main import allowed_file
-from ...sys_init import status_codes
+from ...sys_init import status_codes, get_app_config
 from ...utils import get_app_license
 
 
@@ -16,31 +20,36 @@ from ...utils import get_app_license
 @sys_mgmt_bp.route('/license/', methods=['POST'])
 @rest_permission_required('license')
 def sys_license_upload():
-    file = request.files.get('file')
-    license_txt = ''
-    if file is None or file.filename == '':
-        success = False
-        res_data = 'License file not exist'
+    license_txt = None
+    public_key_file = get_app_config('APP_LICENSE_PUBLIC_KEY_FILEPATH')
+    if not os.path.isfile(public_key_file):
+        success, res_data = False, 'License public key not exist'
     else:
-        if allowed_file(file):
-            license_txt = file.stream.read().decode("utf-8")
-            with open(get_app_path("_license/public.key"), "r") as f:
-                public_key = f.read()
-            license_result = parse_license(public_key, license_txt)
-            if license_result is False:
-                success, res_data = False, status_codes.license_parse_error
-            else:
-                success, res_data = License.add({
-                    'license': license_txt,
-                    'user': license_result.get('User'),
-                    'type': license_result.get('Type'),
-                    'start_date': license_result.get('StartDate'),
-                    'end_date': license_result.get('EndDate'),
-                })
-                res_data = model_to_dict(res_data)
+        file = request.files.get('file')
+        if file is None or file.filename == '':
+            success, res_data = False, res_status_codes.bad_request  # 'file not find'
         else:
-            success, res_data = False, status_codes.file_format_not_allowed
+            if allowed_file(file):
+                license_txt = file.stream.read().decode("utf-8")
+                with open(public_key_file, "r") as f:
+                    public_key = f.read()
+                license_result = parse_license(public_key, license_txt)
+                if license_result is False:
+                    success, res_data = False, status_codes.license_parse_error
+                else:
+                    success, res_data = License.add({
+                        'license': license_txt,
+                        'license_hash': hashlib.sha256(license_txt.encode('utf-8')).hexdigest(),
+                        'user': license_result.get('User'),
+                        'type': license_result.get('Type'),
+                        'start_date': license_result.get('StartDate'),
+                        'end_date': license_result.get('EndDate'),
+                    })
+                    res_data = model_to_dict(res_data)
+            else:
+                success, res_data = False, status_codes.file_format_not_allowed
     log_operation('license', 'add', success, license_txt, get_log_data(res_data))
+    flaskz_logger.info(get_rest_log_msg('Upload license', license_txt, success, res_data))
     return create_response(success, res_data)
 
 

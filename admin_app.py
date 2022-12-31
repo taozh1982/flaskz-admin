@@ -9,7 +9,6 @@ Email: taozh@cisco.com / taozh1982@gmail.com
 -[基于Flaskz的管理系统开发模板] http://zhangyiheng.com/blog/articles/py_flaskz_admin.html
 -[使用手册] http://zhangyiheng.com/blog/articles/py_flaskz_manual.html
 """
-
 import os
 
 from app import create_app
@@ -29,4 +28,4 @@ init_cli(app)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=666, debug=True, threaded=False)
 
-__version__ = 'v0.9'
+__version__ = 'v1.1'

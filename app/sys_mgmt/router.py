@@ -287,3 +287,5 @@ def sys_page_monitor():
     """
     flaskz_logger.warning(get_wrap_str('--Page Monitor', '--Data:', request.json))
     return create_response(True, {})
+
+# from .license import router # for alembic

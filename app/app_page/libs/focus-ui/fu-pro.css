@@ -1,4 +1,4 @@
-/*! Focus Pro v2.3.0 | http://focus-ui.com/ | 2022-10-02 */
+/*! Focus Pro v2.3.2 | http://focus-ui.com/ | 2023-01-01 */
 /*
 轻量级style
 ref: pure+bootstrap
@@ -395,6 +395,7 @@ body {
 .fu-pro .controls input[type='email'],
 .fu-pro .controls input[type='month'],
 .fu-pro .controls input[type='number'],
+.fu-pro .controls input[type='range'],
 .fu-pro .controls input[type='password'],
 .fu-pro .controls input[type='search'],
 .fu-pro .controls input[type='tel'],
@@ -425,6 +426,7 @@ body {
 .fu-pro .controls input[type='email']:focus,
 .fu-pro .controls input[type='month']:focus,
 .fu-pro .controls input[type='number']:focus,
+.fu-pro .controls input[type='range']:focus,
 .fu-pro .controls input[type='password']:focus,
 .fu-pro .controls input[type='search']:focus,
 .fu-pro .controls input[type='tel']:focus,
@@ -444,6 +446,7 @@ body {
 .fu-pro .controls input[type='email'].focus,
 .fu-pro .controls input[type='month'].focus,
 .fu-pro .controls input[type='number'].focus,
+.fu-pro .controls input[type='range'].focus,
 .fu-pro .controls input[type='password'].focus,
 .fu-pro .controls input[type='search'].focus,
 .fu-pro .controls input[type='tel'].focus,
@@ -466,6 +469,7 @@ body {
 .fu-pro .controls input[type='email']:disabled,
 .fu-pro .controls input[type='month']:disabled,
 .fu-pro .controls input[type='number']:disabled,
+.fu-pro .controls input[type='range']:disabled,
 .fu-pro .controls input[type='password']:disabled,
 .fu-pro .controls input[type='search']:disabled,
 .fu-pro .controls input[type='tel']:disabled,
@@ -485,6 +489,7 @@ body {
 .fu-pro .controls input[type='email'][readonly],
 .fu-pro .controls input[type='month'][readonly],
 .fu-pro .controls input[type='number'][readonly],
+.fu-pro .controls input[type='range'][readonly],
 .fu-pro .controls input[type='password'][readonly],
 .fu-pro .controls input[type='search'][readonly],
 .fu-pro .controls input[type='tel'][readonly],
@@ -504,6 +509,7 @@ body {
 .fu-pro .controls input[type='email'].disabled,
 .fu-pro .controls input[type='month'].disabled,
 .fu-pro .controls input[type='number'].disabled,
+.fu-pro .controls input[type='range'].disabled,
 .fu-pro .controls input[type='password'].disabled,
 .fu-pro .controls input[type='search'].disabled,
 .fu-pro .controls input[type='tel'].disabled,
@@ -523,6 +529,7 @@ body {
 .fu-pro .controls input[type='email'].readonly,
 .fu-pro .controls input[type='month'].readonly,
 .fu-pro .controls input[type='number'].readonly,
+.fu-pro .controls input[type='range'].readonly,
 .fu-pro .controls input[type='password'].readonly,
 .fu-pro .controls input[type='search'].readonly,
 .fu-pro .controls input[type='tel'].readonly,
@@ -545,6 +552,7 @@ body {
 .fu-pro .controls input[type='email'].is-invalid,
 .fu-pro .controls input[type='month'].is-invalid,
 .fu-pro .controls input[type='number'].is-invalid,
+.fu-pro .controls input[type='range'].is-invalid,
 .fu-pro .controls input[type='password'].is-invalid,
 .fu-pro .controls input[type='search'].is-invalid,
 .fu-pro .controls input[type='tel'].is-invalid,
@@ -566,6 +574,7 @@ body {
 .fu-pro .controls input[type='email'].is-invalid:focus,
 .fu-pro .controls input[type='month'].is-invalid:focus,
 .fu-pro .controls input[type='number'].is-invalid:focus,
+.fu-pro .controls input[type='range'].is-invalid:focus,
 .fu-pro .controls input[type='password'].is-invalid:focus,
 .fu-pro .controls input[type='search'].is-invalid:focus,
 .fu-pro .controls input[type='tel'].is-invalid:focus,
@@ -585,6 +594,7 @@ body {
 .fu-pro .controls input[type='email'].is-invalid.focus,
 .fu-pro .controls input[type='month'].is-invalid.focus,
 .fu-pro .controls input[type='number'].is-invalid.focus,
+.fu-pro .controls input[type='range'].is-invalid.focus,
 .fu-pro .controls input[type='password'].is-invalid.focus,
 .fu-pro .controls input[type='search'].is-invalid.focus,
 .fu-pro .controls input[type='tel'].is-invalid.focus,
@@ -648,7 +658,7 @@ body {
 }
 .fu-pro .controls input[type='range'],
 .fu-pro input[type='range'].control {
-  padding: 0.375rem;
+  padding: 0.375rem 0;
 }
 .fu-pro .controls input[type='color'],
 .fu-pro input[type='color'].control {

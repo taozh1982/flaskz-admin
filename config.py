@@ -26,6 +26,8 @@ class Config:
 
     # APP_UPLOAD_FOLDER = 'uploads'
     APP_UPLOAD_FILE_ALLOWED_EXTENSIONS = {'txt', 'dat', 'xlsx', 'xls', 'csv', 'xml', 'json', 'yaml'}
+    # license公钥目录
+    APP_LICENSE_PUBLIC_KEY_FILEPATH = './_license/public.key'
 
     # 数据库相关配置，请参考 -http://zhangyiheng.com/blog/articles/py_flaskz_model_init.html
     FLASKZ_DATABASE_URI = None
@@ -49,13 +51,13 @@ class Config:
     FLASKZ_RES_SUCCESS_STATUS = "success"
     FLASKZ_RES_FAIL_STATUS = "fail"
 
-    # redis相关配置, 按需配置
-    REDIS_URL = None
-    # websocket配置, 按需配置
-    WEBSOCKET_HOST = None  # 如果为None, host=0.0.0.0
-    WEBSOCKET_PORT = 3667  # websocket端口号
-    REDIS_WEBSOCKET_DEFAULT_CHANNEL = "ws:channel"  # redis websocket订阅的默认channel
-    REDIS_WEBSOCKET_MESSAGE_TIMEOUT = 1  # redis websocket消息等待时间
+    # # redis相关配置, 按需配置
+    # REDIS_URL = None
+    # # websocket配置, 按需配置
+    # WEBSOCKET_HOST = None  # 如果为None, host=0.0.0.0
+    # WEBSOCKET_PORT = 3667  # websocket端口号
+    # REDIS_WEBSOCKET_DEFAULT_CHANNEL = "ws:channel"  # redis websocket订阅的默认channel
+    # REDIS_WEBSOCKET_MESSAGE_TIMEOUT = 1  # redis websocket消息等待时间
 
     @staticmethod
     def init_app(app):
@@ -69,7 +71,7 @@ class DevelopmentConfig(Config):
     SEND_FILE_MAX_AGE_DEFAULT = 0
     # FLASKZ_LOGGER_FILENAME = 'syslog.txt'
     # REDIS_URL = 'redis://localhost'
-    FLASKZ_DATABASE_URI = os.environ.get('FLASKZ_DEV_DATABASE_URI') or'sqlite:///./_sqlite/flaskz-admin.db?check_same_thread=False'
+    FLASKZ_DATABASE_URI = os.environ.get('FLASKZ_DEV_DATABASE_URI') or 'sqlite:///./_sqlite/flaskz-admin.db?check_same_thread=False'
     # '/Users/taozh/Codes/PY/flaskz-admin/_sqlite/flaskz-admin.db'
 
 

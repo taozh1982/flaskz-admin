@@ -234,10 +234,10 @@ if __name__ == '__main__':
             rsa_private_key = f.read()
 
         license_text = gen_license(rsa_private_key, {
-            'User': 'Telemetry',
-            'Type': 'EVALUATION',
-            'StartDate': '2022/9/10',
-            'EndDate': '2023/12/30',
+            'User': 'Flaskz-Admin',
+            'Type': 'EVALUATION',  # RUNTIME
+            'StartDate': '2022/12/01',
+            'EndDate': '2023/03/31',
             'Modules': '*'
         })
         print(license_text)
