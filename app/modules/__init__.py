@@ -5,6 +5,7 @@ Custom modules, include model and logic
 template为实例，需删除
 """
 # app/modules/__init__.py
+from flaskz import res_status_codes
 from flaskz.models import ModelBase
 from flaskz.utils import filter_list
 
@@ -101,3 +102,54 @@ class UserBaseModelMixin:
         if user_id_field:
             data[user_id_field] = get_current_user_id()
         return data
+
+
+class PKConvertModelMixin:
+    """
+    Convert other value to primary key value.
+
+    class Device(ModelBase, PKConvertModelMixin, ModelMixin):
+        @classmethod
+        def get_key_field(cls):
+        return 'device'
+    """
+    @classmethod
+    def get_update_data(cls, data):
+        pk_value = cls.query_pk_value(data)
+        if pk_value is None:
+            return res_status_codes.db_data_not_found
+        data[cls.get_primary_field()] = pk_value
+        return data
+
+    @classmethod
+    def get_delete_data(cls, pk_value):
+        pk_value = cls.query_pk_value(pk_value)
+        if pk_value is None:
+            return res_status_codes.db_data_not_found
+        return pk_value
+
+    @classmethod
+    def query_pk_value(cls, data, key_field=None):
+        is_dict = type(data) is dict
+        pk_field = cls.get_primary_field()
+        key_field = key_field or cls.get_key_field()
+        key_value = data
+        if is_dict:
+            pk_value = data.get('pk_field')  # if pk value in data, just return
+            if pk_value is not None:
+                return pk_value
+            key_value = data.get(key_field)
+        if key_value is not None:
+            ins = cls.query_by({key_field: key_value}, return_first=True)
+            if ins:
+                return getattr(ins, pk_field)
+
+    @classmethod
+    def get_key_field(cls):
+        """
+        rewrite to return key field(unique)
+
+        example:
+            'device' / 'interface'
+        """
+        return 'name'

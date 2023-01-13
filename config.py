@@ -31,9 +31,9 @@ class Config:
 
     # 数据库相关配置，请参考 -http://zhangyiheng.com/blog/articles/py_flaskz_model_init.html
     FLASKZ_DATABASE_URI = None
-    FLASKZ_DATABASE_ECHO = False
+    FLASKZ_DATABASE_ECHO = False  # 如果为True，会打印sql语句，只适用于开发环境
     FLASKZ_DATABASE_POOL_RECYCLE = int(timedelta(hours=2).total_seconds())  # recycle connections seconds
-    FLASKZ_DATABASE_DEBUG = True
+    FLASKZ_DATABASE_DEBUG = True  # 如果为True，会记录一个请求过程中的DB操作，并打印>slow_time和?times的操作，只适用于开发环境
     FLASKZ_DATABASE_DEBUG_SLOW_TIME = -1
     FLASKZ_DATABASE_DEBUG_ACCESS_TIMES = -1
 

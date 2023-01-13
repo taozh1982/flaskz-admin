@@ -1,6 +1,6 @@
-/*! Focus Pro v2.3.2 | http://focus-ui.com/ | 2023-01-01 */
+/*! Focus Pro v2.3.2 | http://focus-ui.com/ | 2023-01-12 */
 (function(window, undefined) {
-    z.setDefault({
+    z.$.setSysDefault({
         PRO_GRID_OPERATE_CLASS: "btn btn-link",
         PRO_GRID_OPERATE_UPDATE_LABEL: "Update",
         PRO_GRID_OPERATE_UPDATE_CLASS: "btn btn-link",
@@ -965,7 +965,7 @@
                     dateTime = new Date(dateTime);
                 }
                 if (dateTime instanceof Date) {
-                    return dateTime;
+                    return new Date(dateTime.getTime());
                 }
             }
             return null;
@@ -2678,9 +2678,9 @@
     z.util.mergeObject($GVUtil, {
         initSubviewNav: function(gView, option) {
             option = z.util.mergeObject({
-                nav_style: "position: absolute;left: 60px;top:0;user-select: none;padding:2px",
+                nav_style: "position: absolute;left: 60px;user-select: none;padding:2px",
                 active_style: "color: #006bce;cursor: pointer;",
-                top_label: "#"
+                top_label: "<svg width='0.9em' height='0.9em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'></path></svg>"
             }, option);
             if (!option.getLabel) {
                 option.getLabel = function(item) {
@@ -2714,7 +2714,9 @@
                 var arr = [ current ];
                 var parent = current.get("parent");
                 while (parent) {
-                    arr.push(parent);
+                    if (z.type.isSubview(parent)) {
+                        arr.push(parent);
+                    }
                     parent = parent.get("parent");
                 }
                 arr.push(null);

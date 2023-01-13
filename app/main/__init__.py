@@ -10,12 +10,18 @@ from werkzeug.routing import BaseConverter
 
 # static folder
 
+APP_UPLOAD_FILE_ALLOWED_EXTENSIONS = {}
+
 main_bp = Blueprint('main', __name__, static_folder='../app_page', static_url_path='/')
 
-from . import errors
-from . import page
 
-APP_UPLOAD_FILE_ALLOWED_EXTENSIONS = {}
+# @main_bp.after_request
+# def add_header(response):
+#     """
+#     Disable browser cache to fix 'Failed to load response data error'(Chrome)
+#     """
+#     response.headers['Cache-Control'] = 'no-cache, no-store'
+#     return response
 
 
 def init_app(app):
@@ -49,3 +55,7 @@ def allowed_file(file):
         filename = file.filename
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in APP_UPLOAD_FILE_ALLOWED_EXTENSIONS
+
+
+from . import errors
+from . import page

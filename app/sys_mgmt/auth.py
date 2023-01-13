@@ -5,6 +5,8 @@
 from flask import current_app
 from flask_login import current_user
 from flaskz.auth import TimedJSONWebSignatureSerializer as Serializer
+from flaskz.utils import set_g_cache
+from itsdangerous.exc import SignatureExpired
 from werkzeug.exceptions import abort
 
 from ..sys_init import get_app_config
@@ -37,10 +39,12 @@ def verify_token(token, secrete_key=None):
     secrete_key = secrete_key if secrete_key is not None else app_config.get('SECRET_KEY')
     s = Serializer(secrete_key)
     try:
-        data = s.loads(token)
-    except:
+        token_payload = s.loads(token)
+    except SignatureExpired:  # expired
         return False
-    return data
+    except (Exception,):
+        return False
+    return token_payload
 
 
 # def login_required():
