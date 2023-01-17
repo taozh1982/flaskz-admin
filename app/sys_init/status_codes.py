@@ -34,3 +34,5 @@ def init_app(app):
 
 file_format_not_allowed = 'file_format_not_allowed', '非法文件格式'
 license_parse_error = 'license_parse_error', 'License解析错误'
+license_not_found = 'license_not_found', '系统未授权'
+license_public_key_not_found = 'license_public_key_not_found', '未发现授权公钥'

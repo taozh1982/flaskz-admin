@@ -9,6 +9,7 @@ from flaskz.models import ModelBase, ModelMixin
 from flaskz.utils import get_app_path
 from sqlalchemy import Column, Integer, Text, String, DateTime
 
+from app.sys_init import status_codes
 from . import util
 from ...main.errors import return_error
 
@@ -34,7 +35,7 @@ def request_check_by_license(current_license, req):
     if 'api' in path:
         # 根据具体项目进行定制
         if current_license is None:
-            return return_error(('no_license', 'No License, Please Contact Cisco'), 555)
+            return return_error(status_codes.license_not_found, 555)
         # modules = license.get('Modules', "")
         # if 'template' in path:
         #     if "template" not in modules:

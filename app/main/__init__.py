@@ -15,13 +15,13 @@ APP_UPLOAD_FILE_ALLOWED_EXTENSIONS = {}
 main_bp = Blueprint('main', __name__, static_folder='../app_page', static_url_path='/')
 
 
-# @main_bp.after_request
-# def add_header(response):
-#     """
-#     Disable browser cache to fix 'Failed to load response data error'(Chrome)
-#     """
-#     response.headers['Cache-Control'] = 'no-cache, no-store'
-#     return response
+@main_bp.after_request
+def disable_header_cache_control(response):
+    """
+    Disable browser cache to fix 'Failed to load response data error'(Chrome)
+    """
+    response.headers['Cache-Control'] = 'no-cache, no-store'
+    return response
 
 
 def init_app(app):

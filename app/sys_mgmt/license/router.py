@@ -23,7 +23,7 @@ def sys_license_upload():
     license_txt = None
     public_key_file = get_app_config('APP_LICENSE_PUBLIC_KEY_FILEPATH')
     if not os.path.isfile(public_key_file):
-        success, res_data = False, 'License public key not exist'
+        success, res_data = False, status_codes.license_public_key_not_found
     else:
         file = request.files.get('file')
         if file is None or file.filename == '':

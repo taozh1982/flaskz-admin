@@ -71,11 +71,14 @@ def _init_license(app):
     """
     初始化license模块，按需使用
     pip install pycryptodome
+
+    请确保有公钥文件和上传License
+    公钥文件: APP_LICENSE_PUBLIC_KEY_FILEPATH = './_license/public.key'
     """
     # from .sys_mgmt import license
     # from .sys_mgmt.license import router  # enable api, *放在当前文件顶部导入或者在sys_mgmt.router导入，否则alembic不能发现License模型类*
+    #
     # license_manager = license.LicenseManager()
     # license_manager.load_license(license.load_license)  # load license callback
     # license_manager.request_check(license.request_check_by_license)  # request check callback
     # license_manager.init_app(app)
-    pass

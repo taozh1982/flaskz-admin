@@ -1,4 +1,7 @@
-# map the path to the static html files
+"""
+map the path to the static html files.
+it is recommended to use nginx as the static file server.
+"""
 from flask import redirect
 
 from . import main_bp
