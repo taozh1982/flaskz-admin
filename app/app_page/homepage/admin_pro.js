@@ -31,6 +31,10 @@ z.util.mergeObject(Admin, {
         })
     },
     _initLicense: function (license) {
+        this._license = license;
+        if (!z.type.isObject(license)) {
+            z.dom.remove("#licenseA");
+        }
         var cls = null;
         var info = null;
         if (license) {
@@ -80,7 +84,10 @@ z.util.mergeObject(Admin, {
                 },
                 context: this
             });
-        }, this)
+        }, this);
+        if (z.dom.query("#licenseA")) {
+            z.dom.event.onclick("#licenseA", this.showLicenseModal, this);
+        }
     },
     handleSignOut: function () {
         if (AjaxUrl.sys_auth.logout) {
@@ -102,6 +109,20 @@ z.util.mergeObject(Admin, {
         z.widget.popover.close();
         this.profileForm.setValue(this._account_profile);
         z.widget.modal("#modalDiv");
+    },
+    showLicenseModal: function () {
+        z.widget.popover.close();
+        var license = this._license;
+        if (!license) {
+            return;
+        }
+        var licenseItems = [];
+        ['User', "Type", "StartDate", "EndDate", "ExpireDays"].forEach(function (item) {
+            if (license.hasOwnProperty(item)) {
+                licenseItems.push(item + " :  " + license[item])
+            }
+        })
+        z.widget.alert(licenseItems.join("\n"), "License")
     }
 });
 z.util.mergeObject(Admin, {

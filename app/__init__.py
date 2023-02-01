@@ -82,3 +82,4 @@ def _init_license(app):
     # license_manager.load_license(license.load_license)  # load license callback
     # license_manager.request_check(license.request_check_by_license)  # request check callback
     # license_manager.init_app(app)
+    pass

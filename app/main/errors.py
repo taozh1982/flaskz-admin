@@ -41,9 +41,13 @@ def internal_server_error(e):
 
 
 def return_error(app_code, http_code):
+    """
+    通过return_error函数返回的请求状态码都是200
+    表示系统捕获到了异常，并进行了处理，过程是可控的，可以通过系统日志进行查询
+    """
     app_msg = str(get_status_msg(app_code))
     url = request.url
-    if not url.endswith('.map'):
+    if not url.endswith('.map'):  # .js.map / .css.map
         flaskz_logger.error(get_rest_log_msg(url + ' request ' + app_msg, None, False, app_code))
 
     if is_ajax() or (request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html):

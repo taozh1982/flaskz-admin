@@ -19,9 +19,9 @@ var License = z.util.mergeObject(pro.template.CRUDTablePage, {
                     }
                 },
                 {
-                    name: "License", field: "license", minimizable: true, minimized: true,style:{"padding":"0.2em"},
+                    name: "License", field: "license", minimizable: true, minimized: true, style: {"padding": "0.2em"},
                     render: function (td, data) {
-                        td.innerHTML = "<pre style='margin: 0'>"+(data.get('license')||"").trim()+"</pre>"
+                        td.innerHTML = "<pre style='margin: 0'>" + (data.get('license') || "").trim() + "</pre>"
                     }
                 }
             ]
@@ -39,8 +39,9 @@ var License = z.util.mergeObject(pro.template.CRUDTablePage, {
             files: z.dom.getValue("#fileInput"),
             url: AjaxUrl.sys_license.add,
             success: function () {
-                z.widget.modal("#modalDiv", false);
-                _this.reloadData();
+                z.widget.alert("License上传成功", z.getDefault("PRO_MESSAGE_TIPS"), function () {
+                    window.top.location.reload();
+                });
             }
         })
         return false;
