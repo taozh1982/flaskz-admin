@@ -1,4 +1,4 @@
-/*! Focus UI v2.3.2 | http://focus-ui.com/ | 2023-01-01 | Licensed to Cisco */
+/*! Focus UI v2.4.1 | http://www.focus-ui.com | 2023-03-01 | Licensed to Cisco */
 .z-widget {
   position: relative;
   outline: none;
@@ -2569,4 +2569,3 @@ expand图标都放在右侧
 .z-popover-close-animation, .z-tooltip-close-animation {
   animation: z-kfs-host-popup-close @animation_close_duration;
 }*/
-/*# sourceMappingURL=bootstrap.css.map */

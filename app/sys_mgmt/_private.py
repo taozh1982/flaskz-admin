@@ -1,6 +1,6 @@
-from flask import request, make_response
+from flask import request, make_response, current_app
 from flaskz.log import flaskz_logger
-from flaskz.utils import clear_app_cache,  get_app_path
+from flaskz.utils import clear_app_cache, get_app_path
 
 from . import sys_mgmt_bp
 from ..sys_init import get_app_config
@@ -45,3 +45,23 @@ def _sys_sys_log():
         except Exception as e:
             return 'sys log not found'
     return 'sys log not found'
+
+
+@sys_mgmt_bp.route('/_/url_map/', methods=['GET'])
+def _sys_url_map():
+    """
+    Get the url map of the current app
+
+    #methods#                      #rule#                                             #endpoint#
+    [OPTIONS,POST]                 /api/v1.0/template/                                api.model_rest_template_add
+    """
+    rules = list(current_app.url_map.iter_rules())
+    rules.sort(key=lambda item: item.rule)
+    routes = ['{:30s} {:50s} {}'.format('#methods#', '#rule#', '#endpoint#')]
+    for rule in rules:
+        methods = '[' + ','.join(sorted(rule.methods)) + ']'
+        line = '{:30s} {:50s} {}'.format(methods, rule.rule, rule.endpoint)
+        routes.append(line)
+    resp = current_app.make_response('\n'.join(routes))
+    resp.mimetype = "text/plain"
+    return resp

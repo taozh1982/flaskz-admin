@@ -81,12 +81,12 @@ class Role(ModelBase, ModelMixin, AutoModelMixin):
 
     menus = relationship('RoleMenu', cascade='all,delete-orphan')
 
-    def has_menu_permission(self, module, op_permission):
+    def has_menu_permission(self, module, action):
         menu_json_list = _get_app_cache_menus()
         module_menu = find_list(menu_json_list, lambda menu_json_item: Role._check_menu_permission(menu_json_item, module))
         if module_menu:
             menu_id = module_menu.get('id')
-            return find_list(self.menus, lambda item: Role._check_menu_op_permission(item, menu_id, op_permission)) is not None
+            return find_list(self.menus, lambda item: Role._check_menu_action_permission(item, menu_id, action)) is not None
         return False
 
     @staticmethod
@@ -94,7 +94,7 @@ class Role(ModelBase, ModelMixin, AutoModelMixin):
         return menu_json_item.get('path') == module
 
     @staticmethod
-    def _check_menu_op_permission(role_menu_item, menu_id, op_permission):
+    def _check_menu_action_permission(role_menu_item, menu_id, op_permission):
         if role_menu_item.menu_id != menu_id:
             return False
 
@@ -242,12 +242,12 @@ class User(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
 
     @classmethod
     def check_update_data(cls, data):
-        if current_user.id == int(data.get('id')) and data.get('status') != 'enable':  # forbid to disable current user
+        if current_user.id == int(data.get('id')) and data.get('status') == 'disable':  # forbid to disable current user
             return res_status_codes.db_data_in_use
         return super().check_update_data(data)
 
-    def can(self, module, op_permission):  # permission check
-        return self.role.has_menu_permission(module, op_permission)
+    def can(self, module, action):  # permission check
+        return self.role.has_menu_permission(module, action)
 
 
 class OPLog(ModelBase, ModelMixin):

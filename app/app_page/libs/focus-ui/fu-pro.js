@@ -1,4 +1,4 @@
-/*! Focus Pro v2.3.2 | http://focus-ui.com/ | 2023-01-12 */
+/*! Focus Pro v2.4.1 | http://www.focus-ui.com | 2023-03-01 */
 (function(window, undefined) {
     z.$.setSysDefault({
         PRO_GRID_OPERATE_CLASS: "btn btn-link",
@@ -465,7 +465,13 @@
                         var render = column.render;
                         if (z.type.isFunction(render)) {
                             _column.render = function(td, data, column) {
-                                render(td, data, column);
+                                var args = Array.prototype.slice.call(arguments);
+                                if (filterValue) {
+                                    args.push(filterValue);
+                                }
+                                if (render.apply(this, args) === false) {
+                                    return;
+                                }
                                 if (filterValue) {
                                     td.innerHTML = $GridUtil._getFilterMatchValue(td.innerHTML, filterValue, highlight_class);
                                 }
@@ -1332,32 +1338,33 @@
             });
         }
     };
-    var $AccessControl = {
-        setPermissions: function(permissions) {
-            window._acPermissions_$ = permissions || [];
-            this.updateControls();
+    $AccessControl = {
+        updateControls: function() {
+            this.updateActionControls();
+        },
+        hasActionPermission: function(action, menu) {
+            var permissions = this.getActionPermissions(menu);
+            return permissions.indexOf(action) > -1;
+        },
+        hasOPPermission: function(action) {
+            return this.hasActionPermission(action);
         },
         hasUpdatePermission: function() {
-            return this.hasPermission("update");
+            return this.hasActionPermission("update");
         },
-        hasPermission: function(op_permission) {
-            return this.getACPermissions().indexOf(op_permission) > -1;
+        getActionPermissions: function(menu) {
+            var menu_permissions = this.getMenuPermissions();
+            menu = menu == null ? this.getPageMenu() : menu;
+            return menu_permissions[menu] || [];
         },
-        getACPermissions: function() {
-            if (window._acPermissions_$ == null) {
-                var all_module_permissions = z.bom.getSessionStorage("module_permissions") || {};
-                var module = this.getPageModule();
-                var module_permissions = all_module_permissions[module];
-                if (module_permissions == null) {
-                    module = module.replace(/_/g, "-");
-                    module_permissions = all_module_permissions[module];
-                }
-                window._acPermissions_$ = module_permissions || [];
-            }
-            return window._acPermissions_$;
+        getMenuPermissions: function() {
+            return z.bom.getSessionStorage("menu_permissions") || z.bom.getSessionStorage("module_permissions") || z.bom.getSessionStorage("menus") || {};
         },
-        getPageModule: function() {
-            var page_module = window.ac_module || z.bom.getLocationSearchParam("module");
+        getPageMenu: function() {
+            return window.AC_MENU || window.ac_module || z.bom.getLocationSearchParam("menu") || z.bom.getLocationSearchParam("module") || this._getPageMenuByPath();
+        },
+        _getPageMenuByPath: function() {
+            var page_module = z.bom.getURLHash(window.top.location);
             if (page_module == null) {
                 page_module = z.util.findArray(window.location.pathname.split("/").reverse(), function(item) {
                     return item !== "";
@@ -1366,13 +1373,14 @@
             }
             return page_module;
         },
-        updateControls: function() {
-            var acPermissions = this.getACPermissions();
-            this._getControls().forEach(function(acEle) {
-                var opt = acEle._ac_opt_$ || {};
-                var ac_permission = opt.ac_permission;
-                if (acPermissions.indexOf(ac_permission) < 0) {
-                    z.dom.remove(acEle);
+        updateActionControls: function(menu) {
+            var actionPermissions = this.getActionPermissions(menu);
+            this._getActionControls().forEach(function(actionEle) {
+                var opt = actionEle._ac_action_opt_$ || {};
+                if (actionPermissions.indexOf(opt.action) < 0) {
+                    if (actionEle.parentNode) {
+                        z.dom.remove(actionEle);
+                    }
                 } else {
                     var parentNode = opt.parentNode;
                     if (parentNode) {
@@ -1382,34 +1390,38 @@
                         for (var i = index + 1; i < count; i++) {
                             var nextSibling = parentChildNodes[i];
                             if (nextSibling && nextSibling.parentNode) {
-                                z.dom.insertBefore(acEle, nextSibling);
+                                z.dom.insertBefore(actionEle, nextSibling);
                                 break;
                             }
                         }
-                        if (!acEle.parentNode) {
-                            parentNode.appendChild(acEle);
+                        if (!actionEle.parentNode) {
+                            parentNode.appendChild(actionEle);
                         }
                     }
                 }
             });
         },
-        _getControls: function() {
-            var acEles = this._acEles;
-            if (!acEles) {
-                acEles = this._acEles = z.dom.queryAll("[ac_permission]");
-                acEles.forEach(function(ele) {
+        _getActionControls: function() {
+            var acElements = this._ac_action_eles;
+            if (!acElements) {
+                acElements = z.util.mergeArray(z.dom.queryAll("[ac-action]"), z.dom.queryAll("[ac_permission]"));
+                this._ac_action_eles = acElements = z.util.filterArray(acElements, function(item, index) {
+                    return acElements.indexOf(item) === index;
+                });
+                acElements.forEach(function(ele) {
                     var parentNode = ele.parentNode;
                     var parentChildNodes = z.util.mergeArray([], parentNode.childNodes);
-                    ele._ac_opt_$ = {
-                        ac_permission: ele.getAttribute("ac_permission"),
+                    ele._ac_action_opt_$ = {
+                        action: ele.getAttribute("ac-action") || ele.getAttribute("ac_permission"),
                         parentNode: parentNode,
                         parentChildNodes: parentChildNodes,
                         index: parentChildNodes.indexOf(ele)
                     };
+                    ele.removeAttribute("ac-action");
                     ele.removeAttribute("ac_permission");
                 });
             }
-            return acEles;
+            return acElements;
         }
     };
     z.ready(function() {
@@ -1764,6 +1776,12 @@
                         if (count == null) {
                             count = data.total;
                         }
+                        if (count == null) {
+                            count = result.count;
+                        }
+                        if (count == null) {
+                            count = result.total;
+                        }
                         if (count != null) {
                             _this.setPageTotal(count, true);
                         }
@@ -1934,7 +1952,7 @@
             }
         }, {
             _find$Data: function(data) {
-                if (!z.view.isData(data)) {
+                if (!z.type.isData(data)) {
                     var view = this[itfKeyMap.get$CrudView]();
                     var fData;
                     if (view) {
@@ -3408,8 +3426,8 @@
                     y: pointCenter.y - (bounds.y + bounds.height / 2)
                 };
                 if (item.properties.name_center === "points" || nameCenter === "points") {
-                    item.label_x_offset = point_center_offset.x;
-                    item.label_y_offset = point_center_offset.y;
+                    item.label_offset_x = point_center_offset.x;
+                    item.label_offset_y = point_center_offset.y;
                 }
                 item.coordinate = {
                     points_center: pointCenter,
@@ -4390,25 +4408,25 @@
         }
     });
     var $GVPathCalc = {
-        calcShortestPathsBetween: function(srcNode, dstNode, filerFun, sortCmp, directed) {
-            var paths = $GVPathCalc.calcPathsBetween(srcNode, dstNode, filerFun, sortCmp, directed);
-            if (paths.length > 1) {
-                var path1 = paths[0];
+        calcShortestPathsBetween: function(srcNode, dstNode, sortCmp, filerFun, directed, disjoint) {
+            var pathArr = $GVPathCalc.calcPathsBetween(srcNode, dstNode, sortCmp, filerFun, directed, disjoint);
+            if (pathArr.length > 1) {
+                var path1 = pathArr[0];
                 if (path1) {
                     var shortestArr = [ path1 ];
-                    paths.forEach(function(path, index) {
+                    pathArr.forEach(function(path, index) {
                         if (index > 0 && sortCmp(path1, path) === 0) {
                             shortestArr.push(path);
                         }
                     });
-                    paths = shortestArr;
+                    pathArr = shortestArr;
                 }
             }
-            return paths;
+            return pathArr;
         },
-        calcPathsBetween: function(fromNode, toNode, filterFun, sortCmp, directed, disjoint) {
+        calcPathsBetween: function(srcNode, dstNode, sortCmp, filterFun, directed, disjoint) {
             var pathArr = [];
-            $GVPathCalc._calcPathsBetween(fromNode, toNode, pathArr, directed);
+            $GVPathCalc._calcPathsBetween(srcNode, dstNode, pathArr, directed);
             if (filterFun) {
                 pathArr = z.util.filterArray(pathArr, filterFun);
             }
@@ -4422,7 +4440,7 @@
         },
         filterDisjointPaths: function(pathArr) {
             var existMap = {};
-            var nrPathArr = [];
+            var djPathArr = [];
             pathArr.forEach(function(path) {
                 var pathDataMap = {};
                 var joint = false;
@@ -4437,37 +4455,37 @@
                     }
                 });
                 if (joint === false) {
-                    nrPathArr.push(path);
+                    djPathArr.push(path);
                     existMap = z.util.mergeObject(existMap, pathDataMap);
                 }
             });
-            return nrPathArr;
+            return djPathArr;
         },
-        _calcPathsBetween: function(fromNode, toNode, pathArr, directed, containedDataArr) {
+        _calcPathsBetween: function(srcNode, dstNode, pathArr, directed, containedDataArr) {
             var toLinks;
             if (directed !== true) {
-                toLinks = fromNode.getLinks();
+                toLinks = srcNode.getLinks();
             } else {
-                toLinks = fromNode.getFromLinks();
+                toLinks = srcNode.getFromLinks();
             }
             var size = toLinks.length;
             for (var i = 0; i < size; i++) {
                 var link = toLinks[i];
                 var linkToNode = link.get("to");
                 if (directed !== true) {
-                    if (linkToNode === fromNode) {
+                    if (linkToNode === srcNode) {
                         linkToNode = link.get("from");
                     }
                 }
                 var currentPathArr = z.util.mergeArray([], containedDataArr);
-                currentPathArr.push(fromNode);
+                currentPathArr.push(srcNode);
                 if (currentPathArr.indexOf(linkToNode) < 0) {
                     currentPathArr.push(link);
-                    if (linkToNode === toNode) {
-                        currentPathArr.push(toNode);
+                    if (linkToNode === dstNode) {
+                        currentPathArr.push(dstNode);
                         pathArr.push(currentPathArr);
                     } else {
-                        $GVPathCalc._calcPathsBetween(linkToNode, toNode, pathArr, directed, currentPathArr);
+                        $GVPathCalc._calcPathsBetween(linkToNode, dstNode, pathArr, directed, currentPathArr);
                     }
                 }
             }

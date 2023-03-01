@@ -9,6 +9,181 @@
 			"name": "template",
 			"item": [
 				{
+					"name": "add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{flaskz_auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "{{flaskz_requested_with}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"T1\", //名字\n    \"age\": 18,\n    \"email\": \"t1@focus-ui.com\" //邮箱\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/",
+							"protocol": "http",
+							"host": [
+								"{{flaskz_server_url}}"
+							],
+							"path": [
+								"api",
+								"v1.0",
+								"template",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{flaskz_auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "{{flaskz_requested_with}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/1/",
+							"protocol": "http",
+							"host": [
+								"{{flaskz_server_url}}"
+							],
+							"path": [
+								"api",
+								"v1.0",
+								"template",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{flaskz_auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "{{flaskz_requested_with}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1, //pk in body\n    \"age\": 20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/",
+							"protocol": "http",
+							"host": [
+								"{{flaskz_server_url}}"
+							],
+							"path": [
+								"api",
+								"v1.0",
+								"template",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update_by_pk",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{flaskz_auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "{{flaskz_requested_with}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{//pk in body\n    \"age\": 18\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/1/",
+							"protocol": "http",
+							"host": [
+								"{{flaskz_server_url}}"
+							],
+							"path": [
+								"api",
+								"v1.0",
+								"template",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "query",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -59,88 +234,12 @@
 					"response": []
 				},
 				{
-					"name": "add",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Authorization",
-								"value": "{{flaskz_auth_token}}",
-								"type": "text"
-							},
-							{
-								"key": "X-Requested-With",
-								"value": "{{flaskz_requested_with}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"T-X\", //名字\n    \"age\": 10,\n    \"email\": \"t-x@focus-ui.com\" //邮箱\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/",
-							"protocol": "http",
-							"host": [
-								"{{flaskz_server_url}}"
-							],
-							"path": [
-								"api",
-								"v1.0",
-								"template",
-								""
-							]
-						}
+					"name": "query_by_pk",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
 					},
-					"response": []
-				},
-				{
-					"name": "delete",
 					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{flaskz_auth_token}}",
-								"type": "text"
-							},
-							{
-								"key": "X-Requested-With",
-								"value": "{{flaskz_requested_with}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/3",
-							"protocol": "http",
-							"host": [
-								"{{flaskz_server_url}}"
-							],
-							"path": [
-								"api",
-								"v1.0",
-								"template",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "update",
-					"request": {
-						"method": "PATCH",
+						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -161,7 +260,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"id\":3,\n    \"name\":\"T-X-x\",\n    \"age\":20,\n\t\"email\":\"t-x@focus-ui.com\"\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -169,7 +268,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/",
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/1/",
 							"protocol": "http",
 							"host": [
 								"{{flaskz_server_url}}"
@@ -178,6 +277,7 @@
 								"api",
 								"v1.0",
 								"template",
+								"1",
 								""
 							]
 						}
@@ -208,7 +308,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"search\": {\r\n        \"like\": \"t\",\r\n        \"_ors\": {\r\n            \"email\": \"t1@focus-ui.com||t2@focus-ui.com\"\r\n        },\r\n        \"_ands\": {\r\n            \"age\": {\r\n                \">\": 1,\r\n                \"<\": 20\r\n            }\r\n        }\r\n    },\r\n    \"sort\": {\r\n        \"field\": \"name\",\r\n        \"order\": \"asc\"\r\n    },\r\n    \"page\": {\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    }\r\n}",
+							"raw": "{\r\n    \"search\": {\r\n        \"like\": \"t\", // 模糊查询\r\n        \"age\": { // 条件查询\r\n            \">\": 1,\r\n            \"<\": 20\r\n        },\r\n        \"_ors\": { // or高级查询\r\n            \"email\": \"t1@focus-ui.com||t1@flaskz.com\"\r\n        },\r\n        \"_ands\": { // and高级查询\r\n            \"age\": {\r\n                \">\": 1,\r\n                \"<\": 20\r\n            }\r\n        }\r\n    },\r\n    \"sort\": { // 排序\r\n        \"field\": \"name\",\r\n        \"order\": \"asc\" // asc/desc\r\n    },\r\n    \"page\": { // 分页\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -307,6 +407,52 @@
 											"key": "date",
 											"value": "2022-03-10"
 										}
+									]
+								},
+								"description": "query sys log"
+							},
+							"response": []
+						},
+						{
+							"name": "url_map",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/_/url_map/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys_mgmt",
+										"_",
+										"url_map",
+										""
 									]
 								},
 								"description": "query sys log"
@@ -593,7 +739,7 @@
 									}
 								],
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/user/2",
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/user/2/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
@@ -601,7 +747,8 @@
 									"path": [
 										"sys_mgmt",
 										"user",
-										"2"
+										"2",
+										""
 									]
 								}
 							},
@@ -821,7 +968,7 @@
 									}
 								],
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/role/2",
+									"raw": "http://{{flaskz_server_url}}/sys_mgmt/role/2/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
@@ -829,7 +976,8 @@
 									"path": [
 										"sys_mgmt",
 										"role",
-										"2"
+										"2",
+										""
 									]
 								}
 							},

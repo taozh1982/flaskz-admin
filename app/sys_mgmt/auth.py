@@ -5,7 +5,6 @@
 from flask import current_app
 from flask_login import current_user
 from flaskz.auth import TimedJSONWebSignatureSerializer as Serializer
-from flaskz.utils import set_g_cache
 from itsdangerous.exc import SignatureExpired
 from werkzeug.exceptions import abort
 
@@ -66,11 +65,11 @@ def login_check():
     return True
 
 
-def permission_check(module, op_permission=None):
+def permission_check(module, action=None):
     if module is not False:  # False to disable permission check
         if _check_login() is False:
             return abort(401, response='unauthorized')
-        if _check_permission(module, op_permission) is False:
+        if _check_permission(module, action) is False:
             return abort(403, response='forbidden')
     return True
 
@@ -96,13 +95,13 @@ def _check_login():
     return True
 
 
-def _check_permission(module, permission):
+def _check_permission(module, action):
     # if current_user.is_anonymous:
     #     return False
     if module == "*" or module is None:
         return True
     if hasattr(current_user, 'can'):
-        return current_user.can(module, permission)
+        return current_user.can(module, action)
     return False
 
 

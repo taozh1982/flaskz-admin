@@ -8,6 +8,7 @@ from .sys_mgmt import auth
 
 def create_app(config_name):
     app = Flask(__name__)
+    # app.url_map.strict_slashes = False  # disable url redirect ex)'user' and 'user/'
 
     # 配置
     config_name = config_name.lower()
@@ -16,7 +17,7 @@ def create_app(config_name):
     app_config.init_app(app)
     sys_init.init_app(app)  # 系统初始化，中文message等
 
-    # CORS(app) # 跨域支持, 按需使用 pip install cors
+    # CORS(app) # 跨域支持, 按需使用 pip install flask-cors
 
     # 初始化
     log.init_log(app)
@@ -35,7 +36,7 @@ def create_app(config_name):
 
     @app.before_request
     def before_request():
-        # refresh session life time and update client cookie,
+        # refresh session life time and update client cookie(Flask's sessions are client-side sessions)
         # if use session to store user information, please set it before every request.
         session.permanent = True
 

@@ -15,7 +15,7 @@ class TemplateModel(ModelBase, ModelMixin, AutoModelMixin):
     # )
 
     id = Column(Integer, primary_key=True, autoincrement=True)  # primary key
-    name = Column(String(32), nullable=False)
+    name = Column(String(32), unique=True, nullable=False)
     age = Column(Integer)
     email = Column(String(255), nullable=False)
     description = Column(String(255))

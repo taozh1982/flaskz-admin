@@ -75,6 +75,10 @@ z.util.mergeObject(Admin, {
             if (value == null) {
                 return;
             }
+            var password = value.password || "";
+            if (password.trim().length === 0) {
+                delete value.password;
+            }
             pro.AjaxCRUD.update({
                 url: AjaxUrl.sys_auth.update,
                 data: value,
@@ -173,7 +177,7 @@ z.util.mergeObject(Admin, {
                 path_ops[path] = item.op_permissions;
             }
         });
-        z.bom.setSessionStorage("module_permissions", path_ops);
+        z.bom.setSessionStorage("menu_permissions", path_ops);
     },
     _getMenuIcon: function (item) {
         var icon = FontIconMapping[item.id];
