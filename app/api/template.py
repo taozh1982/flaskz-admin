@@ -1,7 +1,7 @@
 # reference template
-from flaskz.rest import init_model_rest_blueprint
+from flaskz.rest import register_model_route
 
 from ..api import api_bp
 from ..modules.template import TemplateModel
 
-init_model_rest_blueprint(TemplateModel, api_bp, '/template', 'template')
+register_model_route(api_bp, TemplateModel, 'templates', 'templates')

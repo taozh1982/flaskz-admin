@@ -14,34 +14,6 @@ from . import util
 from ...main.errors import return_error
 
 
-def load_license():
-    """license加载函数"""
-    license_result = License.query_all()
-    license_list = []
-    if license_result[0] is True:
-        for item in license_result[1]:
-            license_list.append(item.license)
-    return license_list
-
-
-def request_check_by_license(current_license, req):
-    """
-    请求license校验
-    """
-    path = req.path
-    # 页面静态资源不拦截
-    if path == '/' or path.startswith('/libs') or path.endswith(('.js', '.css', '.html', '.png', '.svg', '.jpg', '.ico')):
-        return
-    if 'api' in path:
-        # 根据具体项目进行定制
-        if current_license is None:
-            return return_error(status_codes.license_not_found, 555)
-        # modules = license.get('Modules', "")
-        # if 'template' in path:
-        #     if "template" not in modules:
-        #         return return_error(('no_license', 'No License, Please contact Cisco'), 555)
-
-
 class License(ModelBase, ModelMixin):
     """License database model"""
     __tablename__ = 'sys_licenses'
@@ -175,6 +147,34 @@ class LicenseManager:
     def request_check(self, _request_check):
         self._request_check = _request_check
         return self._request_check
+
+
+def load_license():
+    """license加载函数"""
+    license_result = License.query_all()
+    license_list = []
+    if license_result[0] is True:
+        for item in license_result[1]:
+            license_list.append(item.license)
+    return license_list
+
+
+def request_check_by_license(current_license, req):
+    """
+    请求license校验
+    """
+    path = req.path
+    # 页面静态资源不拦截
+    if path == '/' or path.startswith('/libs') or path.endswith(('.js', '.css', '.html', '.png', '.svg', '.jpg', '.ico')):
+        return
+    if 'api' in path:
+        # 根据具体项目进行定制
+        if current_license is None:
+            return return_error(status_codes.license_not_found, 555)
+        # modules = license.get('Modules', "")
+        # if 'template' in path:
+        #     if "template" not in modules:
+        #         return return_error(('no_license', 'No License, Please contact Cisco'), 555)
 
 
 if __name__ == '__main__':

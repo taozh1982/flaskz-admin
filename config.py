@@ -28,6 +28,9 @@ class Config:
     APP_UPLOAD_FILE_ALLOWED_EXTENSIONS = {'txt', 'dat', 'xlsx', 'xls', 'csv', 'xml', 'json', 'yaml'}
     # license公钥目录
     APP_LICENSE_PUBLIC_KEY_FILEPATH = './_license/public.key'
+    # 静态文件目录(前端页面)
+    APP_PAGE_STATIC_FOLDER = './app/app_page/'
+    APP_PAGE_STATIC_STATIC_URL_PATH = '/'
 
     # 数据库相关配置，请参考 -http://zhangyiheng.com/blog/articles/py_flaskz_model_init.html
     FLASKZ_DATABASE_URI = None
@@ -41,8 +44,8 @@ class Config:
     FLASKZ_DATABASE_DEBUG_ACCESS_TIMES = -1
 
     # 系统日志相关配置，请参考 -http://zhangyiheng.com/blog/articles/py_flaskz_api.html
-    FLASKZ_LOGGER_FILENAME = None
-    FLASKZ_LOGGER_FILEPATH = '_syslog'
+    FLASKZ_LOGGER_FILENAME = None  # 日志文件名
+    FLASKZ_LOGGER_FILEPATH = '_syslog'  # 日志文件目录
     FLASKZ_LOGGER_LEVEL = 'INFO'  # 'DEBUG'/'INFO'/'WARNING'/'WARN'/'ERROR'/'FATAL'/'CRITICAL'
     FLASKZ_LOGGER_FORMAT = '%(asctime)s %(filename)16s[line:%(lineno)-3d] %(levelname)8s: \n%(message)s\n'
     FLASKZ_LOGGER_WHEN = 'midnight'  # 每天midnight，将当日志文件按日期重命名保存，并生成一个新的日志文件
@@ -54,36 +57,22 @@ class Config:
     FLASKZ_RES_SUCCESS_STATUS = "success"
     FLASKZ_RES_FAIL_STATUS = "fail"
 
-    # # redis相关配置, 按需配置
-    # REDIS_URL = None
-    # # websocket配置, 按需配置
-    # WEBSOCKET_HOST = None  # 如果为None, host=0.0.0.0
-    # WEBSOCKET_PORT = 3667  # websocket端口号
-    # REDIS_WEBSOCKET_DEFAULT_CHANNEL = "ws:channel"  # redis websocket订阅的默认channel
-    # REDIS_WEBSOCKET_MESSAGE_TIMEOUT = 1  # redis websocket消息等待时间
-
     @staticmethod
     def init_app(app):
         pass
 
 
 class DevelopmentConfig(Config):
-    """
-    开发环境相关配置
-    """
+    """开发环境配置"""
     SEND_FILE_MAX_AGE_DEFAULT = 0
-    # FLASKZ_LOGGER_FILENAME = 'syslog.txt'
-    # REDIS_URL = 'redis://localhost'
     FLASKZ_DATABASE_URI = os.environ.get('FLASKZ_DEV_DATABASE_URI') or 'sqlite:///./_sqlite/flaskz-admin.db?check_same_thread=False'
-    # '/Users/taozh/Codes/PY/flaskz-admin/_sqlite/flaskz-admin.db'
 
 
 class TestConfig(Config):
-    """
-    测试环境相关配置
-    """
+    """测试环境配置"""
     SEND_FILE_MAX_AGE_DEFAULT = 0  # no cache
-    FLASKZ_DATABASE_URI = os.environ.get('FLASKZ_TEST_DATABASE_URI') or 'sqlite:///./_sqlite/flaskz-admin-test.db?check_same_thread=False'
+    FLASKZ_LOGGER_FILENAME = 'syslog.txt'
+    FLASKZ_DATABASE_URI = os.environ.get('FLASKZ_TEST_DATABASE_URI') or 'mysql+pymysql://root:Cisco123@10.124.4.69:3306/flaskz-admin'
 
 
 class ProductionConfig(Config):

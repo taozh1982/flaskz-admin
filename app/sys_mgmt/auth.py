@@ -5,21 +5,20 @@
 from flask import current_app
 from flask_login import current_user
 from flaskz.auth import TimedJSONWebSignatureSerializer as Serializer
+from flaskz.utils import get_app_config
 from itsdangerous.exc import SignatureExpired
 from werkzeug.exceptions import abort
 
-from ..sys_init import get_app_config
-
 
 def load_user_by_id(user_id):
-    return User.query_by_pk(user_id)
+    return SysUser.query_by_pk(user_id)
 
 
 def load_user_by_token(request):
     token = request.headers.get(get_app_config('APP_TOKEN_AUTHORIZATION'))
     result = verify_token(token)
     if result is not False:
-        return User.query_by_pk(result.get('id'))
+        return SysUser.query_by_pk(result.get('id'))
     return None
 
 
@@ -105,4 +104,4 @@ def _check_permission(module, action):
     return False
 
 
-from ..sys_mgmt.model import User
+from ..sys_mgmt.model import SysUser

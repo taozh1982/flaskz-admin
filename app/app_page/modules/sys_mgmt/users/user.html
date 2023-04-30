@@ -34,8 +34,7 @@
                         <div class="grid-col-9-12">
                             <select ze-model="role_id" ze-model-type="integer"
                                     v-rules="required" v-message="请选择用户角色"
-                                    ze-reset="false"
-                                    class="form-control"> </select>
+                                    ze-reset="false"></select>
                         </div>
                     </div>
                     <div class="grid-row">
@@ -43,37 +42,37 @@
                         <div class="grid-col-9-12">
                             <input ze-model="username" ze-disabled="[editType]!=='add'"
                                    v-rules="required|alphanumeric_dash" v-message="请输入账号"
-                                   class="form-control" autofocus>
+                                   autofocus>
                         </div>
                     </div>
                     <div class="grid-row">
                         <label class="grid-col-3-12 required" for-ze-model="password">密码</label>
                         <div class="grid-col-9-12">
-                            <input ze-model="password" v-rules="required" v-message="请输入密码" class="form-control" type="password" autofocus>
+                            <input ze-model="password" v-rules="required" v-message="请输入密码" type="password" autofocus>
                         </div>
                     </div>
                     <div class="grid-row">
                         <label class="grid-col-3-12 required" for-ze-model="email">Email</label>
                         <div class="grid-col-9-12">
-                            <input ze-model="email" v-rules="email" class="form-control">
+                            <input ze-model="email" v-rules="email">
                         </div>
                     </div>
                     <div class="grid-row">
                         <label class="grid-col-3-12" for-ze-model="name">姓名</label>
                         <div class="grid-col-9-12">
-                            <input ze-model="name" class="form-control">
+                            <input ze-model="name">
                         </div>
                     </div>
                     <div class="grid-row">
                         <label class="grid-col-3-12" for-ze-model="phone">电话</label>
                         <div class="grid-col-9-12">
-                            <input ze-model="phone" class="form-control">
+                            <input ze-model="phone">
                         </div>
                     </div>
                     <div class="grid-row">
                         <label class="grid-col-3-12" for-ze-model="description">描述</label>
                         <div class="grid-col-9-12">
-                            <textarea ze-model="description" class="form-control"></textarea>
+                            <textarea ze-model="description"></textarea>
                         </div>
                     </div>
                 </div>

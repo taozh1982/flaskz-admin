@@ -3,44 +3,37 @@ import json
 from flask import request, abort
 from flask_login import login_user, logout_user, current_user
 from flaskz.log import flaskz_logger, get_log_data
-from flaskz.models import model_to_dict, query_multiple_model
-from flaskz.rest import get_rest_log_msg, rest_login_required, init_model_rest_blueprint, rest_permission_required
+from flaskz.models import model_to_dict, query_all_models
+from flaskz.rest import get_rest_log_msg, rest_login_required, rest_permission_required, register_model_route, register_model_query_pss_route, register_model_query_route, \
+    register_model_delete_route
 from flaskz.utils import create_response, get_wrap_str, find_list, get_dict_mapping
 
 from . import sys_mgmt_bp, log_operation
 from .auth import generate_token
-from .model import User, Role, Menu, RoleMenu, OPLog
+from .model import SysUser, SysRole, SysModule, SysRoleModule, SysActionLog
 from ..utils import get_app_license
 
 
 # -------------------------------------------auth-------------------------------------------
-
-
 @sys_mgmt_bp.route('/auth/login/', methods=['POST'])
 def sys_auth_login():
-    """
-    User login.
-    :return:
-    """
+    """用户登录"""
     request_json = request.json
-    result = User.verify_password(request_json.get('username'), request_json.get('password'))
+    result = SysUser.verify_password(request_json.get('username'), request_json.get('password'))
     success = result[0]
     res_data = None
     if success is False:
         res_data = model_to_dict(result[1])
     else:
-        login_user(result[1], remember=request_json.get('remember_me') == True)
-
+        login_user(result[1], remember=request_json.get('remember_me') is True)
+    log_operation('users', 'login', success, request_json.get('username'), res_data)
     flaskz_logger.info(get_rest_log_msg('User login', {'username': request_json.get('username'), 'remember_me': request_json.get('remember_me')}, success, res_data))
     return create_response(success, res_data)
 
 
 @sys_mgmt_bp.route('/auth/logout/', methods=['GET'])
 def sys_auth_logout():
-    """
-    User logout.
-    :return:
-    """
+    """用户登出"""
     logout_user()
     flaskz_logger.info(get_rest_log_msg('User logout', None, True, None))
     return create_response(True, None)
@@ -48,17 +41,15 @@ def sys_auth_logout():
 
 @sys_mgmt_bp.route('/auth/token/', methods=['POST'])
 def sys_auth_get_token():
-    """
-    User get login token.
-    :return:
-    """
+    """获取token"""
     request_json = request.json
-    success, result = User.verify_password(request_json.get('username'), request_json.get('password'))
+    success, result = SysUser.verify_password(request_json.get('username'), request_json.get('password'))
     if success is False:
         res_data = model_to_dict(result)
     else:
         res_data = {'token': generate_token({'id': result.get_id()})}
 
+    log_operation('users', 'login', success, request_json.get('username'), res_data)
     flaskz_logger.info(get_rest_log_msg('User get login token', {'username': request_json.get('username')}, success, res_data))
     return create_response(success, res_data)
 
@@ -67,8 +58,8 @@ def sys_auth_get_token():
 @rest_login_required()
 def sys_auth_account_query():
     """
-    Query the account profile and menus.
-    :return:
+    获取账户信息
+    profile+menus+license
     """
     if current_user.is_anonymous:
         return abort(401, response='forbidden')
@@ -82,13 +73,13 @@ def sys_auth_account_query():
     role_menus = model_to_dict(role.get_menus())
     menu_map = {}
     for item in role_menus:
-        item['op_permissions'] = []
+        item['actions'] = []
         menu_map[item.get('id')] = item
 
-    for item in role.menus:
-        menu_item = menu_map.get(item.menu_id)
-        if item.permission and menu_item:
-            menu_item.get('op_permissions').append(item.permission)
+    for item in role.modules:
+        menu_item = menu_map.get(item.module_id)
+        if item.action and menu_item:
+            menu_item.get('actions').append(item.action)
 
     profile = current_user.to_dict()
     del profile['role_id']
@@ -130,114 +121,85 @@ def sys_auth_account_query():
 @sys_mgmt_bp.route('/auth/account/', methods=['PUT', 'PATCH'])
 @rest_login_required()
 def sys_auth_account_update():
-    """
-    Update the user profile
-    :return:
-    """
+    """更新账号信息(非管理员)"""
     request_json = request.json
     req_log_data = json.dumps(request_json)
 
     if 'role_id' in request_json:
         del request_json['role_id']
-    result = User.update(request_json)
+    result = SysUser.update(request_json)
     res_data = model_to_dict(result[1])
     if result[0] is True:
         del res_data['role_id']
 
     res_log_data = get_log_data(res_data)
-    log_operation('user', 'update', result[0], req_log_data, res_log_data)
+    log_operation('users', 'update', result[0], req_log_data, res_log_data)
     flaskz_logger.info(get_rest_log_msg('Update the user profile', req_log_data, result[0], res_log_data))
 
     return create_response(result[0], res_data)
 
 
 # -------------------------------------------user-------------------------------------------
-# @sys_mgmt_bp.route('/user/', methods=['GET'])
-# @rest_permission_required('user')
-# def sys_user_query():
-#     """
-#     Query user list and simple role list.
-#     :return:
-#     """
-#     result = query_multiple_model(Role, User)
-#     if result[0] is False:
-#         success = False
-#         res_data = model_to_dict(result[1])
-#     else:
-#         success = True
-#         res_data = {
-#             'roles': model_to_dict(result[0], fields=['id', 'name']),
-#             'users': model_to_dict(result[1])
-#         }
-#
-#     flaskz_logger.info(get_rest_log_msg('Query user', None, success, res_data))
-#     return create_response(success, res_data)
-
-
-init_model_rest_blueprint(User, sys_mgmt_bp, '/user', 'user', multiple_option={
-    'users': User,
+register_model_route(sys_mgmt_bp, SysUser, 'users', 'users', multi_models={
+    'users': SysUser,
     'roles': {
-        'model_cls': Role,
+        'model_cls': SysRole,
         'option': {
-            'includes': ['id', 'name']
+            'include': ['id', 'name']
         }
     }
 })
 
-
 # -------------------------------------------role-------------------------------------------
-@sys_mgmt_bp.route('/role/', methods=['POST'])
-@rest_permission_required('role', 'add')
+register_model_delete_route(sys_mgmt_bp, SysRole, 'roles', 'roles')  # 删除角色
+
+
+@sys_mgmt_bp.route('/roles/', methods=['POST'])
+@rest_permission_required('roles', 'add')
 def sys_role_add():
-    """
-    Add a user role.
-    :return:
-    """
+    """添加角色"""
     request_json = request.json
     req_log_data = json.dumps(request_json)
 
-    result = Role.add(Role.to_server_json(request_json))
+    result = SysRole.add(SysRole.to_server_json(request_json))
     res_data = model_to_dict(result[1], {'cascade': 1})
     if result[0] is True:
-        res_data = Role.to_client_json(res_data)
+        res_data = SysRole.to_client_json(res_data)
 
     res_log_data = get_log_data(res_data)
-    log_operation('role', 'add', result[0], req_log_data, res_log_data)
+    log_operation('roles', 'add', result[0], req_log_data, res_log_data)
     flaskz_logger.info(get_rest_log_msg('Add role', req_log_data, result[0], res_log_data))
 
     return create_response(result[0], res_data)
 
 
-@sys_mgmt_bp.route('/role/', methods=['PUT', 'PATCH'])
-@rest_permission_required('role', 'update')
+@sys_mgmt_bp.route('/roles/', methods=['PUT', 'PATCH'])
+@rest_permission_required('roles', 'update')
 def sys_role_update():
-    """
-    Update the specified role.
-    :return:
-    """
+    """更新角色"""
     request_json = request.json
     req_log_data = json.dumps(request_json)
 
-    result = Role.update(Role.to_server_json(request_json))
+    result = SysRole.update(SysRole.to_server_json(request_json))
     res_data = model_to_dict(result[1], {'cascade': 1})
     if result[0] is True:
-        res_data = Role.to_client_json(res_data)
+        res_data = SysRole.to_client_json(res_data)
 
     res_log_data = get_log_data(res_data)
-    log_operation('role', 'update', result[0], req_log_data, res_log_data)
+    log_operation('roles', 'update', result[0], req_log_data, res_log_data)
     flaskz_logger.info(get_rest_log_msg('Update role', req_log_data, result[0], res_log_data))
 
     return create_response(result[0], res_data)
 
 
-@sys_mgmt_bp.route('/role/', methods=['GET'])
-@rest_permission_required('role')
+@sys_mgmt_bp.route('/roles/', methods=['GET'])
+@rest_permission_required('roles')
 def sys_role_query():
     """
-    Query the role list and the full menu list with operation permissions
-    :return:
+    查询角色列表
+    返回: 角色列表+系统模块列表
     """
-    result = query_multiple_model(Menu, Role, RoleMenu)
+    result = query_all_models(SysModule, SysRole, SysRoleModule)
     if result[0] is False:
         success = False
         res_data = model_to_dict(result[1])
@@ -245,37 +207,19 @@ def sys_role_query():
         success = True
         roles = model_to_dict(result[1], {'cascade': 1})
         for role in roles:
-            Role.to_client_json(role)
+            SysRole.to_client_json(role)
 
         res_data = {
-            'menus': model_to_dict(result[0], {'cascade': 1}),
+            'modules': model_to_dict(result[0], {'cascade': 1}),
             'roles': roles,
         }
     flaskz_logger.debug(get_rest_log_msg('Query role', None, success, res_data))
     return create_response(success, res_data)
 
 
-init_model_rest_blueprint(Role, sys_mgmt_bp, '/role', 'role', routers=['delete'])
-
-
-# -------------------------------------------op_log-------------------------------------------
-
-@sys_mgmt_bp.route('/op_log/menu/', methods=['GET'])
-@rest_permission_required('op_log')
-def sys_role_menu_query():
-    """
-    Query the simple menu list in operation log module.
-    :return:
-    """
-    result = Menu.query_all()
-
-    res_data = model_to_dict(result[1], {'includes': ['id', 'parent_id', 'name']})
-
-    flaskz_logger.debug(get_rest_log_msg('Query op-log menus', None, result[0], res_data))
-    return create_response(result[0], res_data)
-
-
-init_model_rest_blueprint(OPLog, sys_mgmt_bp, '/op_log', 'op_log', routers=['query_pss'])
+# -------------------------------------------action logs-------------------------------------------
+register_model_query_route(sys_mgmt_bp, SysModule, 'modules', to_json_option={'include': ['id', 'parent_id', 'name']})
+register_model_query_pss_route(sys_mgmt_bp, SysActionLog, 'action-logs', 'action-logs')
 
 
 # -------------------------------------------monitor-------------------------------------------
@@ -288,4 +232,4 @@ def sys_page_monitor():
     flaskz_logger.warning(get_wrap_str('--Page Monitor', '--Data:', request.json))
     return create_response(True, {})
 
-# from .license import router # for alembic
+# from .license import router # todo 如果启用license，请取消注释(for alembic)

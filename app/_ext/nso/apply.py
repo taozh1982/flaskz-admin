@@ -1,13 +1,15 @@
 import json
+import re
 import uuid
 
 from flaskz.log import flaskz_logger, get_log_data
 from flaskz.rest import get_rest_log_msg
-from flaskz.utils import api_request, get_app_cache, set_app_cache
+from flaskz.utils import api_request, get_app_cache, set_app_cache, str_replace
 from requests.auth import HTTPBasicAuth
 
 from . import apply_urls as nso_urls
 from . import util as nso_util
+from .device_apply import DeviceNSOApply
 
 NSOReqHeaders = {
     'headers': {
@@ -47,7 +49,8 @@ def nso_request(url, **kwargs):
     kws.update(kwargs)
     res = api_request(url, raw_response=True, verify=False, **kws)
     if type(res) == tuple:
-        return False, 'nso_request_err'
+        flaskz_logger.error(res.text)
+        return False, res[0]
 
     status_code = res.status_code
     if status_code // 100 == 2:
@@ -58,19 +61,31 @@ def nso_request(url, **kwargs):
                     if item in res_result:
                         item_result = res_result.get(item)
                         if item_result.get('result') == 'fail':
-                            return False, "nso_request_err", '下发配置异常'  # 替换成status_codes中的常量
-        except (Exception,):
+                            flaskz_logger.error(res.text)
+                            return False, "nso_request_err",  # status_codes.nso_request_err
+        except Exception:
             pass
         return True, res.text
-    return False, "nso_request_err", '下发配置异常'
+    else:
+        flaskz_logger.error(res.text)
+        error_msg = ''
+        if res.text != '':
+            pattern = re.compile(r'"error-message":\s"((?:.|\s)+?)"')  # 提取异常信息
+            matches = pattern.findall(res.text)
+            for i, match in enumerate(matches):
+                error_msg += str_replace(match, {'NED': 'Config', 'NSO': 'Config'}) + '\r\n\r\n'
+        if error_msg:
+            return False, error_msg  # 如果是status_codes.nso_request_err元组，需处理-->(status_codes.nso_request_err[0], error_msg)
+        else:
+            return False, 'nso_request_err'  # status_codes.nso_request_err
 
 
 def sync_device(device_name):
     """
     todo
     """
-    # return DeviceApply.sync(device_name)
-    return True,
+    return DeviceNSOApply.sync(device_name)
+    # return True,
 
 
 class NSOApply:

@@ -2,7 +2,9 @@ from datetime import datetime
 
 from flask_login import current_user, UserMixin
 from flaskz import res_status_codes
-from flaskz.models import ModelBase, ModelMixin, create_instance, db_session
+from flaskz.log import flaskz_logger
+from flaskz.models import ModelBase, ModelMixin
+from flaskz.utils import find_list, get_app_cache, set_app_cache, get_ins_mapping
 from sqlalchemy import Column, Integer, String, Table, ForeignKey, DateTime, Boolean, Text, desc
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
@@ -10,193 +12,228 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from ..modules import AutoModelMixin
 
-# Menu operation permission
-sys_menu_op_permissions = Table('sys_menu_op_permissions', ModelBase.metadata,
-                                Column('menu_id', Integer, ForeignKey('sys_menus.id', ondelete='CASCADE')),
-                                Column('permission', String(32), ForeignKey('sys_op_permissions.permission', ondelete='CASCADE')))
+# 模块&动作关联
+# #module#      #action#
+# user          add
+# user          update
+# user          config_email
+sys_module_actions = Table('sys_module_actions', ModelBase.metadata,
+                           Column('module', String(100), ForeignKey('sys_modules.module', ondelete='CASCADE', onupdate='CASCADE')),
+                           Column('action', String(100), ForeignKey('sys_actions.action', ondelete='CASCADE', onupdate='CASCADE')))
 
 
-class OPPermission(ModelBase, ModelMixin):
+class SysAction(ModelBase, ModelMixin):
     """
-    operation permission list
-    """
-    __tablename__ = 'sys_op_permissions'
+    系统所有操作列表
 
-    permission = Column(String(32), primary_key=True, unique=True, index=True)
-    label = Column(String(32), nullable=False)
+    action: 操作, 用于权限控制和角色管理模块 ex)add/update/edit/config
+    label: 操作名称,用于角色管理模块 ex)Config Email
+    """
+    __tablename__ = 'sys_actions'
+
+    action = Column(String(100), primary_key=True, unique=True, index=True)  # add/delete
+    label = Column(String(100), nullable=False)  # Add/Delete
     description = Column(String(255))
 
 
-class Menu(ModelBase, ModelMixin):
+class SysModule(ModelBase, ModelMixin):
     """
-    menu list
+    系统模块列表，模块不一定是菜单，有path属性的模块才会是菜单(SysRole.get_menus)
+
+    name: 模块名字, 用于角色管理模块和系统菜单导航 ex)角色管理
+    parent_id: 父模块id
+    module: 模块, 用于权限控制和角色管理模块 ex)roles
+    path: 路径, 用于前端页面导航和页面返回 ex)roles
+    category: 模块分类, 用于平台多业务管理  ex)VPN
+    actions: 模块操作列表
     """
-    __tablename__ = 'sys_menus'
+    __tablename__ = 'sys_modules'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)
     parent_id = Column(Integer)
-    path = Column(String(255))
+    module = Column(String(100), unique=True)  # 用于api和权限控制, path可能为空, 但是module不能为空(例如:只通过api调用的模块)
+    path = Column(String(100), unique=True)  # 用于页面导航(前端hash & main/page.py)
+    category = Column(String(100))  # 用于模块分类, 多系统整合
     description = Column(String(255))
 
-    op_permissions = relationship('OPPermission', secondary=sys_menu_op_permissions, lazy='joined')
-
-    # menu_ops = relationship("MenuOPS", primaryjoin='Menu.id == MenuOPS.menu_id', cascade="all")
-
-    @classmethod
-    def add_to_db(cls, json_data):
-        try:
-            instance = create_instance(cls, json_data, create_relationship=False)
-            with db_session() as session:
-                session.add(instance)
-                op_permissions = json_data.get('op_permissions', [])
-                for op_permission in op_permissions:
-                    instance.op_permissions.append(OPPermission.query_by_pk(op_permission.get('permission')))
-        except Exception as e:
-            flaskz_logger.exception(e)
-            raise
-        return instance
+    actions = relationship('SysAction', secondary=sys_module_actions, lazy='joined')  # 模块操作列表, 不同的模块有不同的操作列表
 
 
-class RoleMenu(ModelBase, ModelMixin):
-    __tablename__ = 'sys_role_menus'
+class SysRoleModule(ModelBase, ModelMixin):
+    """
+    角色对应的模块和操作列表
+    一个角色对应多条记录
+
+    role_id: 角色ID
+    module_id: 模块ID
+    action: 操作权限
+    """
+    __tablename__ = 'sys_role_modules'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     role_id = Column(Integer, ForeignKey('sys_roles.id', ondelete='CASCADE'), nullable=False)
-    menu_id = Column(Integer, ForeignKey('sys_menus.id', ondelete='CASCADE'), nullable=False)
-    permission = Column(String(32), ForeignKey('sys_op_permissions.permission', ondelete='CASCADE'))
+    module_id = Column(Integer, ForeignKey('sys_modules.id', ondelete='CASCADE'), nullable=False)
+    action = Column(String(100), ForeignKey('sys_actions.action', ondelete='CASCADE'))
 
 
-class Role(ModelBase, ModelMixin, AutoModelMixin):
+class SysRole(ModelBase, ModelMixin, AutoModelMixin):
+    """
+    角色列表
+
+    name: 角色名称
+    default: 是否是默认角色(常用于第三方用户校验)
+    modules: 模块+操作权限列表
+    """
     __tablename__ = 'sys_roles'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(32), unique=True, nullable=False)
+    name = Column(String(100), unique=True, nullable=False)
     default = Column(Boolean, default=False)
-
     description = Column(String(255))
-    created_user = Column(String(32))
     created_at = Column(DateTime(), default=datetime.now)
     updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
 
-    menus = relationship('RoleMenu', cascade='all,delete-orphan')
+    modules = relationship('SysRoleModule', cascade='all,delete-orphan')
 
-    def has_menu_permission(self, module, action):
-        menu_json_list = _get_app_cache_menus()
-        module_menu = find_list(menu_json_list, lambda menu_json_item: Role._check_menu_permission(menu_json_item, module))
-        if module_menu:
-            menu_id = module_menu.get('id')
-            return find_list(self.menus, lambda item: Role._check_menu_action_permission(item, menu_id, action)) is not None
+    def check_permission(self, module, action):
+        """
+        权限检查
+        :param module: 要检查的模块名称
+        :param action: 要检查的操作
+        :return:
+        """
+        checked_module_id = SysRole._find_module_id(module)
+        if checked_module_id:
+            for role_module_ins in self.modules:
+                if SysRole._check_module_action_permission(role_module_ins, checked_module_id, action) is True:
+                    return True
         return False
 
     @staticmethod
-    def _check_menu_permission(menu_json_item, module):
-        return menu_json_item.get('path') == module
+    def _find_module_id(module_name):
+        """返回module名对应的module对象"""
+        module_json_list = get_app_cached_modules()
+        for item in module_json_list:
+            if item.get('module') == module_name:
+                return item.get('id')
+        return None
 
     @staticmethod
-    def _check_menu_action_permission(role_menu_item, menu_id, op_permission):
-        if role_menu_item.menu_id != menu_id:
+    def _check_module_permission(menu_json_item, module):
+        """检查是否是指定的模块"""
+        return menu_json_item.get('module') == module
+
+    @staticmethod
+    def _check_module_action_permission(role_module_ins, module_id, action):
+        """检查是否包含指定的操作权限"""
+        if role_module_ins.module_id != module_id:
             return False
 
-        if op_permission is not None:
-            if op_permission == 'add' or op_permission == 'update' or op_permission == 'delete':
-                op_permission = 'update'
-            return role_menu_item.permission == op_permission
+        if action is not None:
+            if action == 'add' or action == 'update' or action == 'delete':  # 简化操作，只检查是否有编辑权限，根据需求设置
+                action = 'update'
+            return role_module_ins.action == action
         return True
 
     def get_menus(self):
         """
-        Get the menu list of the role, include parent menu
+        返回角色的菜单列表(包括父菜单)
         :return:
         """
-        all_menus = Menu.query_all()
-        if all_menus[0] is False:
-            return all_menus
-        all_menus = all_menus[1]
-
-        menu_map = {}
-        for item in all_menus:
-            menu_map[item.id] = item
+        all_modules = SysModule.query_all()
+        if all_modules[0] is False:
+            return all_modules
+        all_modules = all_modules[1]
+        module_ins_map = get_ins_mapping(all_modules, 'id')
 
         menus = []
-        added = {}
-        for item in self.menus:
-            Role._add_menu_item(item.menu_id, menu_map, menus, added)
+        added_map = {}
+        for item in self.modules:
+            SysRole._add_menu_item(item.module_id, module_ins_map, menus, added_map)
         menus.sort(key=lambda i: i.id)
 
         return menus
 
     @staticmethod
-    def _add_menu_item(menu_id, menu_map, menus, added):
-        if menu_id is None:
+    def _add_menu_item(module_id, module_map, menus, added, is_parent=False):
+        if module_id is None:
             return
-        menu_obj = menu_map.get(menu_id)
-        if menu_obj:
-            if menu_id not in added:
-                menus.append(menu_obj)
-                added[menu_id] = menu_obj
-            Role._add_menu_item(menu_obj.parent_id, menu_map, menus, added)
+        module_ins = module_map.get(module_id)
+        if module_ins:
+            if is_parent is not True and module_ins.path is None:  # @2023-03-10 add to filter menus without path
+                return
+            if module_id not in added:
+                menus.append(module_ins)
+                added[module_id] = module_ins
+            SysRole._add_menu_item(module_ins.parent_id, module_map, menus, added, True)
 
     @staticmethod
     def to_client_json(role_model_json):
-        json_menus = []
-        for item in role_model_json.get('menus', []):
-            menu_id = item.get('menu_id')
-            permission = item.get('permission')
-            _item = find_list(json_menus, lambda _i: _i.get('menu_id') == menu_id)
+        modules = []
+        for item in role_model_json.get('modules', []):
+            module_id = item.get('module_id')
+            action = item.get('action')
+            _item = find_list(modules, lambda _i: _i.get('module_id') == module_id)
             if _item is None:
                 _item = {
-                    'menu_id': menu_id,
-                    'op_permissions': []
+                    'module_id': module_id,
+                    'actions': []
                 }
-                json_menus.append(_item)
-            if permission is not None:
-                _item.get('op_permissions').append(permission)
+                modules.append(_item)
+            if action is not None:
+                _item.get('actions').append(action)
 
-        role_model_json['menus'] = json_menus
+        role_model_json['modules'] = modules
         return role_model_json
 
     @staticmethod
     def to_server_json(role_client_json):
         model_json = {}
         model_json.update(role_client_json)
-        model_json_menus = []
-        for item in role_client_json.get('menus', []):
-            op_permissions = item.get('op_permissions')
-            if not op_permissions:
-                op_permissions = [None]
+        modules = []
+        for item in role_client_json.get('modules', []):
+            actions = item.get('actions')
+            if not actions:
+                actions = [None]
 
-            for permission in op_permissions:
-                model_json_menus.append({
-                    'menu_id': item.get('menu_id'),
-                    'permission': permission
+            for action in actions:
+                modules.append({
+                    'module_id': item.get('module_id'),
+                    'action': action
                 })
-        model_json['menus'] = model_json_menus
+        model_json['modules'] = modules
         return model_json
 
 
-class User(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
+class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
+    """
+    用户列表
+
+    type: 账号类型, local-本地账号, ldap-LDAP账号, aaa-3A认证账号
+    username: 账号, 不可重复
+    password_: hash以后的密码, 如果不是本地校验的话, 可能为空
+    status: 账号状态, 停用或启用
+    role_id: 角色ID, 为了简化操作, 使用的是单角色模式
+    last_login_at: 上次登录事件
+    """
     __tablename__ = 'sys_users'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    type = Column(String(32), nullable=False, default='local')  # local/ldap/aaa
-    username = Column(String(32), unique=True, nullable=False)  # account
-    password_ = Column('password', String(128), nullable=False)  # hash password
-    status = Column(String(32), default='enable')  # disable/enable
-    email = Column(String(32), nullable=False)
-    name = Column(String(32))  # full name
-    phone = Column(String(32))
-
+    type = Column(String(100), nullable=False, default='local')  # local/ldap/aaa
+    username = Column(String(100), unique=True, nullable=False)  # account
+    password_ = Column('password', String(255))  # hash password
+    status = Column(String(100), default='enable')  # disable/enable
+    email = Column(String(100), nullable=False)
+    name = Column(String(100))  # full name
+    phone = Column(String(100))
     role_id = Column(Integer, ForeignKey('sys_roles.id'), nullable=False)
-
-    role = relationship('Role')
-
     last_login_at = Column(DateTime())
-
     description = Column(String(255))
-    created_user = Column(String(32))  #
     created_at = Column(DateTime(), default=datetime.now)
     updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
+
+    role = relationship('SysRole')
 
     @hybrid_property
     def password(self):
@@ -204,26 +241,30 @@ class User(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
 
     @password.setter
     def password(self, pwd):
-        self.password_ = generate_password_hash(pwd)
+        if self.type == 'local' or self.type is None:
+            self.password_ = generate_password_hash(pwd)
+        else:
+            self.password_ = None
 
     @staticmethod
     def verify_password(username, password):
         """
         verify username and password
 
+        重载以实现外部登录 & 自动添加账号功能
+
         :param username:
         :param password:
         :return:
         """
         try:
-            items = User.query_by({'username': username.strip()})
-            if len(items) == 0:
+            user = SysUser.query_by({'username': username.strip()}, return_first=True)
+            if not user:
                 return False, res_status_codes.account_not_found
-            item = items[0]
-            if item.status != 'enable':
+            if user.status != 'enable':
                 return False, res_status_codes.account_disabled
-            if check_password_hash(item.password_, password.strip()) is True:
-                return True, item
+            if check_password_hash(user.password_, password) is True:  # 移除password.strip()
+                return True, user
             else:
                 return False, res_status_codes.account_verify_err
         except Exception as e:
@@ -232,38 +273,52 @@ class User(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
 
     @classmethod
     def to_dict_field_filter(cls, field):
+        """过滤属性"""
         return field not in ['password', 'last_login_at'] and super().to_dict_field_filter(field)
 
     @classmethod
     def check_delete_data(cls, pk_value):
-        if current_user.id == int(pk_value):  # forbid to delete current user
+        if current_user.id == int(pk_value):  # 不能删除当前用户
             return res_status_codes.db_data_in_use
         return super().check_delete_data(pk_value)
 
     @classmethod
     def check_update_data(cls, data):
-        if current_user.id == int(data.get('id')) and data.get('status') == 'disable':  # forbid to disable current user
+        if current_user.id == int(data.get('id')) and data.get('status') == 'disable':  # 不能禁用当前用户
             return res_status_codes.db_data_in_use
         return super().check_update_data(data)
 
-    def can(self, module, action):  # permission check
-        return self.role.has_menu_permission(module, action)
+    def can(self, module, action):  # 权限检查
+        return self.role.check_permission(module, action)
 
 
-class OPLog(ModelBase, ModelMixin):
-    __tablename__ = 'sys_op_logs'
+class SysActionLog(ModelBase, ModelMixin):
+    """
+    操作日志
+
+    username: 操作人员账号
+    user_name: 操作人员姓名
+    user_ip: 操作IP
+    module: 模块名
+    action: 操作名
+    req_data: 请求数据
+    res_data: 结果数据
+    result: 操作结果, 成功/失败
+    like_columns: 模糊查询列
+    """
+    __tablename__ = 'sys_action_logs'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String(32), nullable=False)  #
-    user_name = Column(String(32))  #
-    user_ip = Column(String(32))  #
+    username = Column(String(100), nullable=False)  #
+    user_name = Column(String(100))  #
+    user_ip = Column(String(100))  #
 
-    module = Column(String(32))  # The name of the module, ex Role Mgmt/User Mgmt
-    action = Column(String(32))  # add/remove/update
+    module = Column(String(100))  # The name of the module, ex Role Mgmt/User Mgmt
+    action = Column(String(100))  # add/remove/update
 
     req_data = Column(Text())  #
     res_data = Column(Text())  #
-    result = Column(String(32))  # success/fail
+    result = Column(String(100))  # success/fail
 
     description = Column(Text())  #
 
@@ -285,25 +340,18 @@ class OPLog(ModelBase, ModelMixin):
         return desc(cls.created_at)
 
 
-def _get_app_cache_menus():
+def get_app_cached_modules():
     """
-    To improve performance, save the menu data(json) in the app cache.
-    Only used in Role.has_menu_permission
+    返回系统模块列表，为了提高效率，对系统模块进行了缓存
     :return:
     """
-    menus = get_app_cache('sys_menus')
-    if menus is None:
-        menus = []
-        mode_menus = Menu.query_all()
-        if mode_menus[0] is True:
-            mode_menus = mode_menus[1]
-            for menu in mode_menus:
-                menus.append(menu.to_dict())
-        # for menu in mode_menus:
-        #     menus.append(menu.to_dict())
-        set_app_cache('sys_menus', menus, expire_minutes=60)
-    return menus
-
-
-from flaskz.log import flaskz_logger
-from flaskz.utils import find_list, get_app_cache, set_app_cache
+    modules = get_app_cache('sys_modules')
+    if modules is None:
+        modules = []
+        all_modules = SysModule.query_all()
+        if all_modules[0] is True:
+            all_modules = all_modules[1]
+            for item in all_modules:
+                modules.append(item.to_dict())
+        set_app_cache('sys_modules', modules, expire_minutes=60)
+    return modules

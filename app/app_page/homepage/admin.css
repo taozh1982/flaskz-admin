@@ -11,10 +11,6 @@ body {
   flex-flow: column nowrap;
   box-sizing: border-box;
 }
-body.full-screen > header,
-body.full-screen > .body-main > .aside {
-  display: none;
-}
 header {
   display: flex;
   flex: 0 0 2.8em;
@@ -58,6 +54,7 @@ header .right .icon-item {
   transition: 0.2s;
   display: flex;
   align-items: center;
+  white-space: nowrap;
 }
 header .right .icon-item svg {
   display: inline-block;
@@ -100,7 +97,7 @@ header .right .license {
 }
 .header-popover a {
   cursor: pointer;
-  margin: 0.3em 0 0.6em;
+  padding: 0.5em 0;
   display: block;
   color: #007bff;
   text-decoration: none;
@@ -108,11 +105,18 @@ header .right .license {
 .header-popover a:hover {
   text-decoration: underline;
 }
+.header-popover a:first-child {
+  padding-top: 0;
+}
 .header-popover a:last-child {
-  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.header-popover a.split-line {
+  border-bottom: 1px solid #e2e2e2;
 }
 .header-popover a svg {
   vertical-align: middle;
+  margin-right: 2px;
 }
 .header-popover ul {
   list-style: none;
@@ -225,6 +229,10 @@ body.aside-collapsed .body-main > .aside .z-tree {
 }
 body.aside-collapsed .body-main > .aside .z-menu {
   display: block;
+}
+body.full-screen > header,
+body.full-screen > .body-main > .aside {
+  display: none;
 }
 @media only screen and (max-width: 768px) {
   header .toggle-menu {

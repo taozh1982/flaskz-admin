@@ -3,38 +3,38 @@
  */
 var AjaxUrl = {
     for_test: {
-        query: "/api/v1.0/template/",
-        add: "/api/v1.0/template/",
-        delete: "/api/v1.0/template/[id]",
-        update: "/api/v1.0/template/"
+        query: "/api/v1.0/templates/",
+        add: "/api/v1.0/templates/",
+        delete: "/api/v1.0/templates/[id]",
+        update: "/api/v1.0/templates/"
     },
 
     sys_role: {
-        query: "/sys_mgmt/role/",
-        add: "/sys_mgmt/role/",
-        delete: "/sys_mgmt/role/[id]",
-        update: "/sys_mgmt/role/"
+        query: "/sys-mgmt/roles/",
+        add: "/sys-mgmt/roles/",
+        delete: "/sys-mgmt/roles/[id]",
+        update: "/sys-mgmt/roles/"
     },
     sys_user: {
-        query: "/sys_mgmt/user/query_multiple/",
-        add: "/sys_mgmt/user/",
-        delete: "/sys_mgmt/user/[id]",
-        update: "/sys_mgmt/user/"
+        query: "/sys-mgmt/users/multi/",
+        add: "/sys-mgmt/users/",
+        delete: "/sys-mgmt/users/[id]",
+        update: "/sys-mgmt/users/"
     },
     sys_license: {
-        query: "/sys_mgmt/license/",
-        add: {url: "/sys_mgmt/license/", method: "POST"}
+        query: "/sys-mgmt/licenses/",
+        add: {url: "/sys-mgmt/licenses/", method: "POST"}
     },
-    sys_op_log: {
-        query: {url: "/sys_mgmt/op_log/query_pss/", method: "POST"},
-        menu: "/sys_mgmt/op_log/menu/"
+    sys_action_log: {
+        query: {url: "/sys-mgmt/action-logs/pss/", method: "POST"},
+        modules: "/sys-mgmt/modules/"
     },
     sys_auth: {
-        login: {url: "/sys_mgmt/auth/login/", method: "POST"},
-        // login: {url: "/sys_mgmt/auth/token/", method: "POST"},
-        logout: {url: "/sys_mgmt/auth/logout/", method: "GET"},
+        login: {url: "/sys-mgmt/auth/login/", method: "POST"},
+        // login: {url: "/sys-mgmt/auth/token/", method: "POST"},
+        logout: {url: "/sys-mgmt/auth/logout/", method: "GET"},
 
-        query: "/sys_mgmt/auth/account/",
-        update: "/sys_mgmt/auth/account/"
+        query: "/sys-mgmt/auth/account/",
+        update: "/sys-mgmt/auth/account/"
     }
 };

@@ -1,5 +1,6 @@
 from flask import Flask, session
 from flaskz import log, models
+from flaskz.utils import init_app_config
 
 from config import config
 from . import sys_mgmt, main, api, sys_init
@@ -8,31 +9,33 @@ from .sys_mgmt import auth
 
 def create_app(config_name):
     app = Flask(__name__)
-    # app.url_map.strict_slashes = False  # disable url redirect ex)'user' and 'user/'
+    app.url_map.strict_slashes = False  # 不重定向而是直接使用斜杠URL ex)'user' and 'user/'
 
     # 配置
     config_name = config_name.lower()
     app_config = config[config_name]
     app.config.from_object(app_config)
-    app_config.init_app(app)
-    sys_init.init_app(app)  # 系统初始化，中文message等
-
-    # CORS(app) # 跨域支持, 按需使用 pip install flask-cors
+    # 跨域支持, pip install flask-cors
+    # CORS(app)
 
     # 初始化
-    log.init_log(app)
+    app_config.init_app(app)
+    init_app_config(app_config)  # 初始化系统配置, 方便使用get_app_config获取应用配置
+    sys_init.init_app(None)  # 系统初始化，中文message等
+    log.init_log(app)  # 初始化日志
     log.flaskz_logger.info('-- start application with %s config --' % config_name)
-    models.init_model(app)
+    models.init_model(app)  # 初始化数据库
 
+    # 系统管理
     _init_login(app)
     _init_model_rest(app)
     # _init_license(app)
 
-    # 注册api
+    # 注册API
     main.init_app(app)
     app.register_blueprint(main.main_bp, url_prefix='/')
     app.register_blueprint(api.api_bp, url_prefix='/api/v1.0')
-    app.register_blueprint(sys_mgmt.sys_mgmt_bp, url_prefix='/sys_mgmt')
+    app.register_blueprint(sys_mgmt.sys_mgmt_bp, url_prefix='/sys-mgmt')
 
     @app.before_request
     def before_request():

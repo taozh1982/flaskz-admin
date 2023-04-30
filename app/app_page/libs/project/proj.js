@@ -37,66 +37,86 @@ z.setDefault({
     PRO_MODAL_CANCEL_TEXT: "取消"
 });
 
+z.form.Validator.registerRuleMessage({
+    required: '请输入',
+    integer: '请输入整数',
+    numeric: '请输入数字',
+    alphanumeric: '请输入字母/数字',
+    alphanumeric_dash: '请输入字母/数字/中划线/下划线',
+    alphanumeric_space: '请输入字母/数字/空格',
+    email: '请输入Email',
+    ipv4: '请输入IP地址',
+    minlength: '该字段至少包含%p个字符',
+    maxlength: '该字段不得超过%p个字符',
+    greaterthan: '请输入大于%p的数字',
+    lessthan: '请输入小于%p的数字',
+    equal: '该字段必须和%p一致',
+    match: '该字段必须和%p字段一致'
+});
+
+//图标
+z.setDefault({
+    PRO_GRID_OPERATE_UPDATE_LABEL: "<i class='fa fa-edit'></i>编辑",
+    PRO_GRID_OPERATE_DELETE_LABEL: "<i class='fa fa-trash-o'></i>删除",
+    PRO_MESSAGE_DELETE_CONFIRM: "<i class='fa fa-warning color-warning'></i> 确认删除?",
+    PRO_MODAL_UPDATE_TITLE: "<i class='fa fa-edit'></i> 编辑",
+    PRO_MODAL_ADD_TITLE: "<i class='fa fa-plus-square'></i> 添加",
+    PRO_MODAL_VIEW_TITLE: "<i class='fa fa-file-text-o'></i> 查看"
+});
+
 //项目定制化
 z.setDefault({
     FORM_VALIDATE_ERROR_CLASS: "is-invalid",
     FORM_VALIDATE_MESSAGE_CLASS: "invalid-feedback",
 
-    PRO_GRID_OPERATE_UPDATE_LABEL: "<i class='fa fa-edit'></i>编辑",
     PRO_GRID_OPERATE_UPDATE_CLASS: "btn btn-link color-primary",
-    PRO_GRID_OPERATE_DELETE_LABEL: "<i class='fa fa-trash-o'></i>删除",
     PRO_GRID_OPERATE_DELETE_CLASS: "btn btn-link color-danger",
 
     PRO_AJAX_NOTIFY_OPTIONS: {position: "bottom_right"},
 
-    PRO_MESSAGE_DELETE_CONFIRM: "<i class='fa fa-warning color-warning'></i> 确认删除?",
-
-    PRO_MODAL_UPDATE_TITLE: "<i class='fa fa-edit'></i> 编辑",
-    PRO_MODAL_ADD_TITLE: "<i class='fa fa-plus-square'></i> 添加",
-    PRO_MODAL_VIEW_TITLE: "<i class='fa fa-file-text-o'></i> 查看",
-
     PRO_CRUDTABLEPAGE_MODAL_OPTIONS: {open_animation: "z-animation-fadeInLeft", close_animation: "z-animation-fadeOutRight"},
     PRO_CRUDTABLEPAGE_NESTED_MODAL_OPTIONS: {open_animation: "z-animation-fadeInUp", close_animation: "z-animation-fadeOutDown"}
 });
+
 
 /**
  * ajax请求url
  */
 var AjaxUrl = {
     for_test: {
-        query: "/api/v1.0/template/",
-        add: "/api/v1.0/template/",
-        delete: "/api/v1.0/template/[id]",
-        update: "/api/v1.0/template/"
+        query: "/api/v1.0/templates/",
+        add: "/api/v1.0/templates/",
+        delete: "/api/v1.0/templates/[id]",
+        update: "/api/v1.0/templates/"
     },
 
     sys_role: {
-        query: "/sys_mgmt/role/",
-        add: "/sys_mgmt/role/",
-        delete: "/sys_mgmt/role/[id]",
-        update: "/sys_mgmt/role/"
+        query: "/sys-mgmt/roles/",
+        add: "/sys-mgmt/roles/",
+        delete: "/sys-mgmt/roles/[id]",
+        update: "/sys-mgmt/roles/"
     },
     sys_user: {
-        query: "/sys_mgmt/user/query_multiple/",
-        add: "/sys_mgmt/user/",
-        delete: "/sys_mgmt/user/[id]",
-        update: "/sys_mgmt/user/"
+        query: "/sys-mgmt/users/multi/",
+        add: "/sys-mgmt/users/",
+        delete: "/sys-mgmt/users/[id]",
+        update: "/sys-mgmt/users/"
     },
     sys_license: {
-        query: "/sys_mgmt/license/",
-        add: {url: "/sys_mgmt/license/", method: "POST"}
+        query: "/sys-mgmt/licenses/",
+        add: {url: "/sys-mgmt/licenses/", method: "POST"}
     },
-    sys_op_log: {
-        query: {url: "/sys_mgmt/op_log/query_pss/", method: "POST"},
-        menu: "/sys_mgmt/op_log/menu/"
+    sys_action_log: {
+        query: {url: "/sys-mgmt/action-logs/pss/", method: "POST"},
+        modules: "/sys-mgmt/modules/"
     },
     sys_auth: {
-        login: {url: "/sys_mgmt/auth/login/", method: "POST"},
-        // login: {url: "/sys_mgmt/auth/token/", method: "POST"},
-        logout: {url: "/sys_mgmt/auth/logout/", method: "GET"},
+        login: {url: "/sys-mgmt/auth/login/", method: "POST"},
+        // login: {url: "/sys-mgmt/auth/token/", method: "POST"},
+        logout: {url: "/sys-mgmt/auth/logout/", method: "GET"},
 
-        query: "/sys_mgmt/auth/account/",
-        update: "/sys_mgmt/auth/account/"
+        query: "/sys-mgmt/auth/account/",
+        update: "/sys-mgmt/auth/account/"
     }
 };
 
@@ -105,17 +125,17 @@ var AjaxUrl = {
  * ajax数据缓存
  */
 var AjaxCache = {
-    op_log_menu: {
-        _key: "flasky_ajax_cache_op_log_menu",
+    action_logs_modules: {
+        _key: "flasky_ajax_cache_action_logs_modules",
         query: function (callback, context) {
-            var key = AjaxCache.op_log_menu._key;
+            var key = AjaxCache.action_logs_modules._key;
             var data = z.bom.getLocalStorage(key);
             if (data) {
                 callback.apply(context, [data]);
                 return;
             }
             pro.AjaxCRUD.query({
-                url: AjaxUrl.sys_op_log.menu,
+                url: AjaxUrl.sys_action_log.modules,
                 success_notify: false,
                 success: function (result) {
                     var menus = result.data;

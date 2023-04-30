@@ -1,4 +1,4 @@
-/*! Focus Pro v2.4.1 | http://www.focus-ui.com | 2023-03-01 */
+/*! Focus Pro v2.4.1 | http://www.focus-ui.com | 2023-03-09 */
 (function(window, undefined) {
     z.$.setSysDefault({
         PRO_GRID_OPERATE_CLASS: "btn btn-link",
@@ -75,7 +75,7 @@
         }
     };
     var $DomUtil = {
-        createTableHTML: function(values, columns, attributes, inner) {
+        createTableHTML: function(values, columns, tableAttrs, inner) {
             var tt = "";
             if (z.type.isArray(values) && z.type.isArray(columns)) {
                 var thead = "<tr>";
@@ -117,8 +117,7 @@
                     tbody += tr;
                 });
                 tt += tbody;
-            }
-            if (z.type.isObject(values)) {
+            } else if (z.type.isObject(values)) {
                 z.util.eachObject(values, function(key, value) {
                     if (value == null) {
                         value = "";
@@ -129,7 +128,14 @@
             if (inner === true) {
                 return tt;
             }
-            return "<table " + (attributes || "") + ">" + tt + "</table>";
+            if (z.type.isObject(tableAttrs)) {
+                var attrs = [];
+                z.util.eachObject(tableAttrs, function(key, value) {
+                    attrs.push(key + "=" + value);
+                });
+                tableAttrs = attrs.join(" ");
+            }
+            return "<table " + (tableAttrs || "") + ">" + tt + "</table>";
         }
     };
     var $FormUtil = {
@@ -300,6 +306,14 @@
             return $GridUtil._renderEditCell(grid, data, columnOrField, td, function() {
                 return document.createElement("input");
             }, option);
+        },
+        renderCheckbox: function(grid, data, columnOrField, td, option) {
+            option = z.util.deepMergeObject(z.util.mergeObject({}, option), {
+                attributes: {
+                    type: "checkbox"
+                }
+            });
+            return $GridUtil.renderInput(grid, data, columnOrField, td, option);
         },
         renderSelect: function(grid, data, columnOrField, td, selectOptions, option) {
             return $GridUtil._renderEditCell(grid, data, columnOrField, td, function() {
@@ -541,6 +555,7 @@
             return "";
         }
     });
+    z.util.mergeObject($GridUtil, {});
     var $VisibleUtil = {
         addInputVisibleFilter: function(view, filterInput, matchProperty) {
             var matchFunc;
@@ -674,6 +689,7 @@
             }
             url = $AjaxCRUD._getURL(url, options.url_params);
             return z.ajax.ajax(method, url, options.data, z.util.mergeObject({
+                variables: options.variables,
                 complete: function(status, result) {
                     if (loading !== false) {
                         z.widget.loading(false, options.loading_parent);
@@ -1090,6 +1106,29 @@
         }
     });
     var $DataUtil = {
+        appendChildren: function(parents, children, parent_map_key, child_parent_key) {
+            if (parents == null) {
+                return;
+            }
+            if (!z.type.isArray(parents)) {
+                parents = [ parents ];
+            }
+            parents.forEach(function(item) {
+                if (!item.hasOwnProperty("children")) {
+                    item.children = [];
+                }
+            });
+            if (children == null) {
+                return;
+            }
+            var parent_map = z.util.toArrayMap(parents, parent_map_key);
+            children.forEach(function(item) {
+                var parent_item = parent_map[item[child_parent_key]];
+                if (parent_item) {
+                    parent_item.children.push(item);
+                }
+            });
+        },
         parseLevelData: function(levelData, options) {
             options = z.util.mergeObject({
                 id: "id",
@@ -1358,7 +1397,7 @@
             return menu_permissions[menu] || [];
         },
         getMenuPermissions: function() {
-            return z.bom.getSessionStorage("menu_permissions") || z.bom.getSessionStorage("module_permissions") || z.bom.getSessionStorage("menus") || {};
+            return z.bom.getSessionStorage("menu_permissions") || z.bom.getSessionStorage("menus") || z.bom.getSessionStorage("module_permissions") || {};
         },
         getPageMenu: function() {
             return window.AC_MENU || window.ac_module || z.bom.getLocationSearchParam("menu") || z.bom.getLocationSearchParam("module") || this._getPageMenuByPath();
@@ -1625,12 +1664,6 @@
                 modal_title = " ";
             }
             var defaultValue = {};
-            z.dom.queryAll("[ze-reset=false]", this.page_options.modal_form).forEach(function(ele) {
-                var model = ele.getAttribute("ze-model");
-                if (model) {
-                    defaultValue[model] = z.dom.getValue(ele);
-                }
-            });
             z.dom.queryAll("[ze-default]", this.page_options.modal_form).forEach(function(ele) {
                 var model = ele.getAttribute("ze-model");
                 if (model) {
@@ -2038,12 +2071,6 @@
                 }
                 var modal = this[itfKeyMap._get$FormModal]();
                 var defaultValue = {};
-                z.dom.queryAll("[ze-reset=false]", modal).forEach(function(ele) {
-                    var model = ele.getAttribute("ze-model");
-                    if (model) {
-                        defaultValue[model] = z.dom.getValue(ele);
-                    }
-                });
                 z.dom.queryAll("[ze-default]", modal).forEach(function(ele) {
                     var model = ele.getAttribute("ze-model");
                     if (model) {
@@ -2975,12 +3002,9 @@
             return $GVUtil._tooltip;
         },
         getTableTooltipStr: function(values) {
-            var tt = "<table class='tooltip-table'>";
-            z.util.eachObject(values, function(key, value) {
-                tt += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
+            return $DomUtil.createTableHTML(values, null, {
+                class: "tooltip-table"
             });
-            tt += "</table>";
-            return tt;
         }
     });
     z.util.mergeObject($GVUtil, {

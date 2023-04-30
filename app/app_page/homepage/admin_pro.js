@@ -9,13 +9,13 @@ var FontIconMapping = {
 };
 //url mapping
 var URLMapping = {
-    /*user: "./modules/sys_mgmt/user/user.html",
-    role: "./modules/sys_mgmt/role/role.html",
+    /*users: "./modules/sys_mgmt/users/user.html",
+    roles: "./modules/sys_mgmt/roles/role.html",
     op_log: "./modules/sys_mgmt/op_log/op_log.html"*/
 };
 z.util.mergeObject(Admin, {
     initCustom: function () {
-        this.initProfileController();
+        this.initPreferenceController();
     },
     initModel: function () {
         pro.AjaxCRUD.query({
@@ -68,7 +68,7 @@ z.util.mergeObject(Admin, {
     }
 });
 z.util.mergeObject(Admin, {
-    initProfileController: function () {
+    initPreferenceController: function () {
         this.profileForm = z.form.Form("#modalDiv");
         z.dom.event.onclick("#modalOkBtn", function () {
             var value = this.profileForm.getValue();
@@ -109,10 +109,18 @@ z.util.mergeObject(Admin, {
         z.bom.removeLocalStorage("auth-token");
         z.bom.clearSessionStorage();
     },
-    showProfileModal: function () {
+    showPreferenceModal: function () {
         z.widget.popover.close();
         this.profileForm.setValue(this._account_profile);
         z.widget.modal("#modalDiv");
+    },
+    showAboutModal: function () {
+        z.widget.popover.close();
+        z.widget.alert("<ul style='white-space: break-spaces'>" +
+            "<li>Used for quick initialization of the project</li>" +
+            "<li>Provides system and permission management modules(RBAC)</li>" +
+            "<li>Provides the front-end page</li>" +
+            "</ul>", "Flaskz Admin Template");
     },
     showLicenseModal: function () {
         z.widget.popover.close();
@@ -174,7 +182,7 @@ z.util.mergeObject(Admin, {
         menus.forEach(function (item) {
             var path = item.path;
             if (path != null) {
-                path_ops[path] = item.op_permissions;
+                path_ops[path] = item.actions;
             }
         });
         z.bom.setSessionStorage("menu_permissions", path_ops);

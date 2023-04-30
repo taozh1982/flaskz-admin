@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "78e681cb-f9fc-4c79-b50b-a12c5b1c4555",
+		"_postman_id": "56012d93-82df-4765-b823-6535b866813a",
 		"name": "flaskz-admin",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -40,7 +40,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/",
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/templates/",
 							"protocol": "http",
 							"host": [
 								"{{flaskz_server_url}}"
@@ -48,7 +48,7 @@
 							"path": [
 								"api",
 								"v1.0",
-								"template",
+								"templates",
 								""
 							]
 						}
@@ -72,7 +72,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/1/",
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/templates/1/",
 							"protocol": "http",
 							"host": [
 								"{{flaskz_server_url}}"
@@ -80,7 +80,7 @@
 							"path": [
 								"api",
 								"v1.0",
-								"template",
+								"templates",
 								"1",
 								""
 							]
@@ -120,7 +120,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/",
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/templates/",
 							"protocol": "http",
 							"host": [
 								"{{flaskz_server_url}}"
@@ -128,7 +128,7 @@
 							"path": [
 								"api",
 								"v1.0",
-								"template",
+								"templates",
 								""
 							]
 						}
@@ -167,7 +167,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/1/",
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/templates/1/",
 							"protocol": "http",
 							"host": [
 								"{{flaskz_server_url}}"
@@ -175,7 +175,7 @@
 							"path": [
 								"api",
 								"v1.0",
-								"template",
+								"templates",
 								"1",
 								""
 							]
@@ -184,7 +184,7 @@
 					"response": []
 				},
 				{
-					"name": "query",
+					"name": "query_all",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -218,7 +218,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/",
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/templates/",
 							"protocol": "http",
 							"host": [
 								"{{flaskz_server_url}}"
@@ -226,7 +226,7 @@
 							"path": [
 								"api",
 								"v1.0",
-								"template",
+								"templates",
 								""
 							]
 						}
@@ -268,7 +268,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/1/",
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/templates/1/",
 							"protocol": "http",
 							"host": [
 								"{{flaskz_server_url}}"
@@ -276,7 +276,7 @@
 							"path": [
 								"api",
 								"v1.0",
-								"template",
+								"templates",
 								"1",
 								""
 							]
@@ -308,7 +308,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"search\": {\r\n        \"like\": \"t\", // 模糊查询\r\n        \"age\": { // 条件查询\r\n            \">\": 1,\r\n            \"<\": 20\r\n        },\r\n        \"_ors\": { // or高级查询\r\n            \"email\": \"t1@focus-ui.com||t1@flaskz.com\"\r\n        },\r\n        \"_ands\": { // and高级查询\r\n            \"age\": {\r\n                \">\": 1,\r\n                \"<\": 20\r\n            }\r\n        }\r\n    },\r\n    \"sort\": { // 排序\r\n        \"field\": \"name\",\r\n        \"order\": \"asc\" // asc/desc\r\n    },\r\n    \"page\": { // 分页\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    }\r\n}",
+							"raw": "{\r\n    \"search\": {\r\n        \"like\": \"t\", // 模糊查询 - like_columns\r\n        //\"name\": \"T1\", //条件查询\r\n        \"age\": { // 条件查询\r\n            \">\": 1,\r\n            \"<\": 20\r\n        },\r\n        \"_ors\": { // or高级查询\r\n            \"email\": \"t1@focus-ui.com||t1@flaskz.com\"\r\n        },\r\n        \"_ands\": { // and高级查询\r\n            \"age\": {\r\n                \">\": 1,\r\n                \"<\": 20\r\n            }\r\n        }\r\n    },\r\n    \"sort\": { // 排序\r\n        \"field\": \"name\",\r\n        \"order\": \"asc\" // asc/desc\r\n    },\r\n    // \"sort\": [ // 多重排序\r\n    //     {\r\n    //         \"field\": \"name\",\r\n    //         \"order\": \"asc\" // asc/desc\r\n    //     },\r\n    //     {\r\n    //         \"field\": \"age\",\r\n    //         \"order\": \"desc\" // asc/desc\r\n    //     }\r\n    // ],\r\n    \"page\": { // 分页\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -316,7 +316,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/template/query_pss/",
+							"raw": "http://{{flaskz_server_url}}/api/v1.0/templates/pss/",
 							"protocol": "http",
 							"host": [
 								"{{flaskz_server_url}}"
@@ -324,8 +324,8 @@
 							"path": [
 								"api",
 								"v1.0",
-								"template",
-								"query_pss",
+								"templates",
+								"pss",
 								""
 							]
 						},
@@ -391,13 +391,13 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/_/sys_log/?date=2022-03-10",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/_/sys_log/?date=2022-03-10",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
+										"sys-mgmt",
 										"_",
 										"sys_log",
 										""
@@ -443,13 +443,13 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/_/url_map/",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/_/url_map/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
+										"sys-mgmt",
 										"_",
 										"url_map",
 										""
@@ -489,13 +489,13 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/_/clear_cache",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/_/clear_cache",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
+										"sys-mgmt",
 										"_",
 										"clear_cache"
 									]
@@ -562,13 +562,13 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/auth/token/",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/auth/token/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
+										"sys-mgmt",
 										"auth",
 										"token",
 										""
@@ -600,13 +600,13 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/auth/login/",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/auth/login/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
+										"sys-mgmt",
 										"auth",
 										"login",
 										""
@@ -622,13 +622,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/auth/logout/",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/auth/logout/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
+										"sys-mgmt",
 										"auth",
 										"logout",
 										""
@@ -655,13 +655,13 @@
 									}
 								],
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/auth/account/",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/auth/account/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
+										"sys-mgmt",
 										"auth",
 										"account",
 										""
@@ -674,7 +674,7 @@
 					]
 				},
 				{
-					"name": "user",
+					"name": "users",
 					"item": [
 						{
 							"name": "add_user",
@@ -708,14 +708,14 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/user/",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/users/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
-										"user",
+										"sys-mgmt",
+										"users",
 										""
 									]
 								}
@@ -739,14 +739,14 @@
 									}
 								],
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/user/2/",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/users/2/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
-										"user",
+										"sys-mgmt",
+										"users",
 										"2",
 										""
 									]
@@ -786,14 +786,14 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/user/",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/users/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
-										"user",
+										"sys-mgmt",
+										"users",
 										""
 									]
 								}
@@ -835,14 +835,14 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/user/",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/users/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
-										"user",
+										"sys-mgmt",
+										"users",
 										""
 									]
 								},
@@ -851,7 +851,7 @@
 							"response": []
 						},
 						{
-							"name": "query_multiple",
+							"name": "query_multi",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -885,15 +885,15 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/user/query_multiple",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/users/multi",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
-										"user",
-										"query_multiple"
+										"sys-mgmt",
+										"users",
+										"multi"
 									]
 								},
 								"description": "query user&role list"
@@ -903,7 +903,7 @@
 					]
 				},
 				{
-					"name": "role",
+					"name": "roles",
 					"item": [
 						{
 							"name": "add_role",
@@ -937,14 +937,14 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/role/",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/roles/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
-										"role",
+										"sys-mgmt",
+										"roles",
 										""
 									]
 								}
@@ -968,14 +968,14 @@
 									}
 								],
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/role/2/",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/roles/2/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
-										"role",
+										"sys-mgmt",
+										"roles",
 										"2",
 										""
 									]
@@ -1015,14 +1015,14 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/role/",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/roles/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
-										"role",
+										"sys-mgmt",
+										"roles",
 										""
 									]
 								}
@@ -1064,14 +1064,15 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/role",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/roles/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
-										"role"
+										"sys-mgmt",
+										"roles",
+										""
 									]
 								},
 								"description": "query all menus and role list"
@@ -1101,10 +1102,10 @@
 					]
 				},
 				{
-					"name": "op_log",
+					"name": "action-logs",
 					"item": [
 						{
-							"name": "query_menu",
+							"name": "query_modules",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -1138,15 +1139,15 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/op_log/menu",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/modules/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
-										"op_log",
-										"menu"
+										"sys-mgmt",
+										"modules",
+										""
 									]
 								},
 								"description": "query log modules"
@@ -1185,15 +1186,15 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/op_log/query_pss/",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/action-logs/pss/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
-										"op_log",
-										"query_pss",
+										"sys-mgmt",
+										"action-logs",
+										"pss",
 										""
 									]
 								}
@@ -1243,14 +1244,14 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/license/",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/licenses/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
-										"license",
+										"sys-mgmt",
+										"licenses",
 										""
 									]
 								}
@@ -1292,14 +1293,14 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys_mgmt/license/",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/licenses/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
 									],
 									"path": [
-										"sys_mgmt",
-										"license",
+										"sys-mgmt",
+										"licenses",
 										""
 									]
 								}

@@ -2,17 +2,17 @@
  * ajax数据缓存
  */
 var AjaxCache = {
-    op_log_menu: {
-        _key: "flasky_ajax_cache_op_log_menu",
+    action_logs_modules: {
+        _key: "flasky_ajax_cache_action_logs_modules",
         query: function (callback, context) {
-            var key = AjaxCache.op_log_menu._key;
+            var key = AjaxCache.action_logs_modules._key;
             var data = z.bom.getLocalStorage(key);
             if (data) {
                 callback.apply(context, [data]);
                 return;
             }
             pro.AjaxCRUD.query({
-                url: AjaxUrl.sys_op_log.menu,
+                url: AjaxUrl.sys_action_log.modules,
                 success_notify: false,
                 success: function (result) {
                     var menus = result.data;

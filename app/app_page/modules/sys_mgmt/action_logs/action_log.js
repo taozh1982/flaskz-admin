@@ -1,12 +1,13 @@
-var OPLog = z.util.mergeObject(pro.template.CRUDTablePage, {
+var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
     action_selects: [
         {name: "全部", value: ""},
         {name: "添加", value: "add"},
         {name: "删除", value: "delete"},
-        {name: "更新", value: "update"}
+        {name: "更新", value: "update"},
+        {name: "登录", value: "login"}
     ],
     page_options: {
-        url: AjaxUrl.sys_op_log,
+        url: AjaxUrl.sys_action_log,
         grid_options: {
             pageable: true,
             columns: [
@@ -28,7 +29,7 @@ var OPLog = z.util.mergeObject(pro.template.CRUDTablePage, {
                     name: "操作", field: "action", width: 80,
                     render: function (td, data) {
                         var action = data.get("action");
-                        td.innerHTML = OPLog.getActionName(action) || action || "";
+                        td.innerHTML = ActionLog.getActionName(action) || action || "";
                     }
                 },
                 {
@@ -40,13 +41,13 @@ var OPLog = z.util.mergeObject(pro.template.CRUDTablePage, {
                 {
                     name: "请求数据", field: "req_data",
                     render: function (td, data) {
-                        OPLog.renderDetail(td, data, "req_data")
+                        ActionLog.renderDetail(td, data, "req_data")
                     }
                 },
                 {
                     name: "结果数据", field: "res_data",
                     render: function (td, data) {
-                        OPLog.renderDetail(td, data, "res_data")
+                        ActionLog.renderDetail(td, data, "res_data")
                     }
                 },
                 {
@@ -100,7 +101,7 @@ var OPLog = z.util.mergeObject(pro.template.CRUDTablePage, {
         pro.FormUtil.initSelectOptions("#actionSelect", this.action_selects);
     },
     initModel: function () {
-        AjaxCache.op_log_menu.query(function (data) {
+        AjaxCache.action_logs_modules.query(function (data) {
             pro.FormUtil.initSelectOptions("#moduleSelect", z.util.mergeArray([{name: "全部", value: ""}], data));
         }, this);
         this.handleSearchChange();

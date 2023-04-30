@@ -7,6 +7,14 @@ websockets vs SocketIO
 客户端: SocketIO要使用socket.io.js，而websockets可以直接用原生的WebSocket对象
 如果是通过APScheduler或Celery进行任务调度的话，因为没有socket对象，可以考虑通过redis等进行中转
 
+
+#请添加以下配置项
+REDIS_URL = None# redis相关配置, 按需配置
+# websocket配置, 按需配置
+WEBSOCKET_HOST = None  # 如果为None, host=0.0.0.0
+WEBSOCKET_PORT = 3667  # websocket端口号
+REDIS_WEBSOCKET_DEFAULT_CHANNEL = "ws:channel"  # redis websocket订阅的默认channel
+REDIS_WEBSOCKET_MESSAGE_TIMEOUT = 1  # redis websocket消息等待时间
 """
 import asyncio
 import multiprocessing

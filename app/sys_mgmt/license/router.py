@@ -6,20 +6,21 @@ from flaskz import res_status_codes
 from flaskz.log import flaskz_logger, get_log_data
 from flaskz.models import model_to_dict
 from flaskz.rest import get_rest_log_msg, rest_permission_required
-from flaskz.utils import create_response
+from flaskz.utils import create_response, get_app_config
 
 from . import License
 from .util import parse_license
 from ..router import sys_mgmt_bp, log_operation
 from ...main import allowed_file
-from ...sys_init import status_codes, get_app_config
+from ...sys_init import status_codes
 from ...utils import get_app_license
 
 
 # -------------------------------------------license-------------------------------------------
-@sys_mgmt_bp.route('/license/', methods=['POST'])
-@rest_permission_required('license')
+@sys_mgmt_bp.route('/licenses/', methods=['POST'])
+@rest_permission_required('licenses')
 def sys_license_upload():
+    """上传license"""
     license_txt = None
     public_key_file = get_app_config('APP_LICENSE_PUBLIC_KEY_FILEPATH')
     if not os.path.isfile(public_key_file):
@@ -48,18 +49,15 @@ def sys_license_upload():
                     res_data = model_to_dict(res_data)
             else:
                 success, res_data = False, status_codes.file_format_not_allowed
-    log_operation('license', 'add', success, license_txt, get_log_data(res_data))
+    log_operation('licenses', 'add', success, license_txt, get_log_data(res_data))
     flaskz_logger.info(get_rest_log_msg('Upload license', license_txt, success, res_data))
     return create_response(success, res_data)
 
 
-@sys_mgmt_bp.route('/license/', methods=['GET'])
-@rest_permission_required('license')
+@sys_mgmt_bp.route('/licenses/', methods=['GET'])
+@rest_permission_required('licenses')
 def license_query():
-    """
-    Query the role list and the full menu list with operation permissions
-    :return:
-    """
+    """查询license列表"""
     result = License.query_all()
     success = result[0]
     res_data = model_to_dict(result[1])

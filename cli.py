@@ -6,8 +6,8 @@ import click
 from flask.cli import AppGroup
 
 
-# > set FLASK_APP=admin_app.py      # windows
 # > export FLASK_APP=admin_app.py   # mac/linux
+# > set FLASK_APP=admin_app.py      # windows
 
 # > flask admin db help
 # > flask admin db upgrade      # update database tables

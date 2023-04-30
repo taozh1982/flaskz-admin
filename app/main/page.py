@@ -11,16 +11,16 @@ page_mapping = {
     'login': './login.html',
     'index': './index.html',
 
-    'role': './modules/sys_mgmt/role/role.html',
-    'user': './modules/sys_mgmt/user/user.html',
-    'op_log': './modules/sys_mgmt/op_log/op_log.html',
-    'license': './modules/sys_mgmt/license/license.html',
+    'roles': './modules/sys_mgmt/roles/role.html',
+    'users': './modules/sys_mgmt/users/user.html',
+    'action-logs': './modules/sys_mgmt/action_logs/action_log.html',
+    'licenses': './modules/sys_mgmt/licenses/license.html',
 
-    'template': './modules/template/template/template.html',
+    'templates': './modules/example/templates/template.html',
 
     'ex-screen': './modules/example/screen/screen.html',
     'ex-websocket': './modules/example/websocket/websocket.html',
-    # 'op_log': './modules/sys/op_log/op_log.html?module=lop_op',
+    # 'op-log': './modules/sys/op_log/op_log.html?module=lop-op',  # set module
 }
 
 

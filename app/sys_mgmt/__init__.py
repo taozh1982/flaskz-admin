@@ -28,10 +28,10 @@ def log_operation(module, action, result, req_data=None, res_data=None, descript
     elif result is False:
         result = "fail"
 
-    if not is_str(req_data):
+    if req_data is not None and not is_str(req_data):
         req_data = json.dumps(req_data)
 
-    if not is_str(res_data):
+    if res_data is not None and not is_str(res_data):
         res_data = json.dumps(res_data)
 
     log_data = _get_user_info()
@@ -43,7 +43,9 @@ def log_operation(module, action, result, req_data=None, res_data=None, descript
         'result': result,
         'description': description,
     })
-    model.OPLog.add(log_data)
+    if 'username' not in log_data:  # login
+        log_data['username'] = req_data
+    model.SysActionLog.add(log_data)
 
 
 def _get_user_info():
@@ -61,16 +63,16 @@ def _get_user_info():
 def _get_module_name(module):
     if module is None or module is False:
         return None
-    module_name_mapping = get_app_cache('op_module_name_mapping')
+    module_name_mapping = get_app_cache('sys_module_name_mapping')
     if module_name_mapping is None:
         module_name_mapping = {}
-        menu_list = model.Menu.query_all()
+        menu_list = model.SysModule.query_all()
         if menu_list[0] is True:
             for item in menu_list[1]:
                 path = item.path
                 if path:
                     module_name_mapping[path] = item.name
-            set_app_cache('op_module_name_mapping', module_name_mapping)
+            set_app_cache('sys_module_name_mapping', module_name_mapping)
 
     return module_name_mapping.get(module) or module
 

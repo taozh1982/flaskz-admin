@@ -1,9 +1,8 @@
 from flask import request, make_response, current_app
 from flaskz.log import flaskz_logger
-from flaskz.utils import clear_app_cache, get_app_path
+from flaskz.utils import clear_app_cache, get_app_path, get_app_config
 
 from . import sys_mgmt_bp
-from ..sys_init import get_app_config
 
 
 @sys_mgmt_bp.route('/_/clear_cache/', methods=['GET'])
@@ -30,7 +29,7 @@ def _sys_sys_log():
     date = request.args.get('date', '').strip()
     file_path = get_app_config('FLASKZ_LOGGER_FILEPATH')
     file_name = get_app_config('FLASKZ_LOGGER_FILENAME')
-    flaskz_logger.debug('query app log:' + str(file_name))
+    flaskz_logger.debug('Query sys-log: ' + str(file_name) + '?date=' + date)
     if file_path and file_name:
         file_name = get_app_path(file_path, file_name)
 
@@ -43,8 +42,8 @@ def _sys_sys_log():
             res.headers['Content-Type'] = 'text/plain; charset=utf-8'
             return res
         except Exception as e:
-            return 'sys log not found'
-    return 'sys log not found'
+            return 'sys-log not found'
+    return 'sys-log not found'
 
 
 @sys_mgmt_bp.route('/_/url_map/', methods=['GET'])

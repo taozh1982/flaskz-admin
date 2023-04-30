@@ -6,9 +6,9 @@ var Role = z.util.mergeObject(pro.template.CRUDTablePage, {
                     {name: "角色名称", field: "name"},
                     {name: "描述", field: "description", "minimizable": true},
                     {
-                        name: "权限列表", field: "menus", sortable: false, filter: false, "minimizable": true, "minimized": true,
+                        name: "权限列表", field: "modules", sortable: false, filter: false, "minimizable": true, "minimized": true,
                         render: function (td, data) {
-                            td.innerHTML = Role.getMenusName(data.get("menus"));
+                            td.innerHTML = Role.getModulesName(data.get("modules"));
                         }
                     },
                     {
@@ -42,18 +42,18 @@ var Role = z.util.mergeObject(pro.template.CRUDTablePage, {
     },
     {
         onShowFormModal: function (editType, value) {
-            this.initMenuGrid(value);
+            this.initModuleGrid(value);
         },
         getFormValue: function () {
             //需要做校验
             var value = this.form.getValue();
             if (value) {
-                var menus = this._getMenuGridValue();
-                if (menus.length === 0) {
-                    z.widget.notify("请选择角色菜单", {type: "info", duration: 1200});
+                var modules = this._getModuleGridValue();
+                if (modules.length === 0) {
+                    z.widget.notify("请选择功能模块", {type: "info", duration: 1200});
                     return null;
                 }
-                value.menus = menus;
+                value.modules = modules;
             }
             return value;
         },
@@ -63,40 +63,40 @@ var Role = z.util.mergeObject(pro.template.CRUDTablePage, {
                 url: AjaxUrl.sys_role.query,
                 success: function (result) {
                     var data = result.data;
-                    this._menuArr = data.menus;
+                    this._moduleArr = data.modules;
                     this.grid.setData(data.roles);
                 },
                 context: this
             });
         },
-        getMenusName: function (menus) {
-            if (!this._menuMap) {
+        getModulesName: function (modules) {
+            if (!this._moduleMap) {
                 var map = {};
-                this._menuArr.forEach(function (item) {
+                this._moduleArr.forEach(function (item) {
                     map[item.id] = item;
                 });
-                this._menuMap = map;
+                this._moduleMap = map;
             }
             var _this = this;
             var labelArr = [];
-            menus = menus || [];
-            menus.forEach(function (item) {
-                var menu_id = item.menu_id;
-                var menuItem = _this._menuMap[menu_id];
-                if (menuItem) {
-                    var menuLabel = menuItem.name;
-                    var menuOPPermissions = menuItem.op_permissions || [];
-                    var permissions = item.op_permissions || [];
+            modules = modules || [];
+            modules.forEach(function (item) {
+                var module_id = item.module_id;
+                var moduleItem = _this._moduleMap[module_id];
+                if (moduleItem) {
+                    var moduleLabel = moduleItem.name;
+                    var moduleAllActions = moduleItem.actions || [];
+                    var actions = item.actions || [];
                     var opNameArr = [];
-                    menuOPPermissions.forEach(function (op_permission) {
-                        if (permissions.indexOf(op_permission.permission) > -1) {
-                            opNameArr.push(op_permission.label)
+                    moduleAllActions.forEach(function (action) {
+                        if (actions.indexOf(action.action) > -1) {
+                            opNameArr.push(action.label)
                         }
                     });
                     if (opNameArr.length > 0) {
-                        menuLabel += ("(" + opNameArr.join("/") + ")")
+                        moduleLabel += ("(" + opNameArr.join("/") + ")")
                     }
-                    labelArr.push(menuLabel);
+                    labelArr.push(moduleLabel);
                 }
             });
             return labelArr.join(",")

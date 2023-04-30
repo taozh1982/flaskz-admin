@@ -8,7 +8,8 @@ z.util.extendClass(NavTree, z.widget.Tree, z.util.mergeObject({
     showPage: function () {
         var lastSelect = this.getLastSelected();
         if (lastSelect) {
-            if (this.get("cache_page") === false) {
+            var all_page_cache = this.get("cache_page") !== false
+            if (!all_page_cache) {
                 this.clearDataContent();
             }
             if (this.get("update_hash") === true) {
@@ -19,6 +20,12 @@ z.util.extendClass(NavTree, z.widget.Tree, z.util.mergeObject({
                 name: lastSelect.get("name"),
                 path: lastSelect.get("path")
             })
+            if (this._lastSelect !== lastSelect) {
+                if (all_page_cache && this._lastSelect && this._lastSelect.get("cache_page") === false) {
+                    this.removeDataContent(this._lastSelect)
+                }
+                this._lastSelect = lastSelect
+            }
         }
     },
     isSelectable: function (data) {
@@ -27,7 +34,7 @@ z.util.extendClass(NavTree, z.widget.Tree, z.util.mergeObject({
     getContentContainer: function () {
         return this.get("content_container");
     }
-}, z.widget.$interface.DataContentInterface(NavTree)));
+}, z.$.widget.DataContentInterface(NavTree)));
 
 var Admin = {
     init: function () {
@@ -98,7 +105,7 @@ var Admin = {
         this.tree.setSelect(selected_menu || firstPathData);
     },
     initAccountProfile: function (profile) {
-        z.dom.setValue("#accountLabel", profile.name || profile.username);
+        z.dom.setValue("#accountLabel", profile.name);
     },
     initController: function () {
         if (z.dom.query(z.dom.query(".toggle-menu", "header"))) {
@@ -114,11 +121,14 @@ var Admin = {
         this._initProfileController();
     },
     _initProfileController: function () {
+        if (z.dom.query("#preferenceA")) {
+            z.dom.event.onclick("#preferenceA", this.showPreferenceModal, this);
+        }
+        if (z.dom.query("#aboutA")) {
+            z.dom.event.onclick("#aboutA", this.showAboutModal, this);
+        }
         if (z.dom.query("#signOutA")) {
             z.dom.event.onclick("#signOutA", this.handleSignOut, this);
-        }
-        if (z.dom.query("#profileA")) {
-            z.dom.event.onclick("#profileA", this.showProfileModal, this);
         }
     },
     fullScreen: function (full) {
@@ -181,18 +191,24 @@ z.util.mergeObject(Admin, {
     }
 });
 
-//custom
+//Rewriting in the project
 z.util.mergeObject(Admin, {
     initModel: function () {
         this.initMenuItems(MenuItems);
         this.initAccountProfile({name: "admin"});
     },
+    showPreferenceModal: function () {
+        z.widget.popover.close();
+        alert("Show Preferences modal");
+    },
+    showAboutModal: function () {
+        z.widget.popover.close();
+        alert("Show About modal");
+    },
     handleSignOut: function () {
         alert("Sign out");
     },
-    showProfileModal: function () {
-        z.widget.popover.close();
-        alert("Show profile modal");
+    initCustom: function () {
     }
 });
 z.ready(function () {

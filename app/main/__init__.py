@@ -4,9 +4,10 @@
 """
 # static page route
 
-from flask import Blueprint, Flask
+from flask import Blueprint
+from flaskz.utils import get_app_config, get_app_path
 
-from werkzeug.routing import BaseConverter
+from werkzeug.routing import PathConverter
 
 # static folder
 
@@ -33,19 +34,21 @@ def init_app(app):
         return forward_request(base_url + path)
     """
 
-    class RegexConverter(BaseConverter):
+    class RegexConverter(PathConverter):  # Select BaseConverter or PathConverter as required
         def __init__(self, url_map, regex):
             super(RegexConverter, self).__init__(url_map)
             self.regex = regex
 
     app.url_map.converters['regex'] = RegexConverter
 
-    if isinstance(app, Flask):
-        app_config = app.config
-    else:
-        app_config = app
+    static_folder = get_app_config('APP_PAGE_STATIC_FOLDER')
+    if static_folder:
+        static_folder = get_app_path(static_folder)
+    main_bp.static_folder = static_folder or '../app_page'
+    main_bp.static_url_path = get_app_config('APP_PAGE_STATIC_STATIC_URL_PATH') or '/'
+
     global APP_UPLOAD_FILE_ALLOWED_EXTENSIONS
-    APP_UPLOAD_FILE_ALLOWED_EXTENSIONS = app_config.get('APP_UPLOAD_FILE_ALLOWED_EXTENSIONS', set())
+    APP_UPLOAD_FILE_ALLOWED_EXTENSIONS = get_app_config('APP_UPLOAD_FILE_ALLOWED_EXTENSIONS') or set()
 
 
 def allowed_file(file):
