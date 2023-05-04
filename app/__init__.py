@@ -81,7 +81,7 @@ def _init_license(app):
     License菜单path: APP_LICENSE_MENU_PATH = 'licenses' # 参考sys_mgmt/router.sys_auth_account_query()
     """
     # from .sys_mgmt import license
-    # from .sys_mgmt.license import router  # enable api, *放在当前文件顶部导入或者在sys_mgmt.router导入，否则alembic不能发现License模型类*
+    # *在sys_mgmt.router中导入license路由from .license import router，否则alembic不能发现License模型类*
     #
     # license_manager = license.LicenseManager()
     # license_manager.load_license(license.load_license)  # load license callback

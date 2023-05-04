@@ -134,7 +134,7 @@ z.util.mergeObject(Role, {
         var modules = value.modules || [];
         modules.forEach(function (item) {
             var data = this.moduleGrid.findData("id", item.module_id);
-            if (data && data.get("parent")) {//only check child module
+            if (data && !data.hasChildren()) {//only check child module
                 this.moduleGrid.addCheck(data);
                 var actions = item.actions || [];
                 var _ops = {};
