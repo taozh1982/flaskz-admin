@@ -3,9 +3,10 @@ import os
 from datetime import datetime
 
 from flaskz.ext.cypher import RSACipher, AESCipher
-
-
 # -------------------------------------------e-------------------------------------------
+from flaskz.log import flaskz_logger
+
+
 def get_datetime(date):
     """Parse date string to datetime.datetime"""
     return datetime.strptime(date, "%Y/%m/%d")
@@ -104,7 +105,7 @@ def gen_ciphertext(private_key, public_dict, private_dict=None):
 
 def parse_license(public_key, license_txt):
     """
-    解析license，如果成功返回public和private信息
+    验证签名 & 解析license内容，如果成功返回license信息
     :param public_key:
     :param license_txt:
     :return:
@@ -126,7 +127,7 @@ def parse_license(public_key, license_txt):
             #     'private': cipher_obj.get('private')
             # }
     except Exception as e:
-        print(str(e))
+        flaskz_logger.exception(e)
     return False
 
 

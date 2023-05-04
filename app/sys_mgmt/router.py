@@ -6,7 +6,7 @@ from flaskz.log import flaskz_logger, get_log_data
 from flaskz.models import model_to_dict, query_all_models
 from flaskz.rest import get_rest_log_msg, rest_login_required, rest_permission_required, register_model_route, register_model_query_pss_route, register_model_query_route, \
     register_model_delete_route
-from flaskz.utils import create_response, get_wrap_str, find_list, get_dict_mapping
+from flaskz.utils import create_response, get_wrap_str, find_list, get_dict_mapping, get_app_config
 
 from . import sys_mgmt_bp, log_operation
 from .auth import generate_token
@@ -101,7 +101,8 @@ def sys_auth_account_query():
             res_data['license'] = False
         else:
             no_license_menus = []
-            license_menu = find_list(role_menus, lambda menu: menu.get('path') == 'license')
+            license_menu_path = get_app_config('APP_LICENSE_MENU_PATH') or 'licenses'
+            license_menu = find_list(role_menus, lambda menu: menu.get('path') == license_menu_path)
             if license_menu:
                 menu_id_map = get_dict_mapping(role_menus)
                 parent_id = license_menu.get('parent_id')

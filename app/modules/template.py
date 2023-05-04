@@ -22,6 +22,6 @@ class TemplateModel(ModelBase, ModelMixin, AutoModelMixin):
     created_at = Column(DateTime(), default=datetime.now, info={'auto': True})
     updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
     # system_default = Column('default', Boolean, default=False, info={'field': 'system_default'})
-    like_columns = ['name', description]
-    auto_columns = ['id', updated_at]
+    like_columns = ['name', description]  # field/Column
+    auto_columns = ['id', updated_at]  # field/Column
     # user_id = Column(Integer, ForeignKey('sys_users.id',name='user_id'))

@@ -9,7 +9,7 @@ from .sys_mgmt import auth
 
 def create_app(config_name):
     app = Flask(__name__)
-    app.url_map.strict_slashes = False  # 不重定向而是直接使用斜杠URL ex)'user' and 'user/'
+    # app.url_map.strict_slashes = False  # 不重定向而是直接使用斜杠URL ex)'user' and 'user/'
 
     # 配置
     config_name = config_name.lower()
@@ -78,6 +78,7 @@ def _init_license(app):
 
     请确保有公钥文件和上传License
     公钥文件: APP_LICENSE_PUBLIC_KEY_FILEPATH = './_license/public.key'
+    License菜单path: APP_LICENSE_MENU_PATH = 'licenses' # 参考sys_mgmt/router.sys_auth_account_query()
     """
     # from .sys_mgmt import license
     # from .sys_mgmt.license import router  # enable api, *放在当前文件顶部导入或者在sys_mgmt.router导入，否则alembic不能发现License模型类*

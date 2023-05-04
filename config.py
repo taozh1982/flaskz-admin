@@ -28,6 +28,7 @@ class Config:
     APP_UPLOAD_FILE_ALLOWED_EXTENSIONS = {'txt', 'dat', 'xlsx', 'xls', 'csv', 'xml', 'json', 'yaml'}
     # license公钥目录
     APP_LICENSE_PUBLIC_KEY_FILEPATH = './_license/public.key'
+    APP_LICENSE_MENU_PATH = 'licenses'
     # 静态文件目录(前端页面)
     APP_PAGE_STATIC_FOLDER = './app/app_page/'
     APP_PAGE_STATIC_STATIC_URL_PATH = '/'
