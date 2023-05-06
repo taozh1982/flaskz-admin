@@ -43,7 +43,7 @@ def log_operation(module, action, result, req_data=None, res_data=None, descript
         'result': result,
         'description': description,
     })
-    if 'username' not in log_data:  # login
+    if 'username' not in log_data and action == 'login':  # login
         log_data['username'] = req_data
     model.SysActionLog.add(log_data)
 

@@ -9,7 +9,7 @@ from .sys_mgmt import auth
 
 def create_app(config_name):
     app = Flask(__name__)
-    # app.url_map.strict_slashes = False  # 不重定向而是直接使用斜杠URL ex)'user' and 'user/'
+    # app.url_map.strict_slashes = False  # 不需重定向而直接使用斜杠视图路由 ex)'user' and 'user/'
 
     # 配置
     config_name = config_name.lower()

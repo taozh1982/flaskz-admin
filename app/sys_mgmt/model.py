@@ -309,7 +309,7 @@ class SysActionLog(ModelBase, ModelMixin):
     __tablename__ = 'sys_action_logs'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String(100), nullable=False)  #
+    username = Column(String(100))  # 如果不登录，账号为空
     user_name = Column(String(100))  #
     user_ip = Column(String(100))  #
 

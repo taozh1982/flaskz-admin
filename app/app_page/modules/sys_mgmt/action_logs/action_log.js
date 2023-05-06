@@ -15,10 +15,10 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
                 {
                     name: "用户", field: "username", width: 160,
                     render: function (td, data) {
-                        var user_name = data.get("user_name");
-                        var username = data.get("username");
+                        var user_name = data.get("user_name") || "";
+                        var username = data.get("username") || "";
                         if (user_name) {
-                            td.innerHTML = user_name + "/" + username;
+                            td.innerHTML = user_name + "(" + username + ")";
                         } else {
                             td.innerHTML = username;
                         }

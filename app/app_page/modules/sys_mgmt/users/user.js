@@ -73,7 +73,7 @@ var User = z.util.mergeObject(pro.template.CRUDTablePage, {
         status = status === "enable" ? "disable" : "enable";
         var message = status === "enable" ? "启用" : "停用";
         var _this = this;
-        z.widget.confirm("<i class='fa fa-warning text-warning'></i> 确认" + message + "?", z.getDefault("PRO_MESSAGE_TIPS"), function (result) {//callback
+        z.widget.confirm("<i class='fa fa-warning color-warning'></i> 确认" + message + "?", z.getDefault("PRO_MESSAGE_TIPS"), function (result) {//callback
             if (result) {
                 _this.handleModelUpdate({
                     id: data.get("id"),
