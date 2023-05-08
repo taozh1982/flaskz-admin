@@ -85,7 +85,7 @@ class UserBaseModelMixin:
 
         success, result = super().query_all()
         if success is True and per_user:
-            return success, filter_list(result, lambda item: str(getattr(item, user_fk_field)) == current_user_id)
+            return success, filter_list(result, lambda item: str(getattr(item, user_fk_field, None)) == current_user_id)
         return success, result
 
     @classmethod
@@ -155,7 +155,7 @@ class PKConvertModelMixin:
         if key_value is not None:
             ins = cls.query_by({key_field: key_value}, return_first=True)
             if ins:
-                return getattr(ins, pk_field)
+                return getattr(ins, pk_field, None)
 
     @classmethod
     def get_key_field(cls):

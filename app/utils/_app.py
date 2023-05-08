@@ -34,6 +34,6 @@ def is_admin_user():
     Check if the current user is admin, Admin user can view all data
     :return:
     """
-    if current_user and getattr(current_user, 'username') == 'admin':
+    if current_user and getattr(current_user, 'username', None) == 'admin':
         return True
     return False

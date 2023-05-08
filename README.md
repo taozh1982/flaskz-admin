@@ -10,6 +10,27 @@ Flaskz-admin是基于 [Flaskz](https://pypi.org/project/flaskz/) 的管理系统
 4. [☞常用函数](http://zhangyiheng.com/blog/articles/py_flaskz_utils.html)
 5. [☞基于Flaskz的管理系统开发模板 Flaskz-admin (Hello World*)](http://zhangyiheng.com/blog/articles/py_flaskz_admin.html)
 6. [☞使用手册](http://zhangyiheng.com/blog/articles/py_flaskz_manual.html)
+7. [☞开发规范](http://zhangyiheng.com/blog/articles/dev_spec.html)
+
+## 快速入门
+
+1. 修改系统配置参数[config.py](./config.py)
+    - `FLASKZ_DATABASE_URI` - 数据库地址(默认为`./_sqlite/flaskz-admin.db`)
+2. 修改alembic配置参数[alembic.ini](./alembic.ini)
+    - `sqlalchemy.url` - 数据库地址(默认为`./_sqlite/flaskz-admin.db`)
+3. 安装[requirements](requirements.txt)依赖 - `pip install -r requirements.txt`
+4. [cli](./cli.py)初始化数据库(`_sqlite/flaskz-admin.db`已经完成初始化)
+    1. 设置cli环境变量
+        - `export FLASK_APP=admin_app.py` # Mac/Linux
+        - `set FLASK_APP=admin_app.py`    # Windows
+    2. 初始化[数据库表](./migrations/versions/0.1_init_sys_mgmt.py) - `flask admin db upgrade`   # password:taozh
+    3. 初始化[数据库数据](./app/sys_mgmt/_init_db.py) -`flask admin db init`  # password:taozh
+5. 启动[应用](./admin_app.py)
+    1. 设置Flask环境变量 - `export FLASK_APP=admin_app.py`
+    2. 启动Flask应用 - `flask run --host=0.0.0.0 --port=666`
+6. 访问
+    - 地址: [http://127.0.0.1:666](http://127.0.0.1:666)
+    - 账号/密码: admin/admin
 
 ## 文件&目录
 
@@ -46,3 +67,8 @@ Flaskz-admin是基于 [Flaskz](https://pypi.org/project/flaskz/) 的管理系统
 - config.ini: 系统配置文件(for 运维)，可省略，config.ini中属性的优先级>config.py中定义的属性
 - **requirements.txt**: 依赖lib列表`pip install -r requirements.txt`
 
+## 版本
+
+- **1.5** `2023/05/01`
+    - [C] 重构系统RBAC权限管理模块(sys_mgmt)
+    - [C] 重构系统管理API(参考开发规范)

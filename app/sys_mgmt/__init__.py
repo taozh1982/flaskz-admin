@@ -54,8 +54,8 @@ def _get_user_info():
             'user_ip': get_remote_addr(),
         }
     return {
-        'username': getattr(current_user, 'username'),
-        'user_name': getattr(current_user, 'name'),
+        'username': getattr(current_user, 'username', None),
+        'user_name': getattr(current_user, 'name', None),
         'user_ip': get_remote_addr()
     }
 
