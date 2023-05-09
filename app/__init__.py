@@ -52,8 +52,8 @@ def _init_login(app):
     login_manager = LoginManager()
     # 用户加载回调函数，可以通过id查找对应的用户
     login_manager.user_loader(auth.load_user_by_id)
-    # 根据token加载用户回调函数，可以通过token查找到对应的用户
-    login_manager.request_loader(auth.load_user_by_token)
+    # 根据request校验用户，支持Token和Basic Auth
+    login_manager.request_loader(auth.load_user_by_request)
     # 初始化flask应用的用户登录管理
     login_manager.init_app(app)
 

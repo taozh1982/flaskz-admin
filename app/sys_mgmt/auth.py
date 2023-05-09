@@ -14,11 +14,30 @@ def load_user_by_id(user_id):
     return SysUser.query_by_pk(user_id)
 
 
-def load_user_by_token(request):
+def load_user_by_request(request):
+    return _load_user_by_token(request) or _load_user_by_basic_auth(request)
+
+
+def _load_user_by_token(request):
+    """token"""
     token = request.headers.get(get_app_config('APP_TOKEN_AUTHORIZATION'))
-    result = verify_token(token)
-    if result is not False:
-        return SysUser.query_by_pk(result.get('id'))
+    if token:
+        result = verify_token(token)
+        if result is not False:
+            return SysUser.query_by_pk(result.get('id'))
+    return None
+
+
+def _load_user_by_basic_auth(request):  # @2023-05-09 添加Basic Auth认证
+    """basic auth"""
+    basic_auth = getattr(request, 'authorization', None)
+    if basic_auth:
+        username = getattr(basic_auth, 'username', None)
+        password = getattr(basic_auth, 'password', None)
+        if username and password:
+            verify_result = SysUser.verify_password(username, password)
+            if verify_result[0] is True:
+                return verify_result[1]
     return None
 
 

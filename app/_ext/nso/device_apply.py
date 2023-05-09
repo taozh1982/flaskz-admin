@@ -1,4 +1,6 @@
 """Apply示例"""
+from flaskz.log import flaskz_logger
+
 from .apply import NSOApply, nso_urls, nso_request
 
 
@@ -24,6 +26,15 @@ class AuthGroupNSOApply(NSOApply):
 
 
 class DeviceNSOApply(NSOApply):
+    @classmethod
+    def add(cls, value, preview=False):  # @2013-05-09 添加fetch功能
+        add_result = super().add(value, preview)
+        if add_result[0] is True:
+            fetch_result = DeviceNSOApply.fetch(value.get('name'))  # fetch after add
+            if fetch_result[0] is False:
+                flaskz_logger.error(fetch_result[1])
+        return add_result
+
     @classmethod
     def to_nso_data(cls, value, op_type):
         if op_type == 'delete' or op_type is None:
@@ -67,10 +78,14 @@ class DeviceNSOApply(NSOApply):
     @classmethod
     def sync(cls, name, fetch=False):
         if fetch is True:
-            result = nso_request(cls._get_url('fetch'), url_params={'name': name})
+            result = DeviceNSOApply.fetch(name)
             if result[0] is False:
                 return result
         return nso_request(cls._get_url('sync'), url_params={'name': name})
+
+    @classmethod
+    def fetch(cls, name):
+        return nso_request(cls._get_url('fetch'), url_params={'name': name})
 
     @classmethod
     def get_url(cls, value):
