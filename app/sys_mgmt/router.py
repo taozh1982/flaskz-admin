@@ -17,15 +17,16 @@ from ..utils import get_app_license
 # -------------------------------------------auth-------------------------------------------
 @sys_mgmt_bp.route('/auth/login/', methods=['POST'])
 def sys_auth_login():
-    """用户登录"""
+    """用户登录Session/Cookie"""
     request_json = request.json
-    result = SysUser.verify_password(request_json.get('username'), request_json.get('password'))
-    success = result[0]
+    success, result = SysUser.verify_password(request_json.get('username'), request_json.get('password'))
     res_data = None
     if success is False:
-        res_data = model_to_dict(result[1])
+        res_data = model_to_dict(result)
     else:
-        login_user(result[1], remember=request_json.get('remember_me') is True)
+        login_user(result, remember=request_json.get('remember_me') is True)
+        # SysUser.update_db({'id': result.id, 'last_login_at': datetime.now(), '_update_updated_at': False})
+
     log_operation('users', 'login', success, request_json.get('username'), res_data)
     flaskz_logger.info(get_rest_log_msg('User login', {'username': request_json.get('username'), 'remember_me': request_json.get('remember_me')}, success, res_data))
     return create_response(success, res_data)
@@ -33,7 +34,7 @@ def sys_auth_login():
 
 @sys_mgmt_bp.route('/auth/logout/', methods=['GET'])
 def sys_auth_logout():
-    """用户登出"""
+    """用户登出Session/Cookie"""
     logout_user()
     flaskz_logger.info(get_rest_log_msg('User logout', None, True, None))
     return create_response(True, None)
@@ -41,13 +42,14 @@ def sys_auth_logout():
 
 @sys_mgmt_bp.route('/auth/token/', methods=['POST'])
 def sys_auth_get_token():
-    """获取token"""
+    """获取Token"""
     request_json = request.json
     success, result = SysUser.verify_password(request_json.get('username'), request_json.get('password'))
     if success is False:
         res_data = model_to_dict(result)
     else:
         res_data = {'token': generate_token({'id': result.get_id()})}
+        # SysUser.update({'id': result.id, 'last_login_at': datetime.now(), '_update_updated_at': False})
 
     log_operation('users', 'login', success, request_json.get('username'), res_data)
     flaskz_logger.info(get_rest_log_msg('User get login token', {'username': request_json.get('username')}, success, res_data))
@@ -232,5 +234,3 @@ def sys_page_monitor():
     """
     flaskz_logger.warning(get_wrap_str('--Page Monitor', '--Data:', request.json))
     return create_response(True, {})
-
-# from .license import router # todo 如果启用license，请取消注释(for alembic)

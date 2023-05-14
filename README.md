@@ -23,8 +23,8 @@ Flaskz-admin是基于 [Flaskz](https://pypi.org/project/flaskz/) 的管理系统
     1. 设置cli环境变量
         - `export FLASK_APP=admin_app.py` # Mac/Linux
         - `set FLASK_APP=admin_app.py`    # Windows
-    2. 初始化[数据库表](./migrations/versions/0.1_init_sys_mgmt.py) - `flask admin db upgrade`   # password:taozh
-    3. 初始化[数据库数据](./app/sys_mgmt/_init_db.py) -`flask admin db init`  # password:taozh
+    2. 初始化[数据库表](./migrations/versions/0.1_init_sys_mgmt.py) - `flask admin db upgrade`    # password:taozh
+    3. 初始化[数据库数据](./app/sys_mgmt/_init_db.py) -`flask admin db init`   # password:taozh
 5. 启动[应用](./admin_app.py)
     1. 设置Flask环境变量 - `export FLASK_APP=admin_app.py`
     2. 启动Flask应用 - `flask run --host=0.0.0.0 --port=666`
@@ -70,5 +70,6 @@ Flaskz-admin是基于 [Flaskz](https://pypi.org/project/flaskz/) 的管理系统
 ## 版本
 
 - **1.5** `2023/05/01`
-    - [C] 重构系统RBAC权限管理模块(sys_mgmt)
-    - [C] 重构系统管理API(参考开发规范)
+    - [C] 重构系统RBAC [权限管理](http://zhangyiheng.com/blog/articles/py_flaskz_admin.html#toc-rbac) 模块(sys_mgmt)
+    - [C] 重构系统管理API(参考[开发规范](http://zhangyiheng.com/blog/articles/dev_spec.html))
+    - [A] 添加Basic Auth[用户认证](http://zhangyiheng.com/blog/articles/py_flaskz_admin.html#toc-login)  -`2023/05/09`

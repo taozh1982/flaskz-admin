@@ -1,4 +1,4 @@
-from flask import Flask, session
+from flask import Flask
 from flaskz import log, models
 from flaskz.utils import init_app_config
 
@@ -37,12 +37,6 @@ def create_app(config_name):
     app.register_blueprint(api.api_bp, url_prefix='/api/v1.0')
     app.register_blueprint(sys_mgmt.sys_mgmt_bp, url_prefix='/sys-mgmt')
 
-    @app.before_request
-    def before_request():
-        # refresh session life time and update client cookie(Flask's sessions are client-side sessions)
-        # if use session to store user information, please set it before every request.
-        session.permanent = True
-
     return app
 
 
@@ -50,7 +44,7 @@ def _init_login(app):
     """初始化login模块，按需使用"""
     from flask_login import LoginManager
     login_manager = LoginManager()
-    # 用户加载回调函数，可以通过id查找对应的用户
+    # 用户加载回调函数，可以通过id查找对应的用户(Session/Cookie)
     login_manager.user_loader(auth.load_user_by_id)
     # 根据request校验用户，支持Token和Basic Auth
     login_manager.request_loader(auth.load_user_by_request)
@@ -79,12 +73,11 @@ def _init_license(app):
     请确保有公钥文件和上传License
     公钥文件: APP_LICENSE_PUBLIC_KEY_FILEPATH = './_license/public.key'
     License菜单path: APP_LICENSE_MENU_PATH = 'licenses' # 参考sys_mgmt/router.sys_auth_account_query()
+    *在sys_mgmt.router中导入license路由from .license import router，否则alembic不能发现License模型类*
     """
     # from .sys_mgmt import license
-    # *在sys_mgmt.router中导入license路由from .license import router，否则alembic不能发现License模型类*
-    #
     # license_manager = license.LicenseManager()
-    # license_manager.load_license(license.load_license)  # load license callback
-    # license_manager.request_check(license.request_check_by_license)  # request check callback
-    # license_manager.init_app(app)
+    # license_manager.load_license(license.load_license)  # License加载函数(可自定义)
+    # license_manager.request_check(license.request_check_by_license)  # 请求时License检查函数(可自定义)
+    # license_manager.init_app(app)  # 启用License功能
     pass

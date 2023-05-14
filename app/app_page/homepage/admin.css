@@ -83,7 +83,7 @@ header .right .icon-item:hover {
   background-color: #355d74;
 }
 header .right .license {
-  align-self: center;
+  align-self: flex-start;
   padding: 0.2em 0.6em;
 }
 .header-popover {

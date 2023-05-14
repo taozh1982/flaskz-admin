@@ -308,7 +308,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"search\": {\r\n        \"like\": \"t\", // 模糊查询 - like_columns\r\n        //\"name\": \"T1\", //条件查询\r\n        \"age\": { // 条件查询\r\n            \">\": 1,\r\n            \"<\": 20\r\n        },\r\n        \"_ors\": { // or高级查询\r\n            \"email\": \"t1@focus-ui.com||t1@flaskz.com\"\r\n        },\r\n        \"_ands\": { // and高级查询\r\n            \"age\": {\r\n                \">\": 1,\r\n                \"<\": 20\r\n            }\r\n        }\r\n    },\r\n    \"sort\": { // 排序\r\n        \"field\": \"name\",\r\n        \"order\": \"asc\" // asc/desc\r\n    },\r\n    // \"sort\": [ // 多重排序\r\n    //     {\r\n    //         \"field\": \"name\",\r\n    //         \"order\": \"asc\" // asc/desc\r\n    //     },\r\n    //     {\r\n    //         \"field\": \"age\",\r\n    //         \"order\": \"desc\" // asc/desc\r\n    //     }\r\n    // ],\r\n    \"page\": { // 分页\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    }\r\n}",
+							"raw": "{\r\n    \"search\": {\r\n        \"like\": \"t\", // 模糊查询 - like_columns\r\n        \"updated_at1\": {\r\n            \"<\": \"'2023-05-04 11:21:31'\" //*单引号\r\n        },\r\n        //\"name\": \"T1\", //条件查询\r\n        \"age1\": { // 条件查询\r\n            \">\": 1,\r\n            \"<\": 20\r\n        },\r\n        \"_ors1\": { // or高级查询\r\n            \"email\": \"t1@focus-ui.com||t1@flaskz.com\"\r\n        },\r\n        \"_ands1\": { // and高级查询\r\n            \"age\": {\r\n                \">\": 1,\r\n                \"<\": 20\r\n            }\r\n        }\r\n    },\r\n    \"sort\": { // 排序\r\n        \"field\": \"name\",\r\n        \"order\": \"asc\" // asc/desc\r\n    },\r\n    // \"sort\": [ // 多重排序\r\n    //     {\r\n    //         \"field\": \"name\",\r\n    //         \"order\": \"asc\" // asc/desc\r\n    //     },\r\n    //     {\r\n    //         \"field\": \"age\",\r\n    //         \"order\": \"desc\" // asc/desc\r\n    //     }\r\n    // ],\r\n    \"page\": { // 分页\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -635,6 +635,49 @@
 									]
 								},
 								"description": "logout session&cookie"
+							},
+							"response": []
+						},
+						{
+							"name": "basic_auth",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "admin",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/auth/account/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys-mgmt",
+										"auth",
+										"account",
+										""
+									]
+								},
+								"description": "query account profile and menus"
 							},
 							"response": []
 						},

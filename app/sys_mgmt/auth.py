@@ -11,6 +11,7 @@ from werkzeug.exceptions import abort
 
 
 def load_user_by_id(user_id):
+    """Session/Cookie"""
     return SysUser.query_by_pk(user_id)
 
 
@@ -19,7 +20,7 @@ def load_user_by_request(request):
 
 
 def _load_user_by_token(request):
-    """token"""
+    """Token"""
     token = request.headers.get(get_app_config('APP_TOKEN_AUTHORIZATION'))
     if token:
         result = verify_token(token)
@@ -29,8 +30,8 @@ def _load_user_by_token(request):
 
 
 def _load_user_by_basic_auth(request):  # @2023-05-09 添加Basic Auth认证
-    """basic auth"""
-    basic_auth = getattr(request, 'authorization', None)
+    """Basic Auth"""
+    basic_auth = request.authorization
     if basic_auth:
         username = getattr(basic_auth, 'username', None)
         password = getattr(basic_auth, 'password', None)

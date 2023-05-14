@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 
 from flask import request
 from flaskz.log import flaskz_logger
-# from app.sys_mgmt.license import util # for __main__ test
 from flaskz.models import ModelBase, ModelMixin
 from flaskz.utils import get_app_path
 from sqlalchemy import Column, Integer, Text, String, DateTime

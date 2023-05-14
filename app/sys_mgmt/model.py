@@ -215,7 +215,7 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
     password_: hash以后的密码, 如果不是本地校验的话, 可能为空
     status: 账号状态, 停用或启用
     role_id: 角色ID, 为了简化操作, 使用的是单角色模式
-    last_login_at: 上次登录事件
+    last_login_at: 上次登录时间(for 管理员)
     """
     __tablename__ = 'sys_users'
 
@@ -274,7 +274,7 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
     @classmethod
     def to_dict_field_filter(cls, field):
         """过滤属性"""
-        return field not in ['password', 'last_login_at'] and super().to_dict_field_filter(field)
+        return field not in ['password'] and super().to_dict_field_filter(field)
 
     @classmethod
     def check_delete_data(cls, pk_value):
@@ -284,9 +284,16 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
 
     @classmethod
     def check_update_data(cls, data):
-        if current_user.id == int(data.get('id')) and data.get('status') == 'disable':  # 不能禁用当前用户
+        if data.get('status') == 'disable' and current_user.id == int(data.get('id')):  # 不能禁用当前用户
             return res_status_codes.db_data_in_use
         return super().check_update_data(data)
+
+    # @classmethod
+    # def filter_attrs_by_columns(cls, data):
+    #     attrs = super().filter_attrs_by_columns(data)
+    #     if data.get('_update_updated_at') is not False:
+    #         attrs['updated_at'] = datetime.now()
+    #     return attrs
 
     def can(self, module, action):  # 权限检查
         return self.role.check_permission(module, action)

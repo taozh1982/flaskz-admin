@@ -39,6 +39,11 @@ var User = z.util.mergeObject(pro.template.CRUDTablePage, {
                 {name: "姓名", field: "name"},
                 {name: "电话", field: "phone"},
                 {name: "描述", field: "description", "minimizable": true},
+                /*{
+                    name: "上次登录时间", field: "last_login_at", "minimizable": true, "minimized": true, render: function (td, data) {
+                        td.innerHTML = pro.TimeUtil.format(data.get("last_login_at"));
+                    }
+                },*/
                 {
                     name: "更新时间", field: "updated_at", "minimizable": true, "minimized": true, render: function (td, data) {
                         td.innerHTML = pro.TimeUtil.format(data.get("updated_at"));

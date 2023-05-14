@@ -36,28 +36,34 @@ z.util.mergeObject(Admin, {
             z.dom.remove("#licenseA");
         }
         var cls = null;
-        var info = null;
+        var info = "";
         if (license) {
             var ExpireDays = license.ExpireDays;
-            if (ExpireDays < 10) {
-                cls = "bg-color-danger"
-            } else if (ExpireDays < 30) {
-                cls = "bg-color-warning"
+            if (license.Type === "EVALUATION") {
+                cls = "bg-color-warning";
+                info += "Evaluation version for " + license.User;
             }
-            if (cls) {
-                // info = "到期提示 系统授权还有" + ExpireDays + "天到期";
-                info = "License expires in " + ExpireDays + " days";
+            if (ExpireDays < 30) {
+                if (info) {
+                    info += "<br><i class='fa fa-warning'></i> "
+                }
+                info += "License expires in " + ExpireDays + " days";
+                if (ExpireDays < 10) {
+                    cls = "bg-color-danger"
+                } else {
+                    cls = "bg-color-warning"
+                }
             }
-        } else if (license !== false) { //
+        } else if (license !== false) {
             cls = "bg-color-danger"
             // info = "系统未授权";
             info = "No Authorized License";
         }
-        if (cls) {
+        if (info) {
             z.dom.removeStyle("#licenseDiv", "display")
             z.dom.removeClass("#licenseDiv", "bg-color-danger bg-color-warning")
             z.dom.addClass("#licenseDiv", cls);
-            z.dom.setValue("#licenseDiv", "<i class='fa fa-warning'></i> " + info)
+            z.dom.setValue("#licenseDiv", info)
         } else {
             z.dom.setStyle("#licenseDiv", "display", "none");
         }
