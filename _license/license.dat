@@ -1,7 +1,7 @@
-User=Flaskz
+System=Flaskz Admin
+User=Flaskz Admin
 Type=EVALUATION
-StartDate=2022/9/1
-EndDate=2023/9/1
-Modules=*
+StartDate=2023/01/01
+EndDate=2023/12/31
 
-Signature=CA0iFSDUrhMzRxHsBAi1EHi5PzNnSoqzboqb5yIJSWAQeJyb1jmjR93qtRmX+NKkJymWJeGR+UgHyUVmc6kJL6uo+zZycY2GOLF0zkIG7FTKFheA8ym9z1k/tC+f8tXdC9szHAaKALPc3RmXP5HhkYihVNHPuQ24QT86QW4+wlEh2A=
+Signature=CA0WDW3dI92Io44LG7b2Ou1vtghUAA9q62NpJ6Ybb4f4VnAXxDHLVt8LTzJMstTUAvnHcIsEp41ZGqVQDph+KxDc1wVQjkz+euqKntavSHkS5ihjQaFL5mqxPm0YR9Mxgmg62+q2FImUV0s+ux6e4sEu9UW88l/Scm+leNj66Qi3zE=

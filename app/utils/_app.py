@@ -11,7 +11,8 @@ def get_app_license():
     -Return False, if the license feature is not enabled
     -Return None, if there is no eligible license(enabled but not eligible)
     """
-    if hasattr(current_app, 'license_manager'):
+
+    if current_app and hasattr(current_app, 'license_manager'):
         return current_app.license_manager.get_license()
     return False  # license not enabled
 

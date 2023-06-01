@@ -22,7 +22,7 @@ class TemplateModel(ModelBase, ModelMixin, AutoModelMixin):
     description = Column(String(255))
     created_at = Column(DateTime(), default=datetime.now, info={'auto': True})
     updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)  # update时自动更新updated_at列
-    # system_default = Column('default', Boolean, default=False, info={'field': 'system_default'})  #模型列和数据库列不一致，数据库列名为"default"，但是"default"是关键字
-    like_columns = ['name', description]  # field/Column -模糊查询的列
-    auto_columns = ['id', updated_at]  # field/Column -自动维护的列(不受参数影响)，也可以通过info={'auto': True}指定
+    # system_default = Column('default', Boolean, default=False, info={'field': 'system_default'})  #模型列和数据库列不一致，属性名=system_default，数据库列名="default"，注意设置info:field
+    like_columns = ['name', description]  # field/Column -模糊查询列
+    auto_columns = ['id', updated_at]  # field/Column -自动维护列(不受参数影响)，也可以通过info={'auto': True}指定
     # user_id = Column(Integer, ForeignKey('sys_users.id',name='user_id')) # 外键

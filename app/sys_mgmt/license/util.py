@@ -91,7 +91,7 @@ def gen_ciphertext(private_key, public_dict, private_dict=None):
     public_signature_len = len(public_signature)
 
     private_cipher_text = ''
-    if private_dict:
+    if private_dict and len(private_dict) > 0:
         aes_key_index = public_signature_len % 6
         aes_key = public_signature[aes_key_index:aes_key_index + 16]
         private_cipher_text = AESCipher.encrypt(json.dumps(private_dict), aes_key)
@@ -237,8 +237,8 @@ if __name__ == '__main__':
         license_text = gen_license(rsa_private_key, {
             'User': 'Flaskz-Admin',
             'Type': 'EVALUATION',  # RUNTIME
-            'StartDate': '2022/12/01',
-            'EndDate': '2023/03/31',
+            'StartDate': '2022/01/01',
+            'EndDate': '2023/12/31',
             'Modules': '*'
         })
         print(license_text)

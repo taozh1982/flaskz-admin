@@ -278,13 +278,13 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
 
     @classmethod
     def check_delete_data(cls, pk_value):
-        if current_user.id == int(pk_value):  # 不能删除当前用户
+        if current_user and (current_user.id == int(pk_value)):  # 不能删除当前用户
             return res_status_codes.db_data_in_use
         return super().check_delete_data(pk_value)
 
     @classmethod
     def check_update_data(cls, data):
-        if data.get('status') == 'disable' and current_user.id == int(data.get('id')):  # 不能禁用当前用户
+        if data.get('status') == 'disable' and (current_user and current_user.id == int(data.get('id'))):  # 不能禁用当前用户
             return res_status_codes.db_data_in_use
         return super().check_update_data(data)
 

@@ -13,7 +13,7 @@ from . import util
 from ...main.errors import return_error
 
 
-class License(ModelBase, ModelMixin):
+class SysLicense(ModelBase, ModelMixin):
     """License database model"""
     __tablename__ = 'sys_licenses'
 
@@ -31,7 +31,7 @@ class License(ModelBase, ModelMixin):
     created_at = Column(DateTime(), default=datetime.now)
 
     def to_dict(*args, **kwargs):
-        result = super(License, args[0]).to_dict(**kwargs)
+        result = super(SysLicense, args[0]).to_dict(**kwargs)
         licenses = result.get("license").split("Signature=")
         if len(licenses) > 1:
             result['license'] = licenses[0]
@@ -150,7 +150,7 @@ class LicenseManager:
 
 def load_license():
     """license加载函数"""
-    license_result = License.query_all()
+    license_result = SysLicense.query_all()
     license_list = []
     if license_result[0] is True:
         for item in license_result[1]:

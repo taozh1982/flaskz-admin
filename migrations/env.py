@@ -33,7 +33,7 @@ target_metadata = ModelBase.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-IGNORE_TABLES = []  # for multiple db
+IGNORE_TABLES = []  # 不需要alembic维护的table列表，一般用于多数据库操作
 
 
 # https://alembic.sqlalchemy.org/en/latest/api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.include_object
@@ -41,7 +41,7 @@ def include_object(object, name, type_, reflected, compare_to):
     """
     Should you include this table or not?
     """
-
+    # 通过info:{'skip_autogenerate': False}跳过对table/column的维护
     if type_ == 'table' and (name in IGNORE_TABLES or object.info.get("skip_autogenerate", False)):
         return False
 
@@ -70,7 +70,7 @@ def run_migrations_offline():
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
         render_as_batch=True,
-        compare_type=True  # 开启类型变化检测
+        compare_type=True  # 开启列类型变化检测
     )
 
     with context.begin_transaction():
@@ -95,7 +95,7 @@ def run_migrations_online():
             connection=connection, target_metadata=target_metadata,
             include_object=include_object,
             render_as_batch=True,
-            compare_type=True  # 开启类型变化检测
+            compare_type=True  # 开启列类型变化检测
         )
 
         with context.begin_transaction():

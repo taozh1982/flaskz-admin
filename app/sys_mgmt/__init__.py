@@ -49,14 +49,14 @@ def log_operation(module, action, result, req_data=None, res_data=None, descript
 
 
 def _get_user_info():
-    if current_user is None or current_user.is_anonymous:
+    if not current_user or current_user.is_anonymous:
         return {
-            'user_ip': get_remote_addr(),
+            'user_ip': get_remote_addr() or '127.0.0.1'
         }
     return {
         'username': getattr(current_user, 'username', None),
         'user_name': getattr(current_user, 'name', None),
-        'user_ip': get_remote_addr()
+        'user_ip': get_remote_addr() or '127.0.0.1'
     }
 
 

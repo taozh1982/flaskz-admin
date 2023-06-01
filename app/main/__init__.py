@@ -1,6 +1,8 @@
 """
-#1 API请求异常处理
-#2 页面静态文件&url映射，可以通过其他程序实现页面服务功能，例如nginx
+1. session refresh
+2. 正则表达式路由
+3. API请求异常处理
+4. 页面静态文件&url映射(可以通过其他程序实现页面服务功能，例如nginx)
 """
 # static page route
 

@@ -8,7 +8,7 @@ body {
   font-size: 14px;
 }
 .fill-container {
-  background: url("login_bg.jpg");
+  background: url("./login_bg.jpg");
   background-size: cover;
   overflow: auto;
   width: 100%;
@@ -18,7 +18,7 @@ body {
   align-items: center;
 }
 .fill-container .content {
-  padding: 2em 2em 1.2em;
+  padding: 1.2em 2em;
   width: 22em;
   background-color: #fff;
   border-radius: 4px;
@@ -63,3 +63,7 @@ body {
   margin-left: 25%;
   width: 75%;
 }
+.fill-container .content.inline .grid-row .z-validator-message {
+  margin-left: 25%;
+}
+/*# sourceMappingURL=login.css.map */

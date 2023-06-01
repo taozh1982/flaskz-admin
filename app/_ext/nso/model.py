@@ -1,6 +1,6 @@
 from flaskz import res_status_codes
 
-from .apply import NSOApply
+from . import NSOApply
 
 
 def query_device_name(device_id) -> str:

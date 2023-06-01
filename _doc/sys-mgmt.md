@@ -2,7 +2,7 @@
 
 ### 功能设计
 
-<img src="./rbac.png" alt="rbac"/>
+<img src="./images/rbac.png" alt="rbac"/>
 
 系统采用基于角色的权限控制(RBAC)
 
@@ -17,7 +17,7 @@
 
 ### 模型设计
 
-<img src="./rbac_db.png" alt="rbac_db"  />
+<img src="./images/rbac_db.png" alt="rbac_db"  />
 
 权限控制模块的数据模型和关系如下
 
@@ -31,7 +31,7 @@
 - sys_role_modules:角色拥有的模块+操作权限列表
 - sys_users: 系统用户列表，用户通过role_id和角色关联，从而进行权限控制
 
-以上功能实现和数据库设计，请参考[sys_mgmt/model.py](../../app/sys_mgmt/model.py)
+以上功能实现和数据库设计，请参考[sys_mgmt/model.py](../app/sys_mgmt/model.py)
 
 ### API访问控制
 
@@ -141,4 +141,4 @@ license_manager.init_app(app)  # 启用License功能
 
 默认会对API请求进行检查，如果系统当前没有可用的License会返回`license_not_found`提示
 
-如果其他业务操作需要检查系统License信息，可以通过[get_app_license](../../app/utils/_app.py)函数获取&使用
+如果其他业务操作需要检查系统License信息，可以通过[get_app_license](../app/utils/_app.py)函数获取&使用

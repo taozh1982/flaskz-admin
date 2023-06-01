@@ -24,14 +24,14 @@ class Config:
     # 采用token管理用户登录时，token的过期时间
     APP_TOKEN_EXPIRES_IN = int(timedelta(hours=16).total_seconds())
 
-    # APP_UPLOAD_FOLDER = 'uploads'
-    APP_UPLOAD_FILE_ALLOWED_EXTENSIONS = {'txt', 'dat', 'xlsx', 'xls', 'csv', 'xml', 'json', 'yaml'}
-    # license公钥目录
-    APP_LICENSE_PUBLIC_KEY_FILEPATH = './_license/public.key'
-    APP_LICENSE_MENU_PATH = 'licenses'
-    # 静态文件目录(前端页面)
-    APP_PAGE_STATIC_FOLDER = './app/app_page/'
+    APP_PAGE_STATIC_FOLDER = './app/app_page/'  # 静态文件目录(前端页面)
     APP_PAGE_STATIC_STATIC_URL_PATH = '/'
+
+    # APP_UPLOAD_FOLDER = 'uploads'
+    APP_UPLOAD_FILE_ALLOWED_EXTENSIONS = {'txt', 'dat', 'xlsx', 'xls', 'csv', 'xml', 'json', 'yaml'}  # 上传文件格式列表
+
+    APP_LICENSE_PUBLIC_KEY_FILEPATH = './_license/public.key'  # License公钥目录
+    APP_LICENSE_MENU_PATH = 'licenses'  # License菜单path
 
     # 数据库相关配置，请参考 -http://zhangyiheng.com/blog/articles/py_flaskz_model_init.html
     FLASKZ_DATABASE_URI = None

@@ -36,6 +36,8 @@ Flaskz-admin是基于 [Flaskz](https://pypi.org/project/flaskz/) 的管理系统
 
 - _doc: 系统文档
     - flaskz-admin.postman_collection.json: API Postman文件
+    - sys-mgmt.md: 系统权限设计&License功能介绍
+    - alembic.md: alembic常用命令
 - _sqlite: sqlite数据库文件目录(按需使用)
 - _syslog: 系统日志存放目录
 - **app**: 主应用目录
@@ -66,6 +68,10 @@ Flaskz-admin是基于 [Flaskz](https://pypi.org/project/flaskz/) 的管理系统
 - **config.py**: 系统配置(for 开发)
 - config.ini: 系统配置文件(for 运维)，可省略，config.ini中属性的优先级>config.py中定义的属性
 - **requirements.txt**: 依赖lib列表`pip install -r requirements.txt`
+
+## 联系
+
+Email: taozh@cisco.com / taozh1982@gmail.com
 
 ## 版本
 

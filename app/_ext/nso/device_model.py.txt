@@ -1,0 +1,124 @@
+"""Model示例"""
+from datetime import datetime
+
+from flaskz import res_status_codes
+from flaskz.log import flaskz_logger
+from flaskz.models import ModelMixin, ModelBase
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
+from sqlalchemy.orm import relationship
+
+from .apply.device_apply import DeviceNSOApply, AuthGroupNSOApply
+from .model import ModelNSOMixin
+
+
+class DeviceVendor(ModelBase, ModelMixin):
+    """厂商"""
+    __tablename__ = 'device_vendors'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(32), unique=True, nullable=False)  # 厂商名称 思科/华为/F5
+    models = relationship("DeviceModel", cascade='all,delete-orphan')  # 设备型号 删除设备，删除model
+
+
+class DeviceModel(ModelBase, ModelMixin):
+    """设备型号(一个厂商，有多个型号1vN)"""
+    __tablename__ = 'device_models'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    vendor_id = Column(Integer, ForeignKey("device_vendors.id", ondelete='CASCADE'), nullable=False)  # 厂商ID
+    code = Column(String(32), unique=True, nullable=False)  # 设备型号编码
+    name = Column(String(32), nullable=False)  # 设备型号名称 ASA/USD6000/Big-IP
+    type = Column(String(32))  # 设备类型，firewall/switch/router
+    ned = relationship("DeviceNed", uselist=False, cascade='all,delete-orphan', lazy='joined')  # 对应的NED
+
+
+class DeviceNed(ModelBase, ModelMixin):
+    """设备NED(用于配置下发)"""
+    __tablename__ = 'device_neds'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    # Manufacturer.code+DeviceModel.code
+    model_id = Column(Integer, ForeignKey("device_models.id", ondelete='CASCADE'), nullable=False)  # 设备型号id
+    name = Column(String(255), nullable=False)  # NED名称，用于设备纳管
+    type = Column(String(32), nullable=False)  # NED类型('cli|netconf|generic')
+    oper_name = Column(String(255))  # oper ned name
+
+
+class DeviceAuth(ModelBase, ModelNSOMixin, ModelMixin):
+    """授权组"""
+    __tablename__ = 'device_auths'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(32), unique=True, nullable=False)
+    username = Column(String(32), nullable=False)
+    password = Column(String(32), nullable=False)
+    enable_password = Column(String(32))
+    description = Column(Text())
+    created_at = Column(DateTime(), default=datetime.now)
+    updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
+
+    def to_dict(*args, **kwargs):  # 向客户端隐藏密码
+        result = super(DeviceAuth, args[0]).to_dict(**kwargs)
+        password = result.get("password")
+        if password:
+            result['password'] = password[0] + '*' * 6 + password[-1]
+        enable_password = result.get("enable_password")
+        if enable_password:
+            result['enable_password'] = enable_password[0] + '*' * 6 + enable_password[-1]
+        return result
+
+    @classmethod
+    def get_nso_apply(cls):  # 指定NSOApply
+        return AuthGroupNSOApply
+
+
+class Device(ModelBase, ModelNSOMixin, ModelMixin):  # 继承ModelNSOMixin以添加NSO调用功能
+    """设备"""
+    __tablename__ = 'device_devices'
+    # ---------------------------------------管理信息---------------------------------------
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(32), unique=True, nullable=False)  # 管理名称
+    hostname = Column(String(32))  # 主机名
+    vendor_id = Column(Integer, ForeignKey("device_vendors.id"))  # 厂商
+    model_id = Column(Integer, ForeignKey("device_models.id"))  # 设备型号
+    ip_address = Column(String(32))  # 管理地址 10.124.133.133
+    protocol = Column(String(32))  # 管理协议ssh/telnet
+    port = Column(Integer)  # 管理端口
+    auth_id = Column(Integer, ForeignKey("device_auths.id"))  # 授权组
+    # ---------------------------------------通用信息---------------------------------------
+    description = Column(Text())
+    created_at = Column(DateTime(), default=datetime.now)
+    updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
+    # ---------------------------------------关联数据---------------------------------------
+    model = relationship(DeviceModel, uselist=False, lazy='joined')
+    vendor = relationship(DeviceVendor, uselist=False, lazy='joined')
+
+    @classmethod
+    def get_nso_data(cls, json_data, op_type):  # 返回设备纳管所需参数
+        auth = DeviceAuth.query_by_pk(json_data.get('auth_id'))
+        if auth is None:
+            return None
+        dev_model = DeviceModel.query_by_pk(json_data.get("model_id"))
+        if dev_model is None:
+            return None
+        json_data['auth'] = {'id': auth.id, 'name': auth.name}
+        json_data['ned'] = {'type': dev_model.ned.type, 'name': dev_model.ned.name,
+                            'oper_name': dev_model.ned.oper_name}
+        return json_data
+
+    @classmethod
+    def get_nso_apply(cls):  # 指定NSOApply
+        return DeviceNSOApply
+
+    @classmethod
+    def before_add(cls, json_data, preview=False):
+        try:
+            dev_model = DeviceModel.query_by_pk(json_data.get("model_id"))
+            if dev_model:
+                ned = dev_model.ned
+                if ned.type != 'cli':
+                    json_data.pop('protocol', None)
+        except Exception as e:
+            flaskz_logger.exception(e)
+            return res_status_codes.db_add_err
+
+        if json_data.get('in_mgmt') is not True:
+            return True
+
+        return super().before_add(json_data, preview)

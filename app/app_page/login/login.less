@@ -16,14 +16,17 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
+
   .content {
-    padding: 2em 2em 1.2em;
+    padding: 1.2em 2em;
     width: 22em;
     background-color: #fff;
     border-radius: 4px;
+
     .grid-row {
       margin-bottom: 0.8em;
     }
+
     .title {
       border-bottom: 1px solid #eaeaea;
       padding-bottom: 0.6em;
@@ -33,15 +36,18 @@ html, body {
       font-size: 1.6em;
       font-weight: bold
     }
+
     label {
       padding-left: 0;
     }
+
     button {
       margin-top: 1em;
       padding: 0.6em;
       width: 100%;
     }
-    .error-msg{
+
+    .error-msg {
       text-align: center;
     }
 
@@ -51,18 +57,26 @@ html, body {
           display: inline-block;
           width: 75% !important;
         }
+
         label {
           box-sizing: border-box;
         }
+
         label:not(.check-label) {
           width: 25%;
         }
+
         label.check-label {
           padding-left: 25%;
         }
+
         button {
           margin-left: 25%;
           width: 75%;
+        }
+
+        .z-validator-message {
+          margin-left: 25%;
         }
       }
     }

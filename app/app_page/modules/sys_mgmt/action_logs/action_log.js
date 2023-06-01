@@ -13,7 +13,7 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
             columns: [
                 {name: "模块", field: "module", width: 160},
                 {
-                    name: "用户", field: "username", width: 160,
+                    name: "用户", field: "username", width: 180,
                     render: function (td, data) {
                         var user_name = data.get("user_name") || "";
                         var username = data.get("username") || "";
@@ -24,16 +24,16 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
                         }
                     }
                 },
-                {name: "IP地址", field: "user_ip", width: 130, minimized: true, minimizable: true},
+                {name: "IP地址", field: "user_ip", width: 150},
                 {
-                    name: "操作", field: "action", width: 80,
+                    name: "操作", field: "action", width: 120,
                     render: function (td, data) {
                         var action = data.get("action");
                         td.innerHTML = ActionLog.getActionName(action) || action || "";
                     }
                 },
                 {
-                    name: "操作结果", field: "result", width: 80,
+                    name: "操作结果", field: "result", width: 100,
                     render: function (td, data) {
                         pro.GridUtil.renderResult(td, data);
                     }

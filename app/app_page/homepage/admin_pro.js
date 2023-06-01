@@ -20,7 +20,7 @@ z.util.mergeObject(Admin, {
     initModel: function () {
         pro.AjaxCRUD.query({
             url: AjaxUrl.sys_auth.query,
-            tips: "Load account info",
+            tips: "加载账户信息",
             success_notify: false,
             success: function (result) {
                 this._initAccountMenus(result.data.menus);

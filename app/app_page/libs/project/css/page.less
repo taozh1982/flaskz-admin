@@ -92,7 +92,7 @@ select option[disabled] {
     th {
       //border: none;
       font-weight: normal;
-      padding: 0.6em;
+      //padding: 0.6em;
     }
     .z-thead {
       //background: #ebecf0;
@@ -107,8 +107,8 @@ select option[disabled] {
         //border-left: none;
         //border-right: none;
         border-top: none;
-        border-color: #dcdee3;
-        padding: 0.6em;
+        border-color: #f0f0f0;
+        //padding: 0.6em;
         vertical-align: middle;
         word-break: break-word;
 
@@ -193,6 +193,10 @@ select option[disabled] {
   opacity: 0.7;
   &:hover {
     opacity: 1;
+  }
+  &.top-right{
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 

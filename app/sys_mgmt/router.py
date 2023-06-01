@@ -27,7 +27,7 @@ def sys_auth_login():
         login_user(result, remember=request_json.get('remember_me') is True)
         # SysUser.update_db({'id': result.id, 'last_login_at': datetime.now(), '_update_updated_at': False})
 
-    log_operation('users', 'login', success, request_json.get('username'), res_data)
+    log_operation('users', 'login', success, request_json.get('username'), None)
     flaskz_logger.info(get_rest_log_msg('User login', {'username': request_json.get('username'), 'remember_me': request_json.get('remember_me')}, success, res_data))
     return create_response(success, res_data)
 
@@ -51,7 +51,7 @@ def sys_auth_get_token():
         res_data = {'token': generate_token({'id': result.get_id()})}
         # SysUser.update({'id': result.id, 'last_login_at': datetime.now(), '_update_updated_at': False})
 
-    log_operation('users', 'login', success, request_json.get('username'), res_data)
+    log_operation('users', 'login', success, request_json.get('username'), None)
     flaskz_logger.info(get_rest_log_msg('User get login token', {'username': request_json.get('username')}, success, res_data))
     return create_response(success, res_data)
 
@@ -63,7 +63,7 @@ def sys_auth_account_query():
     获取账户信息
     profile+menus+license
     """
-    if current_user.is_anonymous:
+    if not current_user or current_user.is_anonymous:
         return abort(401, response='forbidden')
         # return create_response(False, app_status_codes.uri_unauthorized)
 
@@ -234,3 +234,11 @@ def sys_page_monitor():
     """
     flaskz_logger.warning(get_wrap_str('--Page Monitor', '--Data:', request.json))
     return create_response(True, {})
+
+
+# for alembic
+# 如果不启用License功能，请移除以下代码
+from .license import router as license_router
+
+if license_router:
+    pass

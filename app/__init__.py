@@ -9,24 +9,27 @@ from .sys_mgmt import auth
 
 def create_app(config_name):
     app = Flask(__name__)
-    # app.url_map.strict_slashes = False  # 不需重定向而直接使用斜杠视图路由 ex)'user' and 'user/'
 
-    # 配置
-    config_name = config_name.lower()
-    app_config = config[config_name]
-    app.config.from_object(app_config)
+    # 应用配置
+    # app.url_map.strict_slashes = False  # 不需重定向而直接使用斜杠视图路由 ex)'user' and 'user/'
     # 跨域支持, pip install flask-cors
     # CORS(app)
 
-    # 初始化
+    # 配置文件
+    config_name = config_name.lower()
+    app_config = config[config_name]
     app_config.init_app(app)
-    init_app_config(app_config)  # 初始化系统配置, 方便使用get_app_config获取应用配置
+    # 应用配置
+    app.config.from_object(app_config)
+    init_app_config(app_config)  # 初始化系统配置, 其他模块通过get_app_config获取应用配置
+
+    # 模块初始化
     sys_init.init_app(None)  # 系统初始化，中文message等
     log.init_log(app)  # 初始化日志
     log.flaskz_logger.info('-- start application with %s config --' % config_name)
     models.init_model(app)  # 初始化数据库
 
-    # 系统管理
+    # 系统管理模块初始化
     _init_login(app)
     _init_model_rest(app)
     # _init_license(app)

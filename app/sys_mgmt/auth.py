@@ -109,7 +109,7 @@ def permission_check(module, action=None):
 
 
 def _check_login():
-    if current_user.is_anonymous:
+    if not current_user or current_user.is_anonymous:
         return False
     return True
 
@@ -119,7 +119,7 @@ def _check_permission(module, action):
     #     return False
     if module == "*" or module is None:
         return True
-    if hasattr(current_user, 'can'):
+    if current_user and hasattr(current_user, 'can'):
         return current_user.can(module, action)
     return False
 

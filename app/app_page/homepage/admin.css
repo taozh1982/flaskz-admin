@@ -16,7 +16,7 @@ header {
   flex: 0 0 2.8em;
   align-items: center;
   position: relative;
-  background-color: #254151;
+  background-color: #0d274d;
   color: #fff;
   padding-left: 0.3em;
   padding-right: 0.3em;
@@ -25,7 +25,8 @@ header .logo {
   flex: none;
 }
 header .logo img {
-  height: 2.24em;
+  height: 2.6em;
+  vertical-align: middle;
 }
 header .title {
   margin: 0 0.6em 0 0.3em;

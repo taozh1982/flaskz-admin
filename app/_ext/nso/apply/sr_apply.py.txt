@@ -1,6 +1,6 @@
 # yang patch demo
 
-from ..apply import NSOApply
+from .. import NSOApply
 
 
 def _get_condition_obj(key, value, items):

@@ -16,27 +16,28 @@
 <body class="fu-pro">
 <div class="fill-container">
     <div class="content controls inline">
-        <div class="grid-row title">
-            Flaskz Admin
-        </div>
         <div class="grid-row">
-            <label for="usernameInput">Username</label>
+            <img src="./homepage/logo.png" alt="logo.png" style="margin: 0 auto;height: 5em">
+        </div>
+        <div class="grid-row title">Flaskz Admin</div>
+        <div class="grid-row">
+            <label for="usernameInput">账号</label>
             <input id="usernameInput" name="z_username"
-                   ze-model="username" v-rules="required" v-message="Please enter username"
+                   ze-model="username" v-rules="required" v-message="请输入账号"
                    placeholder="Username" autofocus>
         </div>
         <div class="grid-row">
-            <label for="pwdInput">Password</label>
+            <label for="pwdInput">密码</label>
             <input id="pwdInput"
-                   ze-model="password" v-rules="required" v-message="Please enter password"
+                   ze-model="password" v-rules="required" v-message="请输入密码"
                    type="password" placeholder="*********">
         </div>
         <div class="grid-row">
-            <label class="check-label"><input type="checkbox" class="form-check-input" id="rememberCheck" ze-model="remember_me">Remember me</label>
+            <label class="check-label"><input type="checkbox" class="check-input" id="rememberCheck" ze-model="remember_me">记住我</label>
         </div>
         <div id="errDiv" class="color-danger error-msg"></div>
         <div class="grid-row">
-            <button id="loginBtn" class="btn btn-primary">Login</button>
+            <button id="loginBtn" class="btn btn-primary">登录</button>
         </div>
     </div>
 </div>

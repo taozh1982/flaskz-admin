@@ -8,7 +8,7 @@ from flaskz.models import model_to_dict
 from flaskz.rest import get_rest_log_msg, rest_permission_required
 from flaskz.utils import create_response, get_app_config
 
-from . import License
+from . import SysLicense
 from .util import parse_license
 from ..router import sys_mgmt_bp, log_operation
 from ...main import allowed_file
@@ -38,7 +38,7 @@ def sys_license_upload():
                 if license_result is False:
                     success, res_data = False, status_codes.license_parse_error
                 else:
-                    success, res_data = License.add({
+                    success, res_data = SysLicense.add({
                         'license': license_txt,
                         'license_hash': hashlib.sha256(license_txt.encode('utf-8')).hexdigest(),
                         'user': license_result.get('User'),
@@ -56,9 +56,9 @@ def sys_license_upload():
 
 @sys_mgmt_bp.route('/licenses/', methods=['GET'])
 @rest_permission_required('licenses')
-def license_query():
+def sys_license_query():
     """查询license列表"""
-    result = License.query_all()
+    result = SysLicense.query_all()
     success = result[0]
     res_data = model_to_dict(result[1])
 
