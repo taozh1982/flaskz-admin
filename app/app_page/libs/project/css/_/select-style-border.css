@@ -1,0 +1,85 @@
+.select-style-border.z-grid li.item .node,
+.select-style-border .z-grid li.item .node,
+.select-style-border.z-listview li.item .node,
+.select-style-border .z-listview li.item .node {
+  transition: 0.2s;
+}
+.select-style-border.z-grid li.item.selected .node,
+.select-style-border .z-grid li.item.selected .node,
+.select-style-border.z-listview li.item.selected .node,
+.select-style-border .z-listview li.item.selected .node {
+  background-color: #e6f7ff;
+  color: #1890ff;
+  box-shadow: inset 2px 0 #1890ff;
+}
+.select-style-border.z-grid tr.item,
+.select-style-border .z-grid tr.item,
+.select-style-border.z-listview tr.item,
+.select-style-border .z-listview tr.item {
+  transition: 0.2s;
+}
+.select-style-border.z-grid tr.item.selected,
+.select-style-border .z-grid tr.item.selected,
+.select-style-border.z-listview tr.item.selected,
+.select-style-border .z-listview tr.item.selected {
+  background-color: #e6f7ff;
+  color: #1890ff;
+  box-shadow: inset 2px 0 #1890ff;
+}
+.select-style-border.z-tabs.top li.item .node,
+.select-style-border .z-tabs.top li.item .node {
+  transition: 0.2s;
+}
+.select-style-border.z-tabs.top li.item.selected .node,
+.select-style-border .z-tabs.top li.item.selected .node {
+  background-color: transparent;
+  color: #1890ff;
+  box-shadow: inset 0 -2px #1890ff;
+}
+.select-style-border.z-tabs.bottom li.item .node,
+.select-style-border .z-tabs.bottom li.item .node {
+  transition: 0.2s;
+}
+.select-style-border.z-tabs.bottom li.item.selected .node,
+.select-style-border .z-tabs.bottom li.item.selected .node {
+  background-color: transparent;
+  color: #1890ff;
+  box-shadow: inset 0 2px #1890ff;
+}
+.select-style-border.z-tabs.right li.item .node,
+.select-style-border .z-tabs.right li.item .node {
+  transition: 0.2s;
+}
+.select-style-border.z-tabs.right li.item.selected .node,
+.select-style-border .z-tabs.right li.item.selected .node {
+  background-color: transparent;
+  color: #1890ff;
+  box-shadow: inset -2px 0 #1890ff;
+}
+.select-style-border.z-tabs.left li.item .node,
+.select-style-border .z-tabs.left li.item .node {
+  transition: 0.2s;
+}
+.select-style-border.z-tabs.left li.item.selected .node,
+.select-style-border .z-tabs.left li.item.selected .node {
+  background-color: transparent;
+  color: #1890ff;
+  box-shadow: inset 2px 0 #1890ff;
+}
+.select-style-border.z-tabs li.item .node,
+.select-style-border .z-tabs li.item .node {
+  color: #777;
+  border: none;
+}
+.select-style-border.right-border.z-grid li.item.selected .node,
+.select-style-border.right-border .z-grid li.item.selected .node,
+.select-style-border.right-border.z-listview li.item.selected .node,
+.select-style-border.right-border .z-listview li.item.selected .node {
+  box-shadow: inset -2px 0 #1890ff;
+}
+.select-style-border.right-border.z-grid tr.item.selected,
+.select-style-border.right-border .z-grid tr.item.selected,
+.select-style-border.right-border.z-listview tr.item.selected,
+.select-style-border.right-border .z-listview tr.item.selected {
+  box-shadow: inset -2px 0 #1890ff;
+}

@@ -20,9 +20,9 @@ import asyncio
 import multiprocessing
 
 import websockets
-from flask import Flask
 from flaskz import log
 from flaskz.log import flaskz_logger
+from flaskz.utils import get_app_config
 from redis import asyncio as redis_aio
 
 ws_conn: redis_aio.Redis
@@ -33,11 +33,7 @@ def init_websocket(app):
     """
     初始化redis websocket
     """
-    if isinstance(app, Flask):
-        app_config = app.config
-    else:
-        app_config = app
-    multiprocessing.Process(target=run_process_server, args=(app_config,), daemon=True).start()
+    multiprocessing.Process(target=run_process_server, args=(get_app_config(),), daemon=True).start()
 
 
 def run_process_server(app_config):

@@ -10,7 +10,7 @@ from flaskz.utils import create_response, get_wrap_str, find_list, get_dict_mapp
 
 from . import sys_mgmt_bp, log_operation
 from .auth import generate_token
-from .model import SysUser, SysRole, SysModule, SysRoleModule, SysActionLog
+from .model import SysUser, SysRole, SysModule, SysRoleModule, SysActionLog, SysUserOption
 from ..utils import get_app_license
 
 
@@ -25,8 +25,8 @@ def sys_auth_login():
         res_data = model_to_dict(result)
     else:
         login_user(result, remember=request_json.get('remember_me') is True)
+        SysUserOption.update_login(result.id)
         # SysUser.update_db({'id': result.id, 'last_login_at': datetime.now(), '_update_updated_at': False})
-
     log_operation('users', 'login', success, request_json.get('username'), None)
     flaskz_logger.info(get_rest_log_msg('User login', {'username': request_json.get('username'), 'remember_me': request_json.get('remember_me')}, success, res_data))
     return create_response(success, res_data)
@@ -49,6 +49,7 @@ def sys_auth_get_token():
         res_data = model_to_dict(result)
     else:
         res_data = {'token': generate_token({'id': result.get_id()})}
+        SysUserOption.update_login(result.id)
         # SysUser.update({'id': result.id, 'last_login_at': datetime.now(), '_update_updated_at': False})
 
     log_operation('users', 'login', success, request_json.get('username'), None)
@@ -83,8 +84,9 @@ def sys_auth_account_query():
         if item.action and menu_item:
             menu_item.get('actions').append(item.action)
 
-    profile = current_user.to_dict()
-    del profile['role_id']
+    profile = current_user.to_dict({'cascade': 1})
+    profile.pop('role_id')
+    profile.pop('role')
     res_data = {
         'profile': profile,
         'menus': role_menus
@@ -144,7 +146,13 @@ def sys_auth_account_update():
 
 # -------------------------------------------user-------------------------------------------
 register_model_route(sys_mgmt_bp, SysUser, 'users', 'users', multi_models={
-    'users': SysUser,
+    'users': {
+        'model_cls': SysUser,
+        'option': {
+            'cascade': 1,
+            'exclude': ['role']
+        }
+    },
     'roles': {
         'model_cls': SysRole,
         'option': {
@@ -236,8 +244,8 @@ def sys_page_monitor():
     return create_response(True, {})
 
 
+# todo 如果不启用License功能，请移除以下代码
 # for alembic
-# 如果不启用License功能，请移除以下代码
 from .license import router as license_router
 
 if license_router:

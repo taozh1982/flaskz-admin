@@ -5,5 +5,5 @@ from flask import Blueprint
 
 api_bp = Blueprint('api', __name__)
 
-# delete 
-from . import template
+# todo delete
+from . import example

@@ -88,7 +88,7 @@ var Admin = {
         this.tree.appendTo("#asideDiv");
         this.menu.appendTo("#asideDiv");
 
-        var selected_menu = z.bom.getURLHash();
+        var selected_menu = z.bom.getLocationHash();
         if (selected_menu) {
             selected_menu = this.tree.findData({
                 path: selected_menu

@@ -1,3 +1,5 @@
+import os
+import sys
 from logging.config import fileConfig
 
 from alembic import context
@@ -9,17 +11,9 @@ from sqlalchemy import pool
 
 
 config = context.config
-
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
-
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-import os
-import sys
 
 sys.path.append(os.getcwd())
 
@@ -28,12 +22,16 @@ from app.modules import ModelBase  # 从app.modules导入ModelBase，而不是�
 
 target_metadata = ModelBase.metadata
 
+# for 'autogenerate' support
+# from app.modules import template    # 导入模型类
+
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-IGNORE_TABLES = []  # 不需要alembic维护的table列表，一般用于多数据库操作
+
+IGNORE_TABLES = list(filter(None, config.get_main_option('ignore_tables', '').split(',')))  # 不需要alembic维护的table列表，一般用于多数据库操作
 
 
 # https://alembic.sqlalchemy.org/en/latest/api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.include_object
@@ -101,6 +99,26 @@ def run_migrations_online():
         with context.begin_transaction():
             context.run_migrations()
 
+
+# 导入模型类所在目录中的模型类
+import importlib
+
+
+def import_models(directory, module):
+    for item in os.listdir(directory):
+        item_path = os.path.join(directory, item)
+        if os.path.isdir(item_path):
+            import_models(item_path, module + '.' + item)
+        elif os.path.isfile(item_path):
+            if not item.startswith('_') and item.endswith('.py'):
+                importlib.import_module(module + '.' + item[0:-3])
+
+
+MODEL_CLS_DIRS = list(filter(None, config.get_main_option('model_cls_dirs', '').split(',')))  # 模型类所在目录列表
+
+for cls_dir in MODEL_CLS_DIRS:
+    if cls_dir:
+        import_models(os.path.join(os.getcwd(), cls_dir), '.'.join(cls_dir.split('/')))
 
 if context.is_offline_mode():
     run_migrations_offline()

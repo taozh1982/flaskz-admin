@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Template</title>
+    <title>Departments</title>
     <link rel="stylesheet" href="../../../libs/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../../libs/project/proj.css">
 
@@ -10,13 +10,14 @@
     <script src="../../../libs/focus-ui/fu-pro.js"></script>
     <script src="../../../libs/project/proj.js"></script>
 
-    <script src="./template.js"></script>
+    <script src="./PopoverSelect.js"></script>
+    <script src="./departments.js"></script>
 </head>
 <body class="fu-pro">
 <div class="module">
     <div class="toolbar controls">
-        <button id="addBtn" class="btn btn-primary" ac-action="update">Add</button>
-        <input id="filterInput" placeholder="Filter" autofocus name="for_test_filter">
+        <button id="addBtn" class="btn btn-primary" ac-action="update">添加</button>
+        <input id="filterInput" placeholder="过滤" autofocus name="user_filter">
     </div>
     <div id="gridDiv" class="content"></div>
     <div class="modal-form">
@@ -30,33 +31,31 @@
                     <input type="hidden" ze-model="id" ze-model-type="integer">
                     <input type="hidden" ze-model="editType">
                     <div class="grid-row">
-                        <label class="grid-col-3-12 required required" for-ze-model="name">Name</label>
+                        <label class="grid-col-3-12 required" for-ze-model="parent_name">所属部门</label>
                         <div class="grid-col-9-12">
-                            <input ze-model="name" v-rules="required" ze-disabled="[editType]!=='add'" autofocus>
+                            <button id="selectDepartmentBtn" class="popover-select"
+                                    ze-model="parent_name"
+                                    style="width: 100%;"></button>
                         </div>
                     </div>
                     <div class="grid-row">
-                        <label class="grid-col-3-12 required" for-ze-model="age">Age</label>
+                        <label class="grid-col-3-12 required" for-ze-model="name">部门名称</label>
                         <div class="grid-col-9-12">
-                            <input ze-model="age" v-rules="integer" autofocus>
+                            <input ze-model="name"
+                                   v-rules="required" v-message="请输入部门名称"
+                                   autofocus>
                         </div>
                     </div>
                     <div class="grid-row">
-                        <label class="grid-col-3-12 required required" for-ze-model="email">Email</label>
-                        <div class="grid-col-9-12">
-                            <input ze-model="email" v-rules="email">
-                        </div>
-                    </div>
-                    <div class="grid-row">
-                        <label class="grid-col-3-12" for-ze-model="description">Description</label>
+                        <label class="grid-col-3-12" for-ze-model="description">备注</label>
                         <div class="grid-col-9-12">
                             <textarea ze-model="description"></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="footer">
-                    <button type="button" id="modalOkBtn" class="btn btn-primary" autofocus>Ok</button>
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="modalOkBtn" class="btn btn-primary" autofocus>确认</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">取消</button>
                 </div>
             </div>
         </div>

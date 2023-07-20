@@ -1,0 +1,22 @@
+.popover-select {
+  font-size: 1rem;
+  outline: 0;
+  padding: 0.375rem 1rem 0.375rem 0.7em;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.2rem;
+  background-color: #fff;
+  cursor: pointer;
+  text-align: left;
+}
+.popover-select:focus {
+  border-color: #129fea;
+  box-shadow: 0 0 0 2px #bae4fa;
+}
+.popover-select:empty::before {
+  content: attr(data-placeholder);
+}
+.popover-select::after {
+  content: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9ImZlYXRoZXIgZmVhdGhlci1jaGV2cm9uLWRvd24iPjxwb2x5bGluZSBwb2ludHM9IjYgOSAxMiAxNSAxOCA5Ij48L3BvbHlsaW5lPjwvc3ZnPg==);
+  float: right;
+}

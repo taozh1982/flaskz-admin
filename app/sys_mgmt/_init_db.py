@@ -1,3 +1,8 @@
+"""
+CREATE DATABASE `flaskz-admin`
+CHARACTER SET utf8
+COLLATE utf8_general_ci;
+"""
 from flaskz.models import db_session
 
 from app.sys_mgmt.model import SysAction, SysModule, SysRole, SysUser
@@ -10,19 +15,22 @@ _sys_actions = [
 
 # Module List
 _sys_modules = [
-    {'id': 1000, 'name': 'Menu1'},
-    {'id': 1010, 'parent_id': 1000, 'name': 'Templates', 'module': 'templates', 'path': 'templates'},
-    {'id': 1020, 'parent_id': 1000, 'name': 'Menu1-2', 'module': 'menu12', 'path': 'menu12'},
-    {'id': 1030, 'parent_id': 1000, 'name': 'Menu1-3', 'module': 'menu13', 'path': 'menu13'},
-    {'id': 2000, 'name': 'Examples'},
-    {'id': 2010, 'parent_id': 2000, 'name': 'Screen', 'module': 'ex-screen', 'path': 'ex-screen'},
-    {'id': 2020, 'parent_id': 2000, 'name': 'Websocket', 'module': 'ex-websocket', 'path': 'ex-websocket'},
-    {'id': 2030, 'parent_id': 2000, 'name': 'No-Menu', 'module': 'no-menu'},
-    {'id': 9000, 'name': 'System'},
-    {'id': 9010, 'parent_id': 9000, 'name': 'Users', 'module': 'users', 'path': 'users'},
-    {'id': 9020, 'parent_id': 9000, 'name': 'Roles', 'module': 'roles', 'path': 'roles'},
-    {'id': 9030, 'parent_id': 9000, 'name': 'Licenses', 'module': 'licenses', 'path': 'licenses'},
-    {'id': 9040, 'parent_id': 9000, 'name': 'Action Logs', 'module': 'action-logs', 'path': 'action-logs'}
+    {'id': 10000, 'name': 'Examples'},
+    {'id': 10100, 'parent_id': 10000, 'name': 'EX-Simples', 'module': 'ex-simples', 'path': 'ex-simples'},
+    {'id': 10200, 'parent_id': 10000, 'name': 'EX-Departments', 'module': 'ex-departments', 'path': 'ex-departments'},
+    {'id': 10300, 'parent_id': 10000, 'name': 'EX-Employees', 'module': 'ex-employees', 'path': 'ex-employees'},
+
+    {'id': 20000, 'name': 'Ext'},
+    {'id': 20100, 'parent_id': 20000, 'name': 'Ext-Nav', 'module': 'ext-nav', 'path': 'ext-nav'},
+    {'id': 20200, 'parent_id': 20000, 'name': 'Ext-Websocket', 'module': 'ext-websocket', 'path': 'ext-websocket'},
+    {'id': 20300, 'parent_id': 20000, 'name': 'Ext-Not Found', 'module': 'ext-not-found', 'path': 'ext-not-found'},
+    {'id': 20400, 'parent_id': 20000, 'name': 'Ext-No Menu', 'module': 'ext-no-menu'},
+
+    {'id': 90000, 'name': 'System'},
+    {'id': 90100, 'parent_id': 90000, 'name': 'Users', 'module': 'users', 'path': 'users'},
+    {'id': 90200, 'parent_id': 90000, 'name': 'Roles', 'module': 'roles', 'path': 'roles'},
+    {'id': 90300, 'parent_id': 90000, 'name': 'Licenses', 'module': 'licenses', 'path': 'licenses'},
+    {'id': 90400, 'parent_id': 90000, 'name': 'Action Logs', 'module': 'action-logs', 'path': 'action-logs'}
 ]
 
 # Admin Role

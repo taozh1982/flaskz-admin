@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>用户列表</title>
+    <title>Simples</title>
     <link rel="stylesheet" href="../../../libs/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../../libs/project/proj.css">
 
@@ -10,13 +10,13 @@
     <script src="../../../libs/focus-ui/fu-pro.js"></script>
     <script src="../../../libs/project/proj.js"></script>
 
-    <script src="./user.js"></script>
+    <script src="./simples.js"></script>
 </head>
 <body class="fu-pro">
 <div class="module">
     <div class="toolbar controls">
         <button id="addBtn" class="btn btn-primary" ac-action="update">添加</button>
-        <input id="filterInput" placeholder="过滤" autofocus name="user_filter">
+        <input id="filterInput" placeholder="过滤" autofocus name="for_test_filter" autocomplete="off">
     </div>
     <div id="gridDiv" class="content"></div>
     <div class="modal-form">
@@ -30,49 +30,39 @@
                     <input type="hidden" ze-model="id" ze-model-type="integer">
                     <input type="hidden" ze-model="editType">
                     <div class="grid-row">
-                        <label class="grid-col-3-12 required" for-ze-model="role_id">用户角色</label>
+                        <label class="grid-col-3-12 required" for-ze-model="field_string">String</label>
                         <div class="grid-col-9-12">
-                            <select ze-model="role_id" ze-model-type="integer"
-                                    v-rules="required" v-message="请选择用户角色"
-                                    ze-reset="false"></select>
+                            <input ze-model="field_string" v-rules="required" ze-disabled="[editType]!=='add'" autofocus>
                         </div>
                     </div>
                     <div class="grid-row">
-                        <label class="grid-col-3-12 required" for-ze-model="username">账号</label>
+                        <label class="grid-col-3-12" for-ze-model="field_integer">Integer</label>
                         <div class="grid-col-9-12">
-                            <input ze-model="username" ze-disabled="[editType]!=='add'"
-                                   v-rules="required|alphanumeric_dash" v-message="请输入账号"
-                                   autofocus>
+                            <input ze-model="field_integer" placeholder="default:0" autofocus>
                         </div>
                     </div>
                     <div class="grid-row">
-                        <label class="grid-col-3-12 required" for-ze-model="password">密码</label>
+                        <label class="grid-col-3-12" for-ze-model="field_float">Float</label>
                         <div class="grid-col-9-12">
-                            <input ze-model="password" v-rules="required" v-message="请输入密码" type="password" autofocus>
+                            <input ze-model="field_float" type="number">
                         </div>
                     </div>
                     <div class="grid-row">
-                        <label class="grid-col-3-12 required" for-ze-model="email">Email</label>
+                        <label class="grid-col-3-12" for-ze-model="field_boolean">Boolean</label>
                         <div class="grid-col-9-12">
-                            <input ze-model="email" v-rules="email">
+                            <input ze-model="field_boolean" type="checkbox" ze-reset="false">
                         </div>
                     </div>
                     <div class="grid-row">
-                        <label class="grid-col-3-12" for-ze-model="name">姓名</label>
+                        <label class="grid-col-3-12" for-ze-model="field_datetime">DateTime</label>
                         <div class="grid-col-9-12">
-                            <input ze-model="name">
+                            <input ze-model="field_datetime" type="datetime-local">
                         </div>
                     </div>
                     <div class="grid-row">
-                        <label class="grid-col-3-12" for-ze-model="phone">电话</label>
+                        <label class="grid-col-3-12" for-ze-model="field_text">Text</label>
                         <div class="grid-col-9-12">
-                            <input ze-model="phone">
-                        </div>
-                    </div>
-                    <div class="grid-row">
-                        <label class="grid-col-3-12" for-ze-model="description">备注</label>
-                        <div class="grid-col-9-12">
-                            <textarea ze-model="description"></textarea>
+                            <textarea ze-model="field_text"></textarea>
                         </div>
                     </div>
                 </div>

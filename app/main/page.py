@@ -3,23 +3,32 @@ map the path to the static html files.
 it is recommended to use nginx as the static file server.
 """
 from flask import redirect
+from flaskz.log import flaskz_logger
+from flaskz.rest import get_rest_log_msg
 
 from . import main_bp
 
 page_mapping = {
-    'error_404': './error/404.html',
+    # Admin
     'login': './login.html',
     'index': './index.html',
+    'error_404': './error/404.html',
 
+    # Example
+    'ex-simples': './modules/example/simples/simples.html',
+    'ex-departments': './modules/example/departments/departments.html',
+    'ex-employees': './modules/example/employees/employees.html',
+
+    # Ext
+    'ext-nav': './modules/ext/nav/nav.html',
+    'ext-websocket': './modules/ext/websocket/websocket.html',
+
+    # System
     'roles': './modules/sys_mgmt/roles/role.html',
     'users': './modules/sys_mgmt/users/user.html',
-    'action-logs': './modules/sys_mgmt/action_logs/action_log.html',
     'licenses': './modules/sys_mgmt/licenses/license.html',
+    'action-logs': './modules/sys_mgmt/action_logs/action_log.html',
 
-    'templates': './modules/example/templates/template.html',
-
-    'ex-screen': './modules/example/screen/screen.html',
-    'ex-websocket': './modules/example/websocket/websocket.html',
     # 'op-log': './modules/sys/op_log/op_log.html?module=lop-op',  # set module
 }
 
@@ -32,6 +41,7 @@ def favicon():
 @main_bp.route('/', defaults={'page': 'index'})
 @main_bp.route('/<page>', methods=['GET'])
 def show_page(page):
+    flaskz_logger.debug(get_rest_log_msg('Access page', page, True, None))
     _page = page_mapping.get(page)
     if _page:
         if page == 'index' or page == 'login':

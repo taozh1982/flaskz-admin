@@ -38,15 +38,30 @@ var User = z.util.mergeObject(pro.template.CRUDTablePage, {
                 {name: "Email", field: "email"},
                 {name: "姓名", field: "name"},
                 {name: "电话", field: "phone"},
-                {name: "描述", field: "description", "minimizable": true},
+                {name: "备注", field: "description", minimizable: true},
                 /*{
-                    name: "上次登录时间", field: "last_login_at", "minimizable": true, "minimized": true, render: function (td, data) {
+                    name: "上次登录时间", field: "last_login_at", minimizable: true, minimized: true, render: function (td, data) {
                         td.innerHTML = pro.TimeUtil.format(data.get("last_login_at"));
                     }
                 },*/
+
                 {
-                    name: "更新时间", field: "updated_at", "minimizable": true, "minimized": true, render: function (td, data) {
+                    name: "最后登录时间", field: "option.last_login_at", minimizable: true,
+                    render: function (td, data) {
+                        td.innerHTML = pro.TimeUtil.format((data.get("option") || {}).last_login_at);
+                    }
+                },
+                {name: "登录次数", field: "option.login_times", minimizable: true, width: 100},
+                {
+                    name: "更新时间", field: "updated_at", minimizable: true, minimized: true,
+                    render: function (td, data) {
                         td.innerHTML = pro.TimeUtil.format(data.get("updated_at"));
+                    }
+                },
+                {
+                    name: "创建时间", field: "created_at", minimizable: true, minimized: true,
+                    render: function (td, data) {
+                        td.innerHTML = pro.TimeUtil.format(data.get("created_at"));
                     }
                 },
                 {

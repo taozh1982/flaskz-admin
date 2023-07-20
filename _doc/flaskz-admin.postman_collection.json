@@ -1,360 +1,10 @@
 {
 	"info": {
-		"_postman_id": "56012d93-82df-4765-b823-6535b866813a",
+		"_postman_id": "505a33d0-6db1-4736-92d6-1934cd7aada1",
 		"name": "flaskz-admin",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
-		{
-			"name": "template",
-			"item": [
-				{
-					"name": "add",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Authorization",
-								"value": "{{flaskz_auth_token}}",
-								"type": "text"
-							},
-							{
-								"key": "X-Requested-With",
-								"value": "{{flaskz_requested_with}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"T1\", //名字\n    \"age\": 18,\n    \"email\": \"t1@focus-ui.com\" //邮箱\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/templates/",
-							"protocol": "http",
-							"host": [
-								"{{flaskz_server_url}}"
-							],
-							"path": [
-								"api",
-								"v1.0",
-								"templates",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{flaskz_auth_token}}",
-								"type": "text"
-							},
-							{
-								"key": "X-Requested-With",
-								"value": "{{flaskz_requested_with}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/templates/1/",
-							"protocol": "http",
-							"host": [
-								"{{flaskz_server_url}}"
-							],
-							"path": [
-								"api",
-								"v1.0",
-								"templates",
-								"1",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "update",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "{{flaskz_auth_token}}",
-								"type": "text"
-							},
-							{
-								"key": "X-Requested-With",
-								"value": "{{flaskz_requested_with}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"id\": 1, //pk in body\n    \"age\": 20\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/templates/",
-							"protocol": "http",
-							"host": [
-								"{{flaskz_server_url}}"
-							],
-							"path": [
-								"api",
-								"v1.0",
-								"templates",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "update_by_pk",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "{{flaskz_auth_token}}",
-								"type": "text"
-							},
-							{
-								"key": "X-Requested-With",
-								"value": "{{flaskz_requested_with}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{//pk in body\n    \"age\": 18\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/templates/1/",
-							"protocol": "http",
-							"host": [
-								"{{flaskz_server_url}}"
-							],
-							"path": [
-								"api",
-								"v1.0",
-								"templates",
-								"1",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "query_all",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "{{flaskz_auth_token}}",
-								"type": "text"
-							},
-							{
-								"key": "X-Requested-With",
-								"value": "{{flaskz_requested_with}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/templates/",
-							"protocol": "http",
-							"host": [
-								"{{flaskz_server_url}}"
-							],
-							"path": [
-								"api",
-								"v1.0",
-								"templates",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "query_by_pk",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "{{flaskz_auth_token}}",
-								"type": "text"
-							},
-							{
-								"key": "X-Requested-With",
-								"value": "{{flaskz_requested_with}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/templates/1/",
-							"protocol": "http",
-							"host": [
-								"{{flaskz_server_url}}"
-							],
-							"path": [
-								"api",
-								"v1.0",
-								"templates",
-								"1",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "query_ pss",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "{{flaskz_auth_token}}"
-							},
-							{
-								"key": "X-Requested-With",
-								"type": "text",
-								"value": "{{flaskz_requested_with}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"search\": {\r\n        \"like\": \"t\", // 模糊查询 - like_columns\r\n        \"updated_at1\": {\r\n            \"<\": \"'2023-05-04 11:21:31'\" //*单引号\r\n        },\r\n        //\"name\": \"T1\", //条件查询\r\n        \"age1\": { // 条件查询\r\n            \">\": 1,\r\n            \"<\": 20\r\n        },\r\n        \"_ors1\": { // or高级查询\r\n            \"email\": \"t1@focus-ui.com||t1@flaskz.com\"\r\n        },\r\n        \"_ands1\": { // and高级查询\r\n            \"age\": {\r\n                \">\": 1,\r\n                \"<\": 20\r\n            }\r\n        }\r\n    },\r\n    \"sort\": { // 排序\r\n        \"field\": \"name\",\r\n        \"order\": \"asc\" // asc/desc\r\n    },\r\n    // \"sort\": [ // 多重排序\r\n    //     {\r\n    //         \"field\": \"name\",\r\n    //         \"order\": \"asc\" // asc/desc\r\n    //     },\r\n    //     {\r\n    //         \"field\": \"age\",\r\n    //         \"order\": \"desc\" // asc/desc\r\n    //     }\r\n    // ],\r\n    \"page\": { // 分页\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://{{flaskz_server_url}}/api/v1.0/templates/pss/",
-							"protocol": "http",
-							"host": [
-								"{{flaskz_server_url}}"
-							],
-							"path": [
-								"api",
-								"v1.0",
-								"templates",
-								"pss",
-								""
-							]
-						},
-						"description": "search : search conditions\r\n    --like : like search    # (name like '%t%' OR description like '%t%')\r\n    --_ors : other or conditions    # email='t1@focus-ui.com' OR email='t2@focus-ui.com'\r\n    --_ands : other and conditions  #age>1 AND age<20\r\nsort : sort options    # ORDER BY templates.name ASC\r\n    -- field : sort field\r\n    -- order : sort order asc/desc\r\npage : page options     #  LIMIT ? OFFSET ? (20, 0)\r\n    -- offset : page offset \r\n    -- size : size per page\r\n\r\nSELECT templates.id AS templates_id, templates.name AS templates_name, templates.age AS templates_age, templates.email AS templates_email, templates.description AS templates_description, templates.created_at AS templates_created_at, templates.updated_at AS templates_updated_at\r\nFROM templates\r\nWHERE (name like '%t%' OR description like '%t%') AND (age>1 AND age<20) AND (email='t1@focus-ui.com' OR email='t2@focus-ui.com') ORDER BY templates.name ASC\r\n    LIMIT ? OFFSET ? (20, 0)\r\n\r\n{\r\n    \"search\": {\r\n        \"like\": \"t\",\r\n        \"_ors\": {\r\n            \"email\": \"t1@focus-ui.com||t2@focus-ui.com\"\r\n        },\r\n        \"_ands\": {\r\n            \"age\": {\r\n                \">\": 1,\r\n                \"<\": 20\r\n            }\r\n        }\r\n    },\r\n    \"sort\": {\r\n        \"field\": \"name\",\r\n        \"order\": \"asc\"\r\n    },\r\n    \"page\": {\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    }\r\n}"
-					},
-					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			]
-		},
 		{
 			"name": "sys_mgmt",
 			"item": [
@@ -1353,6 +1003,1390 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "example",
+			"item": [
+				{
+					"name": "simples",
+					"item": [
+						{
+							"name": "add",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"field_string\": \"Item-{{global_counter}}\",\n     \"field_integer\":{{global_counter}},\n     \"field_float\":1.0,\n     \"field_boolean\":true,\n     \"field_text\":\"for test\",\n    \"field_datetime\": \"2023-07-19T12:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-simples/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-simples",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-simples/1/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-simples",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": 1, //pk in body\n    \"field_integer\": 18\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-simples/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-simples",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update_by_pk",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ //pk in url\n    \"field_integer\": 20\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-departments/1/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-departments",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "query_all",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-simples/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-simples",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "departments",
+					"item": [
+						{
+							"name": "add",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Dept1\",\n    \"description\": \"Department1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-departments/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-departments",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-departments/1/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-departments",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": 1, //pk in body\n    \"name\": \"Dept1\",\n    \"description\": \"Department1 -X\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-departments/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-departments",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update_by_pk",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ //pk in url\n    \"age\": 18\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-departments/1/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-departments",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "query_all",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-departments/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-departments",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "employees",
+					"item": [
+						{
+							"name": "add",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Emp-{{global_counter}}\",\n    \"age\":18,\n    \"email\":\"emp.{{global_counter}}@focus-ui.com\",\n    \"department_id\":1,\n    \"description\": \"for Employee-{{global_counter}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/1/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": 1, //pk in body\n    \"age\": 19,\n    \"updated_at\": \"Tue, 11 Jul 2022 16:41:11 GMT\" //auto column, 不会被修改 \n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update_by_pk",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ //pk in url\n    \"age\": 20\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/1/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "query_all",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "query_ pss",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{flaskz_auth_token}}"
+									},
+									{
+										"key": "X-Requested-With",
+										"type": "text",
+										"value": "{{flaskz_requested_with}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"search\": {\r\n        \"like\": \"emp\", // 模糊查询 - like_columns\r\n        \"updated_at\": {\r\n            \">\": \"2023-01-01 11:21:31\" //*单引号\r\n        },\r\n        // \"name1\": \"T1\", //条件查询\r\n        \"age\": { // 条件查询\r\n            \"between\": [\r\n                10,\r\n                20\r\n            ]\r\n        }\r\n    },\r\n    \"sort\": { // 排序\r\n        \"field\": \"name\",\r\n        \"order\": \"asc\" // asc/desc\r\n    },\r\n    \"page\": { // 分页\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/pss/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"pss",
+										""
+									]
+								},
+								"description": "search : search conditions\r\n    --like : like search    # (name like '%t%' OR description like '%t%')\r\n    --_ors : other or conditions    # email='t1@focus-ui.com' OR email='t2@focus-ui.com'\r\n    --_ands : other and conditions  #age>1 AND age<20\r\nsort : sort options    # ORDER BY templates.name ASC\r\n    -- field : sort field\r\n    -- order : sort order asc/desc\r\npage : page options     #  LIMIT ? OFFSET ? (20, 0)\r\n    -- offset : page offset \r\n    -- size : size per page\r\n\r\nSELECT templates.id AS templates_id, templates.name AS templates_name, templates.age AS templates_age, templates.email AS templates_email, templates.description AS templates_description, templates.created_at AS templates_created_at, templates.updated_at AS templates_updated_at\r\nFROM templates\r\nWHERE (name like '%t%' OR description like '%t%') AND (age>1 AND age<20) AND (email='t1@focus-ui.com' OR email='t2@focus-ui.com') ORDER BY templates.name ASC\r\n    LIMIT ? OFFSET ? (20, 0)\r\n\r\n{\r\n    \"search\": {\r\n        \"like\": \"t\",\r\n        \"_ors\": {\r\n            \"email\": \"t1@focus-ui.com||t2@focus-ui.com\"\r\n        },\r\n        \"_ands\": {\r\n            \"age\": {\r\n                \">\": 1,\r\n                \"<\": 20\r\n            }\r\n        }\r\n    },\r\n    \"sort\": {\r\n        \"field\": \"name\",\r\n        \"order\": \"asc\"\r\n    },\r\n    \"page\": {\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    }\r\n}"
+							},
+							"response": [
+								{
+									"name": "query_ pss",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "{{flaskz_auth_token}}"
+											},
+											{
+												"key": "X-Requested-With",
+												"type": "text",
+												"value": "{{flaskz_requested_with}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    //查询\r\n    \"search\": {\r\n        //模糊查询\r\n        \"like\": \"t\", // name like '%t%' OR description like '%t%',\r\n        \"like\": \"t%\", // name like 't%' OR description like 't%'\r\n        \"like\": \"%t\", // name like '%t' OR description like '%t'\r\n        \"like\": \"%' and id=1 and email like 't2\", // sql注入(结果为空)\r\n        //精确查询\r\n        \"name\": \"T1\", // name == T1\r\n        \"email\": \"t1@focus-ui.com\", // email == t1@focus-ui.com\r\n        \"email\": { // age BETWEEN 10 AND 20\r\n            \"like\": \"%emp1\"\r\n        },\r\n        //比较&条件\r\n        \"updated_at\": { // updated_at >= 2022-01-01 00:00:00\" AND updated_at <  2023-01-01 00:00:00\r\n            \">=\": \"2022-01-01 00:00:00\",\r\n            \"<\": \"2023-01-01 00:00:00\"\r\n        },\r\n        \"age\": { // age BETWEEN 10 AND 20\r\n            \"between\": [\r\n                10,\r\n                20\r\n            ]\r\n        }\r\n        // //高级or查询\r\n        // \"_ors\": { // email = t1@focus-ui.com OR email = t1@flaskz.com\r\n        //     \"email\": \"t1@focus-ui.com||t1@flaskz.com\"\r\n        // },\r\n        // //高级and查询\r\n        // \"_ands\": { // age >10 AND age<20\r\n        //     \"age\": {\r\n        //         \">\": 10,\r\n        //         \"<\": 20\r\n        //     }\r\n        // }\r\n    },\r\n    //排序\r\n    \"sort\": \"name\", // ORDER BY name ASC\r\n    \"sort\": { // ORDER BY name DESC\r\n        \"field\": \"name\",\r\n        \"order\": \"desc\"\r\n    },\r\n    \"sort\": [ // ORDER BY name ASC, age DESC\r\n        {\r\n            \"field\": \"name\",\r\n            \"order\": \"asc\" // asc/desc\r\n        },\r\n        {\r\n            \"field\": \"age\",\r\n            \"order\": \"desc\" // asc/desc\r\n        }\r\n    ],\r\n    //分页\r\n    \"page\": { // LIMIT ? OFFSET ? (20, 0)\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    },\r\n    //分组\r\n    \"group\": \"email\" //GROUP BY email\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/pss/",
+											"protocol": "http",
+											"host": [
+												"{{flaskz_server_url}}"
+											],
+											"path": [
+												"api",
+												"v1.0",
+												"ex-employees",
+												"pss",
+												""
+											]
+										}
+									},
+									"_postman_previewlanguage": null,
+									"header": null,
+									"cookie": [],
+									"body": null
+								}
+							]
+						},
+						{
+							"name": "query_multi",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/multi/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"multi",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "query_by_pk",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/1/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "employees-ext",
+					"item": [
+						{
+							"name": "bulk_add",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"name\": \"Emp-b{{global_counter}}-1\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-1@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-1\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-2\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-2@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-2\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-3\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-3@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-3\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-4\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-4@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-4\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-5\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-5@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-5\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-6\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-6@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-6\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-7\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-7@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-7\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-8\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-8@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-8\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-9\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-9@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-9\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-10\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-10@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-10\"\n    }\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/bulk-add/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"bulk-add",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "bulk_update",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"id\": 10,\n        \"age\": 19\n    },\n    {\n        \"id\": 11,\n        \"age\": 19\n    },\n    {\n        \"id\": 12,\n        \"age\": 19\n    }\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/bulk-update/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"bulk-update",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "bulk_delete",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    10,\n    11,\n    12\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/bulk-delete/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"bulk-delete",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "clear",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/clear",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"clear"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "query_count_all",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/count/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"count",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "query_count_ search",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{flaskz_auth_token}}"
+									},
+									{
+										"key": "X-Requested-With",
+										"type": "text",
+										"value": "{{flaskz_requested_with}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"search\": {\r\n        \"age\": { // 条件\r\n            \"between\": [\r\n                10,\r\n                20\r\n            ]\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/count/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"count",
+										""
+									]
+								},
+								"description": "search : search conditions\r\n    --like : like search    # (name like '%t%' OR description like '%t%')\r\n    --_ors : other or conditions    # email='t1@focus-ui.com' OR email='t2@focus-ui.com'\r\n    --_ands : other and conditions  #age>1 AND age<20\r\nsort : sort options    # ORDER BY templates.name ASC\r\n    -- field : sort field\r\n    -- order : sort order asc/desc\r\npage : page options     #  LIMIT ? OFFSET ? (20, 0)\r\n    -- offset : page offset \r\n    -- size : size per page\r\n\r\nSELECT templates.id AS templates_id, templates.name AS templates_name, templates.age AS templates_age, templates.email AS templates_email, templates.description AS templates_description, templates.created_at AS templates_created_at, templates.updated_at AS templates_updated_at\r\nFROM templates\r\nWHERE (name like '%t%' OR description like '%t%') AND (age>1 AND age<20) AND (email='t1@focus-ui.com' OR email='t2@focus-ui.com') ORDER BY templates.name ASC\r\n    LIMIT ? OFFSET ? (20, 0)\r\n\r\n{\r\n    \"search\": {\r\n        \"like\": \"t\",\r\n        \"_ors\": {\r\n            \"email\": \"t1@focus-ui.com||t2@focus-ui.com\"\r\n        },\r\n        \"_ands\": {\r\n            \"age\": {\r\n                \">\": 1,\r\n                \"<\": 20\r\n            }\r\n        }\r\n    },\r\n    \"sort\": {\r\n        \"field\": \"name\",\r\n        \"order\": \"asc\"\r\n    },\r\n    \"page\": {\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    }\r\n}"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "permission",
+					"item": [
+						{
+							"name": "public",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/public",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"public"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "login-required",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/login-required",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"login-required"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "module-required",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/module-required",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"module-required"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "module+action-required",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/module-action-required",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"module-action-required"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
 		}
 	],
 	"event": [
@@ -1447,7 +2481,8 @@
 					"    }",
 					"})(this);",
 					"//对发送数据进行处理",
-					"pm.request.body.raw = JSON.minify(pm.request.body.raw)"
+					"pm.request.body.raw = JSON.minify(pm.request.body.raw)",
+					"pm.collectionVariables.set(\"global_counter\", (pm.collectionVariables.get(\"global_counter\")|0 )+ 1);"
 				]
 			}
 		},

@@ -2,11 +2,23 @@
  * ajax请求url
  */
 var AjaxUrl = {
-    for_test: {
-        query: "/api/v1.0/templates/",
-        add: "/api/v1.0/templates/",
-        delete: "/api/v1.0/templates/[id]",
-        update: "/api/v1.0/templates/"
+    ex_simples: {
+        query: "/api/v1.0/ex-simples/",
+        add: "/api/v1.0/ex-simples/",
+        delete: "/api/v1.0/ex-simples/[id]",
+        update: "/api/v1.0/ex-simples/"
+    },
+    ex_departments: {
+        query: "/api/v1.0/ex-departments/",
+        add: "/api/v1.0/ex-departments/",
+        delete: "/api/v1.0/ex-departments/[id]",
+        update: "/api/v1.0/ex-departments/"
+    },
+    ex_employees: {
+        query: {url: "/api/v1.0/ex-employees/pss/", method: "POST"},
+        add: "/api/v1.0/ex-employees/",
+        delete: "/api/v1.0/ex-employees/[id]",
+        update: "/api/v1.0/ex-employees/"
     },
 
     sys_role: {

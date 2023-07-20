@@ -1,0 +1,37 @@
+.toolbar {
+  flex: none;
+  display: flex;
+  padding: 0.2em 0.2em 0.3em;
+  align-items: center;
+}
+.toolbar > * {
+  width: auto;
+  min-width: 0;
+  margin-right: 0.6em;
+  white-space: nowrap;
+}
+.toolbar label:not(:first-child) {
+  padding-left: 0.6em;
+}
+.toolbar button:last-of-type {
+  margin-right: auto;
+}
+.fu-pro .toolbar input:not([type]),
+.fu-pro .toolbar input[type='date'],
+.fu-pro .toolbar input[type='datetime-local'],
+.fu-pro .toolbar input[type='email'],
+.fu-pro .toolbar input[type='month'],
+.fu-pro .toolbar input[type='number'],
+.fu-pro .toolbar input[type='range'],
+.fu-pro .toolbar input[type='password'],
+.fu-pro .toolbar input[type='search'],
+.fu-pro .toolbar input[type='tel'],
+.fu-pro .toolbar input[type='tel'],
+.fu-pro .toolbar input[type='text'],
+.fu-pro .toolbar input[type='time'],
+.fu-pro .toolbar input[type='url'],
+.fu-pro .toolbar input[type='week'],
+.fu-pro .toolbar select,
+.fu-pro .toolbar textarea {
+  width: auto;
+}

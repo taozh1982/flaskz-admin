@@ -6,8 +6,6 @@ import configparser
 import os
 from datetime import timedelta
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
 
 class Config:
     # Flask参数，用于安全签署会话cookie的密钥，并可用于扩展应用程序的任何其他安全相关需求。它应该是一个长随机字符串

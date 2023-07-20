@@ -2,23 +2,39 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>用户列表</title>
+    <title>Employees</title>
     <link rel="stylesheet" href="../../../libs/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../../libs/project/proj.css">
 
     <script src="../../../libs/focus-ui/focus-ui.min.js"></script>
     <script src="../../../libs/focus-ui/fu-pro.js"></script>
     <script src="../../../libs/project/proj.js"></script>
+    <script src="./employees.js"></script>
+    <style>
 
-    <script src="./user.js"></script>
+        .department-btn {
+            display: flex !important;
+            padding-right: 1em;
+            align-items: center;
+            margin-right: 0.6em;
+            color: #000000 !important;
+        }
+
+        .z-popover {
+            min-width: 16em;
+        }
+    </style>
 </head>
 <body class="fu-pro">
 <div class="module">
     <div class="toolbar controls">
         <button id="addBtn" class="btn btn-primary" ac-action="update">添加</button>
-        <input id="filterInput" placeholder="过滤" autofocus name="user_filter">
+        <label class="col-form-label" style="margin-left: auto;">部门:</label>
+        <button id="departmentBtn" class="popover-select" style="margin-right: 1rem;width: 10em;" data-placeholder="全部" data-select-type="search"></button>
+        <input id="searchInput" placeholder="查询" autofocus name="employees_search">
     </div>
     <div id="gridDiv" class="content"></div>
+
     <div class="modal-form">
         <div id="modalDiv" class="zw-modal drawer controls label-align-right">
             <div class="content">
@@ -30,43 +46,32 @@
                     <input type="hidden" ze-model="id" ze-model-type="integer">
                     <input type="hidden" ze-model="editType">
                     <div class="grid-row">
-                        <label class="grid-col-3-12 required" for-ze-model="role_id">用户角色</label>
+                        <label class="grid-col-3-12 required" for-ze-model="parent_id">部门</label>
                         <div class="grid-col-9-12">
-                            <select ze-model="role_id" ze-model-type="integer"
-                                    v-rules="required" v-message="请选择用户角色"
-                                    ze-reset="false"></select>
+                            <button id="selectDepartmentBtn" class="popover-select"
+                                    data-placeholder="请选择"
+                                    ze-model="department_name"
+                                    v-rules="required" v-message="请选择部门名称",
+                                    data-select-type="select"
+                                    style="width: 100%;"></button>
                         </div>
                     </div>
                     <div class="grid-row">
-                        <label class="grid-col-3-12 required" for-ze-model="username">账号</label>
+                        <label class="grid-col-3-12 required" for-ze-model="name">姓名</label>
                         <div class="grid-col-9-12">
-                            <input ze-model="username" ze-disabled="[editType]!=='add'"
-                                   v-rules="required|alphanumeric_dash" v-message="请输入账号"
-                                   autofocus>
-                        </div>
-                    </div>
-                    <div class="grid-row">
-                        <label class="grid-col-3-12 required" for-ze-model="password">密码</label>
-                        <div class="grid-col-9-12">
-                            <input ze-model="password" v-rules="required" v-message="请输入密码" type="password" autofocus>
+                            <input ze-model="name" v-rules="required" v-message="请输入姓名">
                         </div>
                     </div>
                     <div class="grid-row">
                         <label class="grid-col-3-12 required" for-ze-model="email">Email</label>
                         <div class="grid-col-9-12">
-                            <input ze-model="email" v-rules="email">
+                            <input ze-model="email" v-rules="required|email" v-message="请输入Email">
                         </div>
                     </div>
                     <div class="grid-row">
-                        <label class="grid-col-3-12" for-ze-model="name">姓名</label>
+                        <label class="grid-col-3-12" for-ze-model="age">年龄</label>
                         <div class="grid-col-9-12">
-                            <input ze-model="name">
-                        </div>
-                    </div>
-                    <div class="grid-row">
-                        <label class="grid-col-3-12" for-ze-model="phone">电话</label>
-                        <div class="grid-col-9-12">
-                            <input ze-model="phone">
+                            <input ze-model="age">
                         </div>
                     </div>
                     <div class="grid-row">

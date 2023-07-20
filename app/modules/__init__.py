@@ -5,7 +5,6 @@ Custom modules, include model and logic
 template为实例，需删除
 """
 # app/modules/__init__.py
-
 from flaskz import res_status_codes
 from flaskz.models import ModelBase
 from flaskz.utils import filter_list

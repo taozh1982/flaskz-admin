@@ -42,7 +42,7 @@ z.util.mergeObject(Role, {
                 overflow: false,
                 columns: [
                     {
-                        name: "菜单", field: "name", type: "check",
+                        name: "模块<small class='color-secondary'>(带*表示没有菜单)</small>", field: "name", type: "check",
                         render: function (td, data) {
                             var module = data.get("name");
                             if (!data.hasChildren() && !data.get("path")) {
@@ -52,7 +52,7 @@ z.util.mergeObject(Role, {
                         }
                     },
                     {
-                        name: "操作权限", width: 120,
+                        name: "操作权限", width: 110,
                         render: function (td, data, column) {
                             if (!data.hasChildren()) {
                                 _this._renderOps(td, data);

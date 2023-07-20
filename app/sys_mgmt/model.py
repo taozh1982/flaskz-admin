@@ -3,7 +3,8 @@ from datetime import datetime
 from flask_login import current_user, UserMixin
 from flaskz import res_status_codes
 from flaskz.log import flaskz_logger
-from flaskz.models import ModelBase, ModelMixin
+from flaskz.models import ModelBase, ModelMixin, BaseModelMixin
+from flaskz.rest import get_rest_log_msg
 from flaskz.utils import find_list, get_app_cache, set_app_cache, get_ins_mapping
 from sqlalchemy import Column, Integer, String, Table, ForeignKey, DateTime, Boolean, Text, desc
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -233,7 +234,8 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
     created_at = Column(DateTime(), default=datetime.now)
     updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
 
-    role = relationship('SysRole')
+    role = relationship('SysRole', uselist=False)
+    option = relationship('SysUserOption', cascade='all,delete-orphan', uselist=False, lazy='joined')
 
     @hybrid_property
     def password(self):
@@ -299,6 +301,49 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
         return self.role.check_permission(module, action)
 
 
+class SysUserOption(ModelBase, BaseModelMixin):
+    """用户选项(内部使用)"""
+    __tablename__ = 'sys_user_options'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('sys_users.id', ondelete='CASCADE'), nullable=False)
+    previous_login_at = Column(DateTime())  # 上次登录时间
+    last_login_at = Column(DateTime())  # 最后登录时间
+    login_times = Column(Integer, default=0)  # 登录次数
+    preferences = Column(Text)  # 偏好设置(replace)
+
+    @classmethod
+    def update(cls, option):
+        try:
+            ins = SysUserOption.query_by({'user_id': option.get('user_id')}, True)
+            if ins:
+                option['id'] = ins.id
+                SysUserOption.update_db(option)
+            else:
+                ins = SysUserOption.add_db(option)
+                flaskz_logger.info(get_rest_log_msg('Update User options', option, True, None))
+                return True, ins
+        except Exception as e:
+            flaskz_logger.exception(e)
+        return False, res_status_codes.db_update_err
+
+    @classmethod
+    def update_login(cls, user_id, last_login_at=None):
+        ins = SysUserOption.query_by({'user_id': user_id}, True)
+        previous_login_at = None
+        if ins:
+            previous_login_at = ins.last_login_at
+            login_times = ins.login_times + 1
+        else:
+            login_times = 1
+        return cls.update({
+            'user_id': user_id,
+            'last_login_at': last_login_at or datetime.now(),
+            'previous_login_at': previous_login_at,
+            'login_times': login_times
+        })
+
+
 class SysActionLog(ModelBase, ModelMixin):
     """
     操作日志
@@ -323,8 +368,8 @@ class SysActionLog(ModelBase, ModelMixin):
     module = Column(String(100))  # The name of the module, ex Role Mgmt/User Mgmt
     action = Column(String(100))  # add/remove/update
 
-    req_data = Column(Text())  #
-    res_data = Column(Text())  #
+    req_data = Column(Text())  # request data
+    res_data = Column(Text())  # response data
     result = Column(String(100))  # success/fail
 
     description = Column(Text())  #
@@ -344,6 +389,7 @@ class SysActionLog(ModelBase, ModelMixin):
         Return the default query order.
         :return:
         """
+
         return desc(cls.created_at)
 
 

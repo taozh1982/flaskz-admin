@@ -31,11 +31,12 @@ def init_app(app):
     4.disable cache control
     """
 
-    # refresh session
     @app.before_request
     def before_request():
         # refresh session life time and update client cookie(Flask's sessions are client-side sessions)
         # if use session to store user information, please set it before every request.
+        # 默认情况下, Flask的session是临时的,也就是会在用户关闭浏览器时自动过期
+        # 通过将 session.permanent 属性设置为 True，可以使会话变为持久性会话，即使用户关闭浏览器后也能保留会话信息。
         session.permanent = True
 
     # add regex route rule

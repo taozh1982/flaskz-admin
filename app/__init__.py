@@ -39,7 +39,6 @@ def create_app(config_name):
     app.register_blueprint(main.main_bp, url_prefix='/')
     app.register_blueprint(api.api_bp, url_prefix='/api/v1.0')
     app.register_blueprint(sys_mgmt.sys_mgmt_bp, url_prefix='/sys-mgmt')
-
     return app
 
 

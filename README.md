@@ -75,6 +75,12 @@ Email: taozh@cisco.com / taozh1982@gmail.com
 
 ## 版本
 
+- **1.6** `2023/06/16`
+    - [F] 修复`app._ext.redis_ws.init_websocket`函数中app_config设置问题 -`2023/07/10`
+    - [A] `alembic.inc`添加`ignore_tables`配置项，用于配置不需要alembic维护的table列表 -`2023/07/10`
+    - [A] 添加`example`示例 -`2023/07/11`
+    - [A] 添加`SysUserOption`表，用于存放用户选项(登录时间/登录次数/...) -`2023/07/20`
+
 - **1.5** `2023/05/01`
     - [C] 重构系统RBAC [权限管理](http://zhangyiheng.com/blog/articles/py_flaskz_admin.html#toc-rbac) 模块(sys_mgmt)
     - [C] 重构系统管理API(参考[开发规范](http://zhangyiheng.com/blog/articles/dev_spec.html))
