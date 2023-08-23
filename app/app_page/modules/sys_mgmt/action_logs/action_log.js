@@ -6,6 +6,14 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
         {name: "更新", value: "update"},
         {name: "登录", value: "login"}
     ],
+    /*ext_modules: [
+        {
+            name: "其他", children: [
+                {name: "用户登录", module: "User-login"},
+                {name: "退出登录", module: "User-logout"}
+            ]
+        }
+    ],*/
     page_options: {
         url: AjaxUrl.sys_action_log,
         grid_options: {
@@ -102,7 +110,17 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
     },
     initModel: function () {
         AjaxCache.action_logs_modules.query(function (data) {
-            pro.FormUtil.initSelectOptions("#moduleSelect", z.util.mergeArray([{name: "全部", value: ""}], data));
+            (data || []).forEach(function (item) {
+                item.module = data.name;
+            });
+            var modules = z.util.mergeArray([{name: "全部", module: ""}], data)
+            var ext_modules = this.ext_modules || [];
+            if (ext_modules.length > 0) {
+                modules = z.util.mergeArray(modules, ext_modules)
+            }
+            z.dom.initSelectOptions("#moduleSelect", modules, {
+                value_field: "module"
+            });
         }, this);
         this.handleSearchChange();
     },

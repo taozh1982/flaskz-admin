@@ -14,7 +14,6 @@ from ..modules.example import DepartmentModel, EmployeeModel, SimpleModel
 # 注册数据模型路由: http://zhangyiheng.com/blog/articles/py_flaskz_api.html#toc-model-route
 # API接口规范: http://zhangyiheng.com/blog/articles/dev_spec.html#toc-api
 register_model_route(api_bp, SimpleModel, 'ex-simples', 'ex-simples')
-
 register_model_route(api_bp, DepartmentModel, 'ex-departments', 'ex-departments')
 register_model_route(api_bp, EmployeeModel, 'ex-employees', 'ex-employees',
                      to_json_option={  # 返回json选项

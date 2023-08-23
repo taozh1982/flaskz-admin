@@ -9,7 +9,8 @@ websockets vs SocketIO
 
 
 #请添加以下配置项
-REDIS_URL = None# redis相关配置, 按需配置
+# redis相关配置, 按需配置
+REDIS_URL = None # 'redis://127.0.0.1:6379'
 # websocket配置, 按需配置
 WEBSOCKET_HOST = None  # 如果为None, host=0.0.0.0
 WEBSOCKET_PORT = 3667  # websocket端口号

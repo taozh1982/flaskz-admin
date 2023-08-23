@@ -8,7 +8,7 @@ var Role = z.util.mergeObject(pro.template.CRUDTablePage, {
                     {
                         name: "权限列表", field: "modules", sortable: false, filter: false, "minimizable": true, "minimized": true,
                         render: function (td, data) {
-                            td.innerHTML = Role.getModulesName(data.get("modules"));
+                            td.innerHTML = "<small>" + Role.getModulesName(data.get("modules")) + "</small>";
                         }
                     },
                     {
@@ -99,6 +99,6 @@ var Role = z.util.mergeObject(pro.template.CRUDTablePage, {
                     labelArr.push(moduleLabel);
                 }
             });
-            return labelArr.join(",")
+            return labelArr.join("<br>")
         }
     });

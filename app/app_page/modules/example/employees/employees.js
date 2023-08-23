@@ -78,7 +78,6 @@ var Employees = z.util.mergeObject(pro.template.CRUDTablePage, {
             z.widget.popover.close()
         });
 
-        var _this = this;
         var selectDepartmentBtn = z.dom.query("#selectDepartmentBtn");
         new MutationObserver(function (mutationsList, observer) {
             var rect = selectDepartmentBtn.getBoundingClientRect();
@@ -86,8 +85,8 @@ var Employees = z.util.mergeObject(pro.template.CRUDTablePage, {
                 return;
             }
             mutationsList.forEach(function (mutation) {
-                if (mutation.type === 'attributes' && mutation.attributeName === 'department_id') {
-                    _this.form.getValidator().validate();
+                if (mutation.type === 'attributes' && mutation.attributeName === 'data-dept-id') {
+                    z.form.Validator.validate("#modalDiv");
                 }
             })
         }).observe(selectDepartmentBtn, {attributes: true, childList: false, subtree: false});

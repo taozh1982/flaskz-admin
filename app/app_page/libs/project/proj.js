@@ -61,7 +61,9 @@ z.setDefault({
     PRO_MESSAGE_DELETE_CONFIRM: "<i class='fa fa-warning color-warning'></i> 确认删除?",
     PRO_MODAL_UPDATE_TITLE: "<i class='fa fa-edit'></i> 编辑",
     PRO_MODAL_ADD_TITLE: "<i class='fa fa-plus-square'></i> 添加",
-    PRO_MODAL_VIEW_TITLE: "<i class='fa fa-file-text-o'></i> 查看"
+    PRO_MODAL_VIEW_TITLE: "<i class='fa fa-file-text-o'></i> 查看",
+
+                                                                    DATE_LOCAL_TIMEZONE_OFFSET:null
 });
 
 //项目定制化

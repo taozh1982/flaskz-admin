@@ -12,7 +12,7 @@ from flask_login import current_user
 sys_mgmt_bp = Blueprint('sys_mgmt', __name__)
 
 
-def log_operation(module, action, result, req_data=None, res_data=None, description=None):
+def log_operation(module, action, result, req_data=None, res_data=None, description=None, log_data=None):
     """
     Add operation logs to the database.
     :param module: The module of the operation.
@@ -21,6 +21,7 @@ def log_operation(module, action, result, req_data=None, res_data=None, descript
     :param req_data: The request data of the operation.
     :param res_data: The result data of the operation.
     :param description: The description of the operation.
+    :param log_data: The custom log data
     :return:
     """
     if result is True:
@@ -34,8 +35,8 @@ def log_operation(module, action, result, req_data=None, res_data=None, descript
     if res_data is not None and not is_str(res_data):
         res_data = json.dumps(res_data)
 
-    log_data = _get_user_info()
-    log_data.update({
+    props = _get_user_info()
+    props.update({
         'module': _get_module_name(module),
         'action': action,
         'req_data': req_data,
@@ -43,9 +44,13 @@ def log_operation(module, action, result, req_data=None, res_data=None, descript
         'result': result,
         'description': description,
     })
-    if 'username' not in log_data and action == 'login':  # login
-        log_data['username'] = req_data
-    model.SysActionLog.add(log_data)
+    if 'username' not in props and action == 'login':  # login
+        props['username'] = req_data
+
+    if type(log_data) is dict:
+        props.update(log_data)
+
+    model.SysActionLog.add(props)
 
 
 def _get_user_info():

@@ -18,7 +18,8 @@ var Simples = z.util.mergeObject(pro.template.CRUDTablePage, {
                 {
                     name: "DateTime", field: "field_datetime",
                     render: function (td, data) {
-                        td.innerHTML = pro.TimeUtil.format(data.get("field_datetime"));
+                        // td.innerHTML = pro.TimeUtil.format(data.get("field_datetime"));
+                        td.innerHTML = z.util.formatDate(data.get("field_datetime"));
                     }
                 },
                 {
