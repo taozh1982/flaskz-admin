@@ -80,6 +80,8 @@ Email: taozh@cisco.com / taozh1982@gmail.com
     - [A] `alembic.inc`添加`ignore_tables`配置项，用于配置不需要alembic维护的table列表 -`2023/07/10`
     - [A] 添加`example`示例 -`2023/07/11`
     - [A] 添加`SysUserOption`表，用于存放用户选项(登录时间/登录次数/...) -`2023/07/20`
+    - [F] 修复`Action Logs`模块前端页面过滤问题 -`2023/08/23`
+    - [A] 添加`FLASKZ_DATABASE_SESSION_KWARGS = {'expire_on_commit': False}`配置 -`2023/09/01`
 
 - **1.5** `2023/05/01`
     - [C] 重构系统RBAC [权限管理](http://zhangyiheng.com/blog/articles/py_flaskz_admin.html#toc-rbac) 模块(sys_mgmt)

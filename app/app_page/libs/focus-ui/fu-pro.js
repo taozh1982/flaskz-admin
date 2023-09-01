@@ -1,4 +1,4 @@
-/*! Focus Pro v2.4.2 | http://www.focus-ui.com | 2023-07-20 */
+/*! Focus Pro v2.4.3rc1 | http://www.focus-ui.com | 2023-08-18 */
 (function(window, undefined ) {
 z.$.setSysDefault({
     //grid button render option
@@ -995,7 +995,6 @@ var $AjaxCRUD = {
      *        method: "请求方法,如果url中有mehtod则用url中的",
      *        success_notify: "成功以后是否提示",
      *        fail_notify: "失败以后是否提示",
-     *        loading: "是否有loading效果",
      *        loading: "是否有loading效果",
      *        loading_parent: "loading的父组件，如果不指定，默认为body",
      *        ajax_options:"设置header和其它ajax属性"
@@ -2055,6 +2054,7 @@ var $CRUDTablePage = {
         if (pageable) {
             this.gridPagination = grid.getPagination();
             this.pageConfig = grid.getPageConfig();
+            this.sortConfig = grid.getSortConfig();
         }
         return grid;
     },
@@ -2392,7 +2392,10 @@ var $CRUDTablePage = {
                 var data = result.data;
                 var count = null;
                 if (z.type.isObject(data)) {
-                    count = data.count || data.total;
+                    count = data.count;
+                    if (count == null) {//0||undefined = undefined
+                        count = data.total;
+                    }
                     if (data.data) {
                         data = data.data;
                     }

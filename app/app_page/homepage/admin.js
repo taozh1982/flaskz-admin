@@ -15,9 +15,15 @@ z.util.extendClass(NavTree, z.widget.Tree, z.util.mergeObject({
             if (this.get("update_hash") === true) {
                 window.location.hash = lastSelect.get("path");
             }
+            var name = lastSelect.get("name")
+            if (name && this.get("update_tile") === true) {
+                var rawTitles = document.title.split(" - ");
+                var rawTitle = rawTitles[1] || rawTitles[0]
+                document.title = name + "  - " + rawTitle;
+            }
             this.setCurrentDataContent(lastSelect);
             z.bom.setSessionStorage("selected_menu", {
-                name: lastSelect.get("name"),
+                name: name,
                 path: lastSelect.get("path")
             })
             if (this._lastSelect !== lastSelect) {
@@ -50,6 +56,7 @@ var Admin = {
             model_select: true,
             // cache_page:false,
             update_hash: true,
+            update_tile: true,
             content_container: z.dom.query(".content", ".body-main"),
             getLabel: function (data) {
                 return (data.get("font_icon") || "") + data.get("name");

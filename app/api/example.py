@@ -13,6 +13,7 @@ from ..modules.example import DepartmentModel, EmployeeModel, SimpleModel
 
 # 注册数据模型路由: http://zhangyiheng.com/blog/articles/py_flaskz_api.html#toc-model-route
 # API接口规范: http://zhangyiheng.com/blog/articles/dev_spec.html#toc-api
+
 register_model_route(api_bp, SimpleModel, 'ex-simples', 'ex-simples')
 register_model_route(api_bp, DepartmentModel, 'ex-departments', 'ex-departments')
 register_model_route(api_bp, EmployeeModel, 'ex-employees', 'ex-employees',
@@ -152,3 +153,31 @@ def employees_module_required():
 def employees_module_action_required():
     """module+action permission required"""
     return create_response(True, 'module+action required')
+
+
+# -------------------------------------------test-------------------------------------------
+@api_bp.route('/for-test/', methods=['POST'])
+def for_test():
+    return create_response(True, 'for-test')
+
+
+"""
+# test expire_on_commit
+@api_bp.route('/for-test-expire_on_commit/', methods=['POST'])
+def for_test_expire_on_commit():
+    from flaskz.models import get_db_session
+    # 先查询出来设备
+
+    session = get_db_session()
+    session.expire_on_commit = True
+    ax = list(DepartmentModel.query_all()[1])
+    SimpleModel.add_db({
+        'field_string': 'a33'
+    })
+    print(''.center(60, '-'))
+    for auth_item in ax:  # expire_on_commit==True-->SELECT
+        print(auth_item)
+    print(SimpleModel.query_all())
+
+    return create_response(True, 'for-test')
+"""
