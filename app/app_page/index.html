@@ -11,7 +11,11 @@
     <link rel="stylesheet" href="./homepage/admin.css">
     <script src="./homepage/admin.js"></script>
     <script src="./homepage/admin_pro.js"></script>
-
+    <style>
+        td .btn-link b{
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body class="fu-pro">
 <header>
@@ -91,13 +95,14 @@
             </div>
             <div class="body controls label-align-right">
                 <input type="hidden" ze-model="id" ze-model-type="integer">
+                <input type="hidden" ze-model="type">
                 <div class="grid-row">
                     <label class="grid-col-3-12 required">账号</label>
                     <div class="grid-col-8-12">
                         <input ze-model="username" disabled>
                     </div>
                 </div>
-                <div class="grid-row">
+                <div class="grid-row" ze-visible="[type]==='local'">
                     <label class="grid-col-3-12" for-ze-model="password">密码</label>
                     <div class="grid-col-8-12">
                         <input ze-model="password" autofocus>
@@ -106,7 +111,7 @@
                 <div class="grid-row">
                     <label class="grid-col-3-12 required" for-ze-model="email">Email</label>
                     <div class="grid-col-8-12">
-                        <input ze-model="email" v-rules="email">
+                        <input ze-model="email" v-rules="email" autofocus>
                     </div>
                 </div>
                 <div class="grid-row">

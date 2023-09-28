@@ -18,6 +18,7 @@ var AjaxUrl = {
         query: {url: "/api/v1.0/ex-employees/pss/", method: "POST"},
         add: "/api/v1.0/ex-employees/",
         delete: "/api/v1.0/ex-employees/[id]",
+        bulk_delete: {url: "/api/v1.0/ex-employees/bulk-delete/", method: "POST"},
         update: "/api/v1.0/ex-employees/"
     },
 

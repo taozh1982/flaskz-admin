@@ -68,6 +68,7 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
             ]
         }
     },
+
     renderDetail: function (td, data, attr) {
         var content = data.get(attr);
         if (content) {
@@ -82,23 +83,30 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
             if (content.length > 100) {
                 label = content.substring(0, 100) + "...";
             }
-            pro.GridUtil.appendRenderer(function () {
-                var btn = z.dom.create("button", z.getDefault("PRO_GRID_OPERATE_CLASS"));
-                btn.textContent = label;
-                btn.setAttribute("title", title);
-                btn.setAttribute("field", attr);
-                z.dom.event.onclick(btn, _this.showDetail, _this);
-                return btn;
-            }, td, data, attr)
+            var btn = pro.GridUtil.renderOperateButton(
+                null, data, attr, td, _this.showDetail, {
+                    attributes: {"title": this.decodeDetail(title), "field": attr},
+                    this: _this
+                }
+            )
+            btn.innerText = label;
         }
     },
     showDetail: function (evt) {
-        var target = evt.target;
+        var target = z.dom.event.getTarget(evt, 'button');
+        if (target == null) {
+            return;
+        }
         var field = target.getAttribute("field");
         this.showFormModal("view", {
             modal_title: field === "req_data" ? "请求数据" : "结果数据",
-            detail: evt.target.getAttribute("title")
+            detail: target.getAttribute("title")
         })
+    },
+    decodeDetail: function (str) {
+        return str.replace(/\\u([\d\w]{4})/gi, function (match, group) {
+            return String.fromCharCode(parseInt(group, 16));
+        });
     },
     getActionName: function (action) {
         this._actionNameMap = this._actionNameMap || pro.DataUtil.getArrayMap(this.action_selects, "value", "name");
@@ -109,9 +117,9 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
         pro.FormUtil.initSelectOptions("#actionSelect", this.action_selects);
     },
     initModel: function () {
-        AjaxCache.action_logs_modules.query(function (data) {
+        pro.AjaxCache.query('ajax_cache_action_logs_modules', {url: AjaxUrl.sys_action_log.modules}, function (data) {
             (data || []).forEach(function (item) {
-                item.module = data.name;
+                item.module = data.name;//for select
             });
             var modules = z.util.mergeArray([{name: "全部", module: ""}], data)
             var ext_modules = this.ext_modules || [];
@@ -121,25 +129,47 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
             z.dom.initSelectOptions("#moduleSelect", modules, {
                 value_field: "module"
             });
-        }, this);
+        }, this, function (result) {
+            var menus = result.data;
+            var levelMenus = pro.DataUtil.parseLevelData(menus);
+            menus.forEach(function (item) {
+                delete item.id;
+                delete item.parent_id;
+            });
+            return levelMenus;
+        });
+
         this.handleSearchChange();
     },
     initController: function () {
-        z.dom.event.onchange("#moduleSelect", this.handleSearchChange, this);
-        z.dom.event.onchange("#actionSelect", this.handleSearchChange, this);
-        z.dom.event.onchange("#resultSelect", this.handleSearchChange, this);
+        this.queryForm = z.form.Form(".module>.toolbar");
+        this.queryForm.onFormChange(this.handleSearchChange, this);
     },
     handleSearchChange: function () {
-        this.setSearchConfig({
-            module: z.dom.getValue("#moduleSelect"),
-            action: z.dom.getValue("#actionSelect"),
-            result: z.dom.getValue("#resultSelect")
-            /*  _ands: {
-                  created_at: {
-                      ">=": "'2020-02-28 16:00'",
-                      "<": "'2020-02-29'"
-                  }
-              }*/
-        });
+        var query_params = this.queryForm.getValue();
+        z.util.mergeObject(query_params, {
+            created_at: this._getQueryDateRange(query_params.created_at)
+        })
+        this.setSearchConfig(query_params);
+    },
+    _getQueryDateRange: function (date_range) {
+        var current = new Date();
+        switch (date_range) {
+            case "previous_24_hours":
+                current.setSeconds(0);
+                return {
+                    ">=": z.util.formatDate(new Date(current - 24 * 60 * 60 * 1000))
+                }
+            case "previous_7_days":
+                current.setHours(0, 0, 0, 0);
+                return {
+                    ">=": z.util.formatDate(new Date(current - 24 * 60 * 60 * 1000 * 6)) //include today
+                }
+            case "previous_30_days":
+                current.setHours(0, 0, 0, 0);
+                return {
+                    ">=": z.util.formatDate(new Date(current - 24 * 60 * 60 * 1000 * 29)) //include today
+                }
+        }
     }
 });

@@ -95,7 +95,10 @@ def employees_bulk_delete():
     req_log_data = json.dumps(request_json)
     success, result = True, None
     try:
-        EmployeeModel.bulk_delete(request_json)
+        items = request_json
+        if type(request_json) is dict:
+            items = request_json.get('ids') or request_json.get('id', [])
+        EmployeeModel.bulk_delete(items)
     except Exception as e:
         flaskz_logger.exception(e)
         success, result = False, res_status_codes.db_delete_err

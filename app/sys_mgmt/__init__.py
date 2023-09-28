@@ -35,6 +35,15 @@ def log_operation(module, action, result, req_data=None, res_data=None, descript
     if res_data is not None and not is_str(res_data):
         res_data = json.dumps(res_data)
 
+    if module == 'users' and (action == 'add' or action == 'update'):  # @2023-09-15 add, user mgmt
+        try:
+            if is_str(req_data):
+                req_data = json.loads(req_data)
+                req_data.pop('password', None)  # delete password
+                req_data = json.dumps(req_data)
+        except Exception:
+            pass
+
     props = _get_user_info()
     props.update({
         'module': _get_module_name(module),
@@ -44,6 +53,7 @@ def log_operation(module, action, result, req_data=None, res_data=None, descript
         'result': result,
         'description': description,
     })
+
     if 'username' not in props and action == 'login':  # login
         props['username'] = req_data
 

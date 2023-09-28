@@ -61,9 +61,7 @@ z.setDefault({
     PRO_MESSAGE_DELETE_CONFIRM: "<i class='fa fa-warning color-warning'></i> 确认删除?",
     PRO_MODAL_UPDATE_TITLE: "<i class='fa fa-edit'></i> 编辑",
     PRO_MODAL_ADD_TITLE: "<i class='fa fa-plus-square'></i> 添加",
-    PRO_MODAL_VIEW_TITLE: "<i class='fa fa-file-text-o'></i> 查看",
-
-                                                                    DATE_LOCAL_TIMEZONE_OFFSET:null
+    PRO_MODAL_VIEW_TITLE: "<i class='fa fa-file-text-o'></i> 查看"
 });
 
 //项目定制化
@@ -77,7 +75,9 @@ z.setDefault({
     // PRO_AJAX_NOTIFY_OPTIONS: {position: "bottom_right"},
 
     PRO_CRUDTABLEPAGE_MODAL_OPTIONS: {open_animation: "z-animation-fadeInLeft", close_animation: "z-animation-fadeOutRight"},
-    PRO_CRUDTABLEPAGE_NESTED_MODAL_OPTIONS: {open_animation: "z-animation-fadeInUp", close_animation: "z-animation-fadeOutDown"}
+    PRO_CRUDTABLEPAGE_NESTED_MODAL_OPTIONS: {open_animation: "z-animation-fadeInUp", close_animation: "z-animation-fadeOutDown"},
+
+    DATE_LOCAL_TIMEZONE_OFFSET:null
 });
 
 
@@ -101,6 +101,7 @@ var AjaxUrl = {
         query: {url: "/api/v1.0/ex-employees/pss/", method: "POST"},
         add: "/api/v1.0/ex-employees/",
         delete: "/api/v1.0/ex-employees/[id]",
+        bulk_delete: {url: "/api/v1.0/ex-employees/bulk-delete/", method: "POST"},
         update: "/api/v1.0/ex-employees/"
     },
 
@@ -134,45 +135,6 @@ var AjaxUrl = {
     }
 };
 
-
-/**
- * ajax数据缓存
- */
-var AjaxCache = {
-    action_logs_modules: {
-        _key: "flasky_ajax_cache_action_logs_modules",
-        query: function (callback, context) {
-            var key = AjaxCache.action_logs_modules._key;
-            var data = z.bom.getLocalStorage(key);
-            if (data) {
-                callback.apply(context, [data]);
-                return;
-            }
-            pro.AjaxCRUD.query({
-                url: AjaxUrl.sys_action_log.modules,
-                success_notify: false,
-                success: function (result) {
-                    var menus = result.data;
-                    menus.forEach(function (item) {
-                        if (item.module) {
-                            item.value = item.module;
-                        }
-                    });
-                    var levelMenus = pro.DataUtil.parseLevelData(menus);
-                    menus.forEach(function (item) {
-                        delete item.id;
-                        delete item.parent_id;
-                    });
-                    callback.apply(context, [levelMenus]);
-                    z.bom.setLocalStorage(key, levelMenus, 2880);
-                }
-            });
-        }
-    },
-    clear: function () {
-        z.bom.clearSessionStorage();
-    }
-};
 
 var refreshMenuByPath = function (paths) {
     var admin = window.top.Admin;

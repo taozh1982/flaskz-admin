@@ -1,4 +1,4 @@
-/*! Focus Pro v2.4.3rc1 | http://www.focus-ui.com | 2023-08-18 */
+/*! Focus Pro v2.4.3rc1 | http://www.focus-ui.com | 2023-09-13 */
 (function(window, undefined ) {
 z.$.setSysDefault({
     //grid button render option
@@ -121,13 +121,13 @@ z.setDefault({
 
     PRO_AJAX_UPLOAD_TIPS: "上传",
 
-    PRO_AJAX_TIMEOUT_TIPS: "超时",
+    PRO_AJAX_TIMEOUT_TIPS: "请求超时",
     PRO_AJAX_FORBIDDEN_TIPS: "禁止访问",
     PRO_AJAX_EXCEPTION_TIPS: "请求异常",
     PRO_AJAX_CLIENT_ERROR_TIPS: "请求错误",
     PRO_AJAX_SERVER_ERROR_TIPS: "服务器错误",
-    PRO_AJAX_SUCCESS_TIPS: "成功",
-    PRO_AJAX_FAIL_TIPS: "失败",
+    PRO_AJAX_SUCCESS_TIPS: "请求成功",
+    PRO_AJAX_FAIL_TIPS: "请求失败",
 
     PRO_MESSAGE_TIPS: "提示",
     PRO_MESSAGE_DELETE_CONFIRM: "确认删除?",
@@ -1005,6 +1005,9 @@ var $AjaxCRUD = {
      */
     ajax: function (options) {
         var tips = options.tips;
+        if (tips == null) {
+            tips = "";
+        }
         var loading = options.loading;
         if (loading !== false) {
             z.widget.loading(tips, options.loading_parent);
@@ -1095,6 +1098,7 @@ var $AjaxCRUD = {
         return z.util.mergeObject({}, defaultOptions, options)
     }
 };
+//多页面数据共享
 var $AjaxCache = {
     _ajaxQueryCBMap: {},
     query: function (cacheKey, ajaxOption, callback, thisArg, resultParser, cbArgsParser) {
@@ -1137,17 +1141,28 @@ var $AjaxCache = {
                         item.callback.apply(item.context, args);
                     }
                 });
-                delete  $AjaxCache._ajaxQueryCBMap[cacheKey];
+                delete $AjaxCache._ajaxQueryCBMap[cacheKey];
             }
         }, ajaxOption));
     },
-    clear: function (obj, args) {
+    clear: function (cacheKey, args) {
+        if (z.type.isString(cacheKey)) {
+            z.bom.removeSessionStorage(cacheKey);
+            return;
+        }
+        if (!z.type.isObject(cacheKey)) {
+            return;
+        }
         if (arguments.length === 1) {
-            z.bom.removeSessionStorage(function (key) {
-                return key.startsWith(obj._key)
-            })
+            if (cacheKey.hasOwnProperty("_key")) {
+                z.bom.removeSessionStorage(function (key) {
+                    return key.startsWith(cacheKey._key)
+                })
+            }
         } else {
-            z.bom.removeSessionStorage(obj._getKey(args));
+            if (z.type.isFunction(cacheKey._getKey)) {
+                z.bom.removeSessionStorage(cacheKey._getKey(args));
+            }
         }
     }
 };
@@ -2168,10 +2183,10 @@ var $CRUDTablePage = {
         this.showFormModal("view", data.getProperties());
     },
     handleClickDelete: function (data) {
-        this.handleModelDelete([data]);
+        this.handleModelDelete([data], true, false);
     },
     handleClickBatDelete: function () {
-        this.handleModelDelete(this.grid.getChecked());
+        this.handleModelDelete(this.grid.getChecked(), true, true);
     },
     handleSearchChange: function () {
         var like = z.dom.getValue(this.page_options.search_input).trim();
@@ -2303,7 +2318,7 @@ var $CRUDTablePage = {
     _onModelUpdate: function (value, resultData) {
         this.onModelChange("update", resultData);
     },
-    handleModelDelete: function (modelDataArr, confirm) {
+    handleModelDelete: function (modelDataArr, confirm, bat) {
         if (modelDataArr.length === 0) {
             return;
         }
@@ -2313,12 +2328,12 @@ var $CRUDTablePage = {
             modelDataArr.forEach(function (item) {
                 ids.push(item.get("id"));
             });
-            var delete_data = _this.getModelDeleteData(modelDataArr);
+            var delete_data = _this.getModelDeleteData(modelDataArr, bat);
             $AjaxCRUD.delete({
-                url: _this.getModalDeleteUrl(delete_data),//_this.page_options.url.delete || _this.page_options.url.remove,
+                url: _this.getModalDeleteUrl(delete_data, bat),//_this.page_options.url.delete || _this.page_options.url.remove,
                 url_params: {id: ids},
                 // variables: {id: ids},
-                data: _this.getModelDeleteData(modelDataArr),
+                data: delete_data,
                 success: function (result) {
                     _this.grid.removeData(modelDataArr);
                     _this._onModelDelete(modelDataArr);
@@ -2340,8 +2355,12 @@ var $CRUDTablePage = {
             });
         }
     },
-    getModalDeleteUrl: function (value) {
-        return this.page_options.url.delete || this.page_options.url.remove;
+    getModalDeleteUrl: function (value, bat) {
+        var url = null;
+        if (bat === true) {
+            url = this.page_options.url.bulk_delete || this.page_options.url.bulk_delete
+        }
+        return url || this.page_options.url.delete || this.page_options.url.remove;
     },
     _onModelDelete: function (modelDataArr) {
         this.setPageTotal(-modelDataArr.length);
@@ -2352,12 +2371,16 @@ var $CRUDTablePage = {
     /**
      * 删除操作可能要通过post实现，或附加其它信息(name)
      * @param dataArr
+     * @param bat
      */
-    getModelDeleteData: function (dataArr) {
+    getModelDeleteData: function (dataArr, bat) {
         var ids = [];
         dataArr.forEach(function (item) {
             ids.push(item.get("id"));
         });
+        if(bat){
+            return ids;
+        }
         return {
             id: ids
         }

@@ -1,7 +1,7 @@
 var FontIconMapping = {
     10000: "<i class='fa fa-server'></i>",
-    20000: "<i class='fa fa-ioxhost'></i>",
     10000: "<i class='fa fa-cubes'></i>",
+    20000: "<i class='fa fa-ioxhost'></i>",
     90000: "<i class='fa fa-gears'></i>",
     default_root_folder: "<i class='fa fa-file-text-o'></i>",
     default_folder: "",

@@ -225,7 +225,7 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
     username = Column(String(100), unique=True, nullable=False)  # account
     password_ = Column('password', String(255))  # hash password
     status = Column(String(100), default='enable')  # disable/enable
-    email = Column(String(100), nullable=False)
+    email = Column(String(100))  # @2023-09-18修改，nullable=False-->nullable=True, aaa用户email为空
     name = Column(String(100))  # full name
     phone = Column(String(100))
     role_id = Column(Integer, ForeignKey('sys_roles.id'), nullable=False)
@@ -265,6 +265,9 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
                 return False, res_status_codes.account_not_found
             if user.status != 'enable':
                 return False, res_status_codes.account_disabled
+            if user.password_ is None:  # @2023-09-18添加，密码不存在(aaa)
+                return False, res_status_codes.account_verify_err
+
             if check_password_hash(user.password_, password) is True:  # 移除password.strip()
                 return True, user
             else:

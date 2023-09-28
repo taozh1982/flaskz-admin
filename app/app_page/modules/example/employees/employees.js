@@ -9,6 +9,7 @@ var Employees = z.util.mergeObject(pro.template.CRUDTablePage, {
         grid_options: {
             pageable: true,
             columns: [
+                {type: "check", fixed: true, width: 60},
                 {
                     name: "部门", field: "department_id",
                     render: function (td, data) {

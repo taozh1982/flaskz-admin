@@ -19,16 +19,16 @@ from ..utils import get_app_license
 def sys_auth_login():
     """用户登录Session/Cookie"""
     request_json = request.json
-    success, result = SysUser.verify_password(request_json.get('username'), request_json.get('password'))
+    username, password, remember_me = request_json.get('username'), request_json.get('password'), request_json.get('remember_me')
+    success, result = SysUser.verify_password(username, password)
     res_data = None
     if success is False:
         res_data = model_to_dict(result)
     else:
-        login_user(result, remember=request_json.get('remember_me') is True)
+        login_user(result, remember=remember_me is True)
         SysUserOption.update_login(result.id)
-        # SysUser.update_db({'id': result.id, 'last_login_at': datetime.now(), '_update_updated_at': False})
-    log_operation('users', 'login', success, request_json.get('username'), None)
-    flaskz_logger.info(get_rest_log_msg('User login', {'username': request_json.get('username'), 'remember_me': request_json.get('remember_me')}, success, res_data))
+    log_operation('users', 'login', success, username, None)
+    flaskz_logger.info(get_rest_log_msg('User login', {'username': username, 'remember_me': remember_me}, success, res_data))
     return create_response(success, res_data)
 
 
@@ -44,16 +44,16 @@ def sys_auth_logout():
 def sys_auth_get_token():
     """获取Token"""
     request_json = request.json
-    success, result = SysUser.verify_password(request_json.get('username'), request_json.get('password'))
+    username, password = request_json.get('username'), request_json.get('password')
+    success, result = SysUser.verify_password(username, password)
     if success is False:
         res_data = model_to_dict(result)
     else:
         res_data = {'token': generate_token({'id': result.get_id()})}
         SysUserOption.update_login(result.id)
-        # SysUser.update({'id': result.id, 'last_login_at': datetime.now(), '_update_updated_at': False})
 
-    log_operation('users', 'login', success, request_json.get('username'), None)
-    flaskz_logger.info(get_rest_log_msg('User get login token', {'username': request_json.get('username')}, success, res_data))
+    log_operation('users', 'login', success, username, None)
+    flaskz_logger.info(get_rest_log_msg('User get login token', {'username': username}, success, res_data))
     return create_response(success, res_data)
 
 
@@ -150,7 +150,8 @@ register_model_route(sys_mgmt_bp, SysUser, 'users', 'users', multi_models={
         'model_cls': SysUser,
         'option': {
             'cascade': 1,
-            'exclude': ['role']
+            'exclude': ['role'],
+            'filter': lambda ins: ins.type == 'local'
         }
     },
     'roles': {

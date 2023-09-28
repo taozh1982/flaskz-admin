@@ -53,13 +53,16 @@ def init_app(app):
     main_bp.static_url_path = get_app_config('APP_PAGE_STATIC_STATIC_URL_PATH') or '/'
 
     # disable cache
-    @main_bp.after_request
-    def disable_header_cache_control(response):
-        """
-        Disable browser cache to fix 'Failed to load response data error'(Chrome)
-        """
-        response.headers['Cache-Control'] = 'no-cache, no-store'
-        return response
+    try:  # unittest--> AssertionError: The setup method 'after_request' can no longer be called on the blueprint 'main'
+        @main_bp.after_request
+        def disable_header_cache_control(response):
+            """
+            Disable browser cache to fix 'Failed to load response data error'(Chrome)
+            """
+            response.headers['Cache-Control'] = 'no-cache, no-store'
+            return response
+    except Exception:
+        pass
 
 
 def allowed_file(file):

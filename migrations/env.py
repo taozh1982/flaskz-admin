@@ -82,10 +82,12 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
+    echo = config.get_main_option("echo") == 'True'
     connectable = engine_from_config(
         config.get_section(config.config_ini_section),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        echo=echo
     )
 
     with connectable.connect() as connection:

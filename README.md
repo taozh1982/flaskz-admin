@@ -62,7 +62,7 @@ Flaskz-admin是基于 [Flaskz](https://pypi.org/project/flaskz/) 的管理系统
 - **migrations**: alembic数据库迁移目录，用于存放数据库迁移文件，按需使用
     - versions: 数据库迁移版本目录
 - **alembic.ini**: alembic配置文件
-- test: 单元测试目录
+- tests: 测试目录(单元测试/性能测试)
 - **admin_app.py**: 应用程序主入口
 - cli.py: 命令行工具，可用于数据初始化等`flask admin db help`
 - **config.py**: 系统配置(for 开发)
@@ -82,6 +82,14 @@ Email: taozh@cisco.com / taozh1982@gmail.com
     - [A] 添加`SysUserOption`表，用于存放用户选项(登录时间/登录次数/...) -`2023/07/20`
     - [F] 修复`Action Logs`模块前端页面过滤问题 -`2023/08/23`
     - [A] 添加`FLASKZ_DATABASE_SESSION_KWARGS = {'expire_on_commit': False}`配置 -`2023/09/01`
+    - [A] `app._ext.redis_ws`添加对redis哨兵模式的支持 -`2023/09/01`
+    - [A] `log_operation`对于用户添加/更新操作移除`password` -`2023/09/15`
+    - [C] `SysUser.email`移除`nullable=False`属性(for AAA) -`2023/09/18`
+    - [F] `SysUser.verify_password`方法添加`password`为None的逻辑判断 -`2023/09/18`
+    - [A] `app._ext`添加`auth`扩展，用于第三方授权认证，并添加`TACACS`授权认证实现 -`2023/09/20`
+    - [A] `alembic.inc`添加`echo`配置项，用于配置是否启用Alembic的echo功能 -`2023/09/21`
+    - [A] `config.py`和`config.ini` 添加`UnittestConfig`配置项，用于单元测试 -`2023/09/27`
+    - [A] `tests`添加`perf`和`unit`测试项，用于性能和单元测试 -`2023/09/27`
 
 - **1.5** `2023/05/01`
     - [C] 重构系统RBAC [权限管理](http://zhangyiheng.com/blog/articles/py_flaskz_admin.html#toc-rbac) 模块(sys_mgmt)

@@ -25,6 +25,13 @@
             overflow: hidden;
         }
 
+        .toolbar label {
+            margin: 0;
+        }
+
+        .toolbar label:not(:first-child) {
+            margin-left: .3em;
+        }
     </style>
     <script src="./action_log.js"></script>
 </head>
@@ -32,29 +39,29 @@
 <div class="module">
     <div class="toolbar controls">
         <label class="col-form-label">模块:</label>
-        <select id="moduleSelect"></select>
+        <select id="moduleSelect" ze-model="module"></select>
 
         <label class="col-form-label">操作:</label>
-        <select id="actionSelect"> </select>
+        <select id="actionSelect" ze-model="action"> </select>
 
         <label class="col-form-label">操作结果:</label>
-        <select id="resultSelect">
+        <select id="resultSelect" ze-model="result">
             <option value="">全部</option>
             <option value="success">成功</option>
             <option value="fail">失败</option>
         </select>
 
-        <!--<<label class="col-form-label">时间:</label>
-        select id="dateRangeSelect">
-            <option></option>
-            <option value="previous_24_hours">过去24小时</option>
-            <option value="previous_7_days">过去7天</option>
-            <option value="previous_30_days">过去30天</option>
-            <option disabled="true">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</option>
+        <label class="col-form-label">时间:</label>
+        <select id="dateRangeSelect" ze-model="created_at">
+            <option value="">全部</option>
+            <option value="previous_24_hours">最近24小时</option>
+            <option value="previous_7_days">最近7天</option>
+            <option value="previous_30_days">最近30天</option>
+            <!--<option disabled="true">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</option>
             <option value="previous_month">上个月</option>
             <option value="previous_2_months">上2个月</option>
-            <option value="previous_3_months">上3个月</option>
-        </select>-->
+            <option value="previous_3_months">上3个月</option>-->
+        </select>
     </div>
     <div id="gridDiv" class="content"></div>
 

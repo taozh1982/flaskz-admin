@@ -1,4 +1,10 @@
 var User = z.util.mergeObject(pro.template.CRUDTablePage, {
+    user_types: [
+        {name: "Local", value: "local"},
+        {name: "TACACS+", value: "tacacs+"},
+        {name: "RADIUS", value: "radius"},
+        {name: "LDAP", value: "ldap"}
+    ],
     page_options: {
         url: AjaxUrl.sys_user,
         grid_options: {
@@ -6,7 +12,7 @@ var User = z.util.mergeObject(pro.template.CRUDTablePage, {
                 {name: "账号", field: "username"},
                 // {name: "账号类型", field: "type"},
                 {
-                    name: "状态", field: "status", filter: false,
+                    name: "状态", field: "status", filter: false, width: 100,
                     render: function (td, data) {
                         pro.GridUtil.renderResult(td, data, {
                             key: "status",
@@ -30,6 +36,12 @@ var User = z.util.mergeObject(pro.template.CRUDTablePage, {
                     }
                 },
                 {
+                    name: "类型", field: "type", width: 100,
+                    render: function (td, data) {
+                        td.innerHTML = User.getTypeLabel(data.get("type")) || "";
+                    }
+                },
+                {
                     name: "用户角色", field: "role_id",
                     render: function (td, data) {
                         td.innerHTML = User.getRoleName(data.get("role_id")) || "";
@@ -38,7 +50,6 @@ var User = z.util.mergeObject(pro.template.CRUDTablePage, {
                 {name: "Email", field: "email"},
                 {name: "姓名", field: "name"},
                 {name: "电话", field: "phone"},
-                {name: "备注", field: "description", minimizable: true},
                 /*{
                     name: "上次登录时间", field: "last_login_at", minimizable: true, minimized: true, render: function (td, data) {
                         td.innerHTML = pro.TimeUtil.format(data.get("last_login_at"));
@@ -64,6 +75,7 @@ var User = z.util.mergeObject(pro.template.CRUDTablePage, {
                         td.innerHTML = pro.TimeUtil.format(data.get("created_at"));
                     }
                 },
+                {name: "备注", field: "description", minimizable: true},
                 {
                     name: "操作", width: 130, sortable: false, filter: false,
                     visible: pro.AccessControl.hasUpdatePermission(),
@@ -73,6 +85,10 @@ var User = z.util.mergeObject(pro.template.CRUDTablePage, {
                 }
             ]
         }
+    },
+    getTypeLabel: function (type) {
+        this._typeLabelMap = this._typeLabelMap || pro.DataUtil.getArrayMap(this.user_types, "value", "name");
+        return this._typeLabelMap[type] || type;
     }
 }, {
     init: function () {
