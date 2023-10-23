@@ -5,6 +5,7 @@ from flaskz.utils import init_app_config
 from config import config
 from . import sys_mgmt, main, api, sys_init
 from .sys_mgmt import auth
+from ._ext.swagger import init_swagger
 
 
 def create_app(config_name):
@@ -40,6 +41,7 @@ def create_app(config_name):
     app.register_blueprint(api.api_bp, url_prefix='/api/v1.0')
     app.register_blueprint(sys_mgmt.sys_mgmt_bp, url_prefix='/sys-mgmt')
 
+    init_swagger(app)  # 初始化swagger
     # 其他
     # from ._ext.redis_ws import init_websocket
     # init_websocket(app)
