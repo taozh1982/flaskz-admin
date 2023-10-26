@@ -19,3 +19,9 @@
    auth_tacacs_auth_fail = 'aaa_tacacs_auth_fail', 'TACACS认证失败'
    ```
 4. 替换登录API `[POST] http://{{server}}/sys-mgmt/auth/aaa/`
+
+## 授权过程
+
+1. authenticate: 验证账号/密码
+2. authorize: 获取角色
+3. 创建/更新本地账号(tacacs)

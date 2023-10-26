@@ -72,7 +72,7 @@ def update_auth_user(username, role, user_type):
     if not role:
         return False, status_codes.auth_local_role_not_found  # 没有对应的角色
     else:
-        user = SysUser.query_by({'name': username}, True)
+        user = SysUser.query_by({'username': username}, True)
         if not user:  # 没有用户-->添加
             user = SysUser.add_db({'type': user_type, 'username': username, 'role_id': role.id})
         else:  # 已有用户-->更新role

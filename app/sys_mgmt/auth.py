@@ -1,7 +1,8 @@
-# 1>session
-# 2>cookie
-# 3>header token
-
+"""
+1.Session/Cookie
+2.JWT/JWS Bear Token
+3.Basic Auth
+"""
 from flask import current_app
 from flask_login import current_user
 from flaskz.auth import TimedJSONWebSignatureSerializer as Serializer
@@ -23,6 +24,9 @@ def _load_user_by_token(request):
     """Token"""
     token = request.headers.get(get_app_config('APP_TOKEN_AUTHORIZATION'))
     if token:
+        if token.startswith('Bearer '):  # @2023-09-28添加对以"Bearer "开头token的处理
+            token = token[7:]
+        # token = token.replace('Bearer ', '', 1)
         result = verify_token(token)
         if result is not False:
             return SysUser.query_by_pk(result.get('id'))

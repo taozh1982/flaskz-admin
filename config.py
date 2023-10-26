@@ -114,6 +114,7 @@ class TestConfig(Config):
     SEND_FILE_MAX_AGE_DEFAULT = 0  # no cache
     FLASKZ_LOGGER_FILENAME = 'syslog.txt'
     FLASKZ_DATABASE_URI = os.environ.get('FLASKZ_TEST_DATABASE_URI') or 'mysql+pymysql://root:Cisco123@10.124.4.69:3306/flaskz-admin'
+    FLASKZ_DATABASE_ENGINE_KWARGS = {'isolation_level': 'READ COMMITTED'}  # for mysql
 
 
 class ProductionConfig(Config):
@@ -124,6 +125,7 @@ class ProductionConfig(Config):
     SECRET_KEY = os.environ.get('APP_SECRET_KEY') or 'hard to guess string'
     FLASKZ_LOGGER_FILENAME = 'syslog.txt'
     FLASKZ_DATABASE_URI = os.environ.get('FLASKZ_PRO_DATABASE_URI') or 'mysql+pymysql://{username}:{password}@{url}:{port}/{db}'
+    FLASKZ_DATABASE_ENGINE_KWARGS = {'isolation_level': 'READ COMMITTED'}  # for mysql
 
 
 update_config_from_file()

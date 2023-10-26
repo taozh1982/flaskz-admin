@@ -126,8 +126,8 @@ var AjaxUrl = {
         modules: "/sys-mgmt/modules/"
     },
     sys_auth: {
-        login: {url: "/sys-mgmt/auth/login/", method: "POST"},
-        // login: {url: "/sys-mgmt/auth/token/", method: "POST"},
+        // login: {url: "/sys-mgmt/auth/login/", method: "POST"},
+        login: {url: "/sys-mgmt/auth/token/", method: "POST"},
         logout: {url: "/sys-mgmt/auth/logout/", method: "GET"},
 
         query: "/sys-mgmt/auth/account/",

@@ -40,9 +40,8 @@ def create_app(config_name):
     app.register_blueprint(api.api_bp, url_prefix='/api/v1.0')
     app.register_blueprint(sys_mgmt.sys_mgmt_bp, url_prefix='/sys-mgmt')
 
-    # 其他
-    # from ._ext.redis_ws import init_websocket
-    # init_websocket(app)
+    _init_optional(app)
+
     return app
 
 
@@ -87,3 +86,15 @@ def _init_license(app):
     # license_manager.request_check(license.request_check_by_license)  # 请求时License检查函数(可自定义)
     # license_manager.init_app(app)  # 启用License功能
     pass
+
+
+def _init_optional(app):
+    pass
+    # 其他
+    # -websocket
+    # from ._ext.redis_ws import init_websocket
+    # init_websocket(app)
+
+    # -swagger
+    # from ._ext.swagger import init_swagger
+    # init_swagger(app)

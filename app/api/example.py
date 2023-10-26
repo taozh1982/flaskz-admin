@@ -130,7 +130,6 @@ def employees_bulk_update():
 
 # -------------------------------------------permission-------------------------------------------
 # http://zhangyiheng.com/blog/articles/py_flaskz_api.html#toc-mgmt
-
 @api_bp.route('/ex-employees/public', methods=['GET'])
 def employees_public():
     """public API"""
@@ -159,10 +158,28 @@ def employees_module_action_required():
 
 
 # -------------------------------------------test-------------------------------------------
-@api_bp.route('/for-test/', methods=['POST'])
+@api_bp.route('/for-test/', methods=['GET', 'POST'])
 def for_test():
+
     return create_response(True, 'for-test')
 
+
+"""
+# test refresh & isolation_level
+@api_bp.route('/for-test-session_cache/', methods=['GET'])
+def for_test_session_cache():
+    from flaskz.models import get_db_session
+    from time import sleep
+    session = get_db_session()
+    item = SimpleModel.query_by({'field_string': 'Item-1'}, True)
+    print(item)
+    sleep(20)
+    # session.rollback()
+    session.refresh(item)
+    # item = SimpleModel.query_by({'field_string': 'Item-1'}, True)
+    print(item)
+    return create_response(True, 'for-test')
+"""
 
 """
 # test expire_on_commit
@@ -172,6 +189,7 @@ def for_test_expire_on_commit():
     # 先查询出来设备
 
     session = get_db_session()
+    session.expire_all()
     session.expire_on_commit = True
     ax = list(DepartmentModel.query_all()[1])
     SimpleModel.add_db({

@@ -90,6 +90,7 @@ Email: taozh@cisco.com / taozh1982@gmail.com
     - [A] `alembic.inc`添加`echo`配置项，用于配置是否启用Alembic的echo功能 -`2023/09/21`
     - [A] `config.py`和`config.ini` 添加`UnittestConfig`配置项，用于单元测试 -`2023/09/27`
     - [A] `tests`添加`perf`和`unit`测试项，用于性能和单元测试 -`2023/09/27`
+    - [A] `app._ext`添加`swagger`扩展，用于生成Swagger文档 -`2023/10/26`
 
 - **1.5** `2023/05/01`
     - [C] 重构系统RBAC [权限管理](http://zhangyiheng.com/blog/articles/py_flaskz_admin.html#toc-rbac) 模块(sys_mgmt)
