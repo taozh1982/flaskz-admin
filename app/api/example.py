@@ -160,9 +160,16 @@ def employees_module_action_required():
 # -------------------------------------------test-------------------------------------------
 @api_bp.route('/for-test/', methods=['GET', 'POST'])
 def for_test():
-
     return create_response(True, 'for-test')
 
+
+"""
+# test publish websocket message
+@api_bp.route('/for-test-ws-msg/', methods=['GET', 'POST'])
+def for_test_ws_msg():
+    publish_message('hello')
+    return create_response(True, 'for-test-ws-msg')
+"""
 
 """
 # test refresh & isolation_level

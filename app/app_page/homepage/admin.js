@@ -106,7 +106,11 @@ var Admin = {
         if (!selected_menu) {
             selected_menu = z.bom.getSessionStorage("selected_menu");
             if (selected_menu) {
-                selected_menu = this.tree.findData(selected_menu);
+                if (z.type.isString(selected_menu)) {
+                    selected_menu = this.tree.findData({'path': selected_menu})
+                } else {
+                    selected_menu = this.tree.findData(selected_menu);
+                }
             }
         }
         this.tree.setSelect(selected_menu || firstPathData);

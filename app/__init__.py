@@ -90,11 +90,16 @@ def _init_license(app):
 
 def _init_optional(app):
     pass
-    # 其他
-    # -websocket
-    # from ._ext.redis_ws import init_websocket
-    # init_websocket(app)
+    # 可选
 
+    """
+    # -websocket
+    from ._ext.redis_ws import init_websocket
+    init_websocket(app)
+    """
+
+    """
     # -swagger
-    # from ._ext.swagger import init_swagger
-    # init_swagger(app)
+    from ._ext.swagger import init_swagger
+    init_swagger(app)
+    """

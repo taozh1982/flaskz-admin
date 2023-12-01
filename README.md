@@ -75,6 +75,10 @@ Email: taozh@cisco.com / taozh1982@gmail.com
 
 ## 版本
 
+- **2.0.0** `2023/12/01`
+    - [A] `app._ext.redis_ws`添加对Redis哨兵模式url的支持
+    - [A] 添加Token刷新功能，APP_REFRESH_TOKEN_EXPIRES_IN配置项用于设置refresh token的有效时间
+
 - **1.6** `2023/06/16`
     - [F] 修复`app._ext.redis_ws.init_websocket`函数中app_config设置问题 -`2023/07/10`
     - [A] `alembic.inc`添加`ignore_tables`配置项，用于配置不需要alembic维护的table列表 -`2023/07/10`

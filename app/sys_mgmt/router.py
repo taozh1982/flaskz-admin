@@ -2,6 +2,7 @@ import json
 
 from flask import request, abort
 from flask_login import login_user, logout_user, current_user
+from flaskz import res_status_codes
 from flaskz.log import flaskz_logger, get_log_data
 from flaskz.models import model_to_dict, query_all_models
 from flaskz.rest import get_rest_log_msg, rest_login_required, rest_permission_required, register_model_route, register_model_query_pss_route, register_model_query_route, \
@@ -9,8 +10,9 @@ from flaskz.rest import get_rest_log_msg, rest_login_required, rest_permission_r
 from flaskz.utils import create_response, get_wrap_str, find_list, get_dict_mapping, get_app_config
 
 from . import sys_mgmt_bp, log_operation
-from .auth import generate_token
+from .auth import verify_refresh_token, generate_token
 from .model import SysUser, SysRole, SysModule, SysRoleModule, SysActionLog, SysUserOption
+from ..sys_init.status_codes import refresh_token_err
 from ..utils import get_app_license
 
 
@@ -43,18 +45,52 @@ def sys_auth_logout():
 @sys_mgmt_bp.route('/auth/token/', methods=['POST'])
 def sys_auth_get_token():
     """获取Token"""
+    # grant_type
     request_json = request.json
     username, password = request_json.get('username'), request_json.get('password')
     success, result = SysUser.verify_password(username, password)
     if success is False:
         res_data = model_to_dict(result)
     else:
-        res_data = {'token': generate_token({'id': result.get_id()})}
+        res_data = generate_token({'id': result.get_id()})
         SysUserOption.update_login(result.id)
 
     log_operation('users', 'login', success, username, None)
     flaskz_logger.info(get_rest_log_msg('User get login token', {'username': username}, success, res_data))
     return create_response(success, res_data)
+
+
+@sys_mgmt_bp.route('/auth/token/refresh/', methods=['POST'])
+def sys_auth_token_refresh():
+    """刷新Token"""
+    request_json = request.json
+    req_log_data = json.dumps(request_json)
+    refresh_token = request_json.get('refresh_token')
+    refresh_token_payload = verify_refresh_token(refresh_token)
+    username = None
+    success = False
+    if refresh_token_payload is False:
+        res_data = refresh_token_err
+    else:
+        user_id = refresh_token_payload.get('id')
+        user = SysUser.query_by_pk(user_id)
+        if user:
+            success = True
+            username = user.username
+            res_data = generate_token({'id': user_id})
+            SysUserOption.update_login(user_id)
+        else:
+            res_data = res_status_codes.account_not_found
+
+    log_operation('users', 'login', success, req_log_data, None)
+    flaskz_logger.info(get_rest_log_msg('User refresh login token', {'username': username}, success, res_data))
+    return create_response(success, res_data)
+
+
+@sys_mgmt_bp.route('/auth/keep-alive/', methods=['GET', 'POST'])
+def sys_auth_keep_alive():
+    """前端保持登录"""
+    return create_response(True, None)
 
 
 @sys_mgmt_bp.route('/auth/account/', methods=['GET', 'POST'])
@@ -129,9 +165,14 @@ def sys_auth_account_update():
     """更新账号信息(非管理员)"""
     request_json = request.json
     req_log_data = json.dumps(request_json)
-
+    # role不可修改
     if 'role_id' in request_json:
         del request_json['role_id']
+    # password为空==不修改
+    password = request_json.get('password')
+    if type(password) is not str or password.strip() == '':
+        del request_json['password']
+
     result = SysUser.update(request_json)
     res_data = model_to_dict(result[1])
     if result[0] is True:

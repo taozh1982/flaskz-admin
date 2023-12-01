@@ -1,6 +1,7 @@
 """
 Flask >= 2.3版本，需要修改main/__init__.py: @main_bp.after_request --> @app.after_request
 """
+import inspect
 import unittest
 from datetime import datetime
 
@@ -10,6 +11,7 @@ from sqlalchemy.exc import IntegrityError, InvalidRequestError
 
 from app import create_app
 from app.modules.example import SimpleModel
+from tests.unit import print_test
 
 
 class ModelMixinCRUDCase(unittest.TestCase):
@@ -17,12 +19,12 @@ class ModelMixinCRUDCase(unittest.TestCase):
 
     def setUp(self) -> None:
         self.app = create_app('unittest')
-        # self.app_context = self.app.app_context()  # 测试flask.g session缓存
-        # self.app_context.push()
+        self.app_context = self.app.app_context()  # 测试flask.g session缓存
+        self.app_context.push()
 
     def tearDown(self) -> None:
         SimpleModel.clear_db()
-        # self.app_context.pop()
+        self.app_context.pop()
         pass
 
     # ----------------------------------add----------------------------------
@@ -30,7 +32,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         """
         添加数据测试
         """
-        print('test_add'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         # 1. add成功 --> True, instance
         field_string = 'test_' + str(datetime.now())
         result, instance = SimpleModel.add({
@@ -53,7 +55,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         """
         添加数据检查测试
         """
-        print('test_check_add'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         result, instance = self._add_test_ins()
         # 1. 检查成功 --> True
         check_ok = SimpleModel.check_add_data({'field_string': 'abc'})
@@ -73,7 +75,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         批量添加数据测试
         原子操作，不会有部分成功/部分失败的情况
         """
-        print('test_bulk_add'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         # 1. 添加成功
         items = []
         for i in range(100):
@@ -93,7 +95,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         """
         删除数据测试
         """
-        print('test_delete'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         result, instance = self._add_test_ins()
 
         # 1. 删除成功 --> True, instance
@@ -112,7 +114,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         """
         批量删除数据测试
         """
-        print('test_bulk_delete'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         self._bulk_add_test_ins(10)
         # 1. 删除成功 --> count
         items = SimpleModel.query_all()[1]
@@ -129,7 +131,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         """
         删除数据检查测试
         """
-        print('test_check_delete'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         result, instance = self._add_test_ins()
         # 1. 检查成功 --> True
         check_ok = SimpleModel.check_delete_data(instance.id)
@@ -146,7 +148,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         """
         更新数据测试
         """
-        print('test_update'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         result, instance = self._add_test_ins()
         # 1. 更新成功 --> True,instance
         ins_dict = instance.to_dict()
@@ -167,7 +169,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         """
         更新数据检查测试
         """
-        print('test_check_update'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         result, instance = self._add_test_ins()
         result, instance1 = self._add_test_ins()
         # 1. 数据检查成功 --> True
@@ -194,7 +196,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         批量更新数据测试
         原子操作不会有部分成功，部分失败的情况
         """
-        print('test_bulk_update'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         self._bulk_add_test_ins(10)
         # 1. 更新成功
         items = SimpleModel.query_all()[1]
@@ -219,7 +221,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         """
         全量查询测试
         """
-        print('test_query_all'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         self._bulk_add_test_ins(100)
         self.assertEqual(len(SimpleModel.query_all()[1]), 100)
 
@@ -227,7 +229,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         """
         条件查询测试
         """
-        print('test_query_by'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         result, instance = self._add_test_ins({'field_integer': 30})
         # 1. 返回一个数据
         query_ins = SimpleModel.query_by({'field_integer': 30}, True)
@@ -248,7 +250,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         """
         pk查询测试
         """
-        print('test_query_by_pk'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         result, instance = self._add_test_ins()
         # 1. 查询成功
         query_ins = SimpleModel.query_by_pk(instance.id)
@@ -261,7 +263,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         """
         unique查询测试
         """
-        print('test_query_by_unique_key'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         result, instance = self._add_test_ins()
         ins = SimpleModel.query_by_unique_key({'field_string': instance.field_string})
         # 1. 查询成功
@@ -274,7 +276,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         """
         分页+排序+查询测试
         """
-        print('test_query_pss'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         self._bulk_add_test_ins(100)
         # 1. 分页+排序+查询
         result, pss_result = SimpleModel.query_pss(parse_pss(SimpleModel, {
@@ -302,7 +304,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         """
         count查询测试
         """
-        print('test_count'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         self._bulk_add_test_ins(10)
         self._bulk_add_test_ins(10, 30)
         # 1. 全量count

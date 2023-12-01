@@ -12,7 +12,12 @@ def get_all_cases():
     return suite
 
 
+def print_test(method, test_ins):
+    class_name = test_ins.__class__.__name__
+    print((class_name + '.' + method).center(100, '-'))
+
+
 if __name__ == '__main__':
     # 运行测试用例
     runner = unittest.TextTestRunner()
-    print(runner.run(get_all_cases()))
+    runner.run(get_all_cases())

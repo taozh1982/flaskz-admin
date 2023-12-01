@@ -3,7 +3,6 @@
 2.JWT/JWS Bear Token
 3.Basic Auth
 """
-from flask import current_app
 from flask_login import current_user
 from flaskz.auth import TimedJSONWebSignatureSerializer as Serializer
 from flaskz.utils import get_app_config
@@ -11,6 +10,7 @@ from itsdangerous.exc import SignatureExpired
 from werkzeug.exceptions import abort
 
 
+# ------------------------------load user------------------------------
 def load_user_by_id(user_id):
     """Session/Cookie"""
     return SysUser.query_by_pk(user_id)
@@ -29,6 +29,9 @@ def _load_user_by_token(request):
         # token = token.replace('Bearer ', '', 1)
         result = verify_token(token)
         if result is not False:
+            token_type = result.get('type')
+            if token_type == 'refresh':
+                return None
             return SysUser.query_by_pk(result.get('id'))
     return None
 
@@ -46,19 +49,11 @@ def _load_user_by_basic_auth(request):  # @2023-05-09 添加Basic Auth认证
     return None
 
 
-def generate_token(content, secrete_key=None, expires_in=None):
-    app_config = current_app.config
-    secrete_key = secrete_key if secrete_key is not None else app_config.get('SECRET_KEY')
-    expires_in = expires_in if expires_in is not None else app_config.get('APP_TOKEN_EXPIRES_IN')
-    s = Serializer(secrete_key, expires_in=expires_in)
-    return s.dumps(content).decode('utf-8')
-
-
+# ------------------------------jwt token------------------------------
 def verify_token(token, secrete_key=None):
     if token is None:
         return False
-    app_config = current_app.config
-    secrete_key = secrete_key if secrete_key is not None else app_config.get('SECRET_KEY')
+    secrete_key = secrete_key if secrete_key is not None else get_app_config('SECRET_KEY')
     s = Serializer(secrete_key)
     try:
         token_payload = s.loads(token)
@@ -69,19 +64,43 @@ def verify_token(token, secrete_key=None):
     return token_payload
 
 
-# def login_required():
-#     def decorate(func):
-#         @wraps(func)
-#         def wrapper(*args, **kwargs):
-#             if _check_login() is False:
-#                 return abort(401, response='forbidden')
-#             return func(*args, **kwargs)
-#
-#         return wrapper
-#
-#     return decorate
+def verify_refresh_token(token, secrete_key=None):
+    result = verify_token(token, secrete_key)
+    if type(result) is dict and result.get('type') == 'refresh':
+        return result
+    return False
 
 
+def generate_token(obj, include_refresh_token=True):
+    obj = obj.copy()
+    obj['type'] = 'access'
+    result = {'token': _generate_token(obj, expires_in=get_app_config('APP_TOKEN_EXPIRES_IN'))}
+
+    refresh_expires_in = get_app_config('APP_REFRESH_TOKEN_EXPIRES_IN')
+    if type(refresh_expires_in) is int and refresh_expires_in > 0:
+        refresh_obj = None
+        if type(include_refresh_token) is dict:
+            refresh_obj = include_refresh_token
+        elif include_refresh_token is True:
+            if 'id' in obj:
+                refresh_obj = {'id': obj.get('id')}
+            else:
+                refresh_obj = obj
+            refresh_obj['type'] = 'refresh'
+        if refresh_obj:
+            result['refresh_token'] = _generate_token(refresh_obj, expires_in=refresh_expires_in)
+
+    return result
+
+
+def _generate_token(obj, expires_in, secrete_key=None):
+    secrete_key = secrete_key if secrete_key is not None else get_app_config('SECRET_KEY')
+    # expires_in = expires_in if expires_in is not None else app_config.get('APP_TOKEN_EXPIRES_IN')
+    s = Serializer(secrete_key, expires_in=expires_in)
+    return s.dumps(obj).decode('utf-8')
+
+
+# ------------------------------check------------------------------
 def login_check():
     if _check_login() is False:
         return abort(401, response='unauthorized')
@@ -95,21 +114,6 @@ def permission_check(module, action=None):
         if _check_permission(module, action) is False:
             return abort(403, response='forbidden')
     return True
-
-
-# def permission_required(module, op_permission=None):
-#     def decorate(func):
-#         @wraps(func)
-#         def wrapper(*args, **kwargs):
-#             if _check_login() is False:
-#                 return abort(401, response='forbidden')
-#             if _check_permission(module, op_permission) is False:
-#                 return abort(403, response='unauthorized')
-#             return func(*args, **kwargs)
-#
-#         return wrapper
-#
-#     return decorate
 
 
 def _check_login():

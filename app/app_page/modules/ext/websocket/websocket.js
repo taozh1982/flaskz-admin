@@ -19,6 +19,11 @@ var EXWebsocket = {
 
         var _this = this;
         var ws = this.ws = new WebSocket(url);
+        /**
+         * url示例:
+         * ws://127.0.0.1:3667  //默认channel(ws:channel)
+         * ws://127.0.0.1:3667/abc  //指定channel
+         */
         ws.onopen = function () {
             _this.appendMsg("open websocket:" + url)
         }
@@ -36,7 +41,7 @@ var EXWebsocket = {
     appendMsg: function (msg) {
         var msgPre = z.dom.query("#msgPre");
         var time = pro.TimeUtil.format(new Date());
-        z.dom.setValue(msgPre, "["+time+"]-"+msg + "<br>" + z.dom.getValue(msgPre));
+        z.dom.setValue(msgPre, "[" + time + "]-" + msg + "<br>" + z.dom.getValue(msgPre));
         msgPre.scrollTop = 0;
     }
 }

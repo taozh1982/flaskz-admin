@@ -48,6 +48,8 @@ class Config:
     APP_TOKEN_AUTHORIZATION = 'Authorization'
     # 采用token管理用户登录时，token的过期时间
     APP_TOKEN_EXPIRES_IN = int(timedelta(hours=16).total_seconds())
+    # 采用token管理用户登录时，refresh token的过期时间，如果<0则不生成refresh token
+    APP_REFRESH_TOKEN_EXPIRES_IN = int(timedelta(days=7).total_seconds())
     # 静态文件目录(前端页面)
     APP_PAGE_STATIC_FOLDER = './app/app_page/'
     APP_PAGE_STATIC_STATIC_URL_PATH = '/'

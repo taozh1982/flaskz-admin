@@ -154,6 +154,10 @@ z.setDefault({
                 try {
                     var result = JSON.parse(httpRequest.responseText);
                     if (result.status !== z.getDefault("PRO_AJAX_SUCCESS_STATE") && result.status_code === 'uri_unauthorized') {
+                        var hash = z.bom.getLocationHash()
+                        if (hash) {
+                            z.bom.setSessionStorage('selected_menu', hash);
+                        }
                         var pathname = window.location.pathname;
                         if (pathname === "/" || pathname === "/index" || pathname === "index") {
                             window.top.location.href = "/login";

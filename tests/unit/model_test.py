@@ -1,9 +1,11 @@
 """
 Flask >= 2.3版本，需要修改main/__init__.py: @main_bp.after_request --> @app.after_request
 """
+import inspect
 import unittest
 
 from app.modules.example import SimpleModel, DepartmentModel
+from tests.unit import print_test
 
 
 class ModelMixinCase(unittest.TestCase):
@@ -13,7 +15,7 @@ class ModelMixinCase(unittest.TestCase):
         """
         模型类方法测试
         """
-        print('test_model_method'.center(100, '-'))
+        print_test(inspect.currentframe().f_code.co_name, self)
         self.assertEqual(SimpleModel.get_class_name(), 'SimpleModel')
         self.assertEqual(len(SimpleModel.get_columns()), 7)
         self.assertListEqual(SimpleModel.get_columns_fields(), ['id', 'field_string', 'field_integer', 'field_float', 'field_boolean', 'field_text', 'field_datetime'])

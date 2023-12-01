@@ -89,7 +89,7 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
                     this: _this
                 }
             )
-            btn.innerText = label;
+            btn.textContent = label;
         }
     },
     showDetail: function (evt) {

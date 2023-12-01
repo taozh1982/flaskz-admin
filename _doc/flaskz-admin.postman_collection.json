@@ -186,7 +186,8 @@
 									"script": {
 										"exec": [
 											"var jsonData = JSON.parse(responseBody);",
-											"pm.collectionVariables.set(\"flaskz_auth_token\",jsonData['data']['token']);"
+											"pm.collectionVariables.set(\"flaskz_auth_token\",jsonData['data']['token']);",
+											"pm.collectionVariables.set(\"flaskz_auth_refresh_token\",jsonData['data']['refresh_token']);"
 										],
 										"type": "text/javascript"
 									}
@@ -229,6 +230,58 @@
 							"response": []
 						},
 						{
+							"name": "refresh_token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"pm.collectionVariables.set(\"flaskz_auth_token\",jsonData['data']['token']);",
+											"pm.collectionVariables.set(\"flaskz_auth_refresh_token\",jsonData['data']['refresh_token']);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"refresh_token\":\"{{flaskz_auth_refresh_token}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/auth/token/refresh/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys-mgmt",
+										"auth",
+										"token",
+										"refresh",
+										""
+									]
+								},
+								"description": "get auth token"
+							},
+							"response": []
+						},
+						{
 							"name": "login",
 							"request": {
 								"method": "POST",
@@ -263,6 +316,28 @@
 									]
 								},
 								"description": "use session&cookie to login"
+							},
+							"response": []
+						},
+						{
+							"name": "keep-alive",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/auth/keep-alive/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys-mgmt",
+										"auth",
+										"keep-alive",
+										""
+									]
+								},
+								"description": "logout session&cookie"
 							},
 							"response": []
 						},
@@ -578,7 +653,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/sys-mgmt/users/multi",
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/users/multi/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
@@ -586,7 +661,8 @@
 									"path": [
 										"sys-mgmt",
 										"users",
-										"multi"
+										"multi",
+										""
 									]
 								},
 								"description": "query user&role list"
@@ -622,7 +698,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\"name\":\"test\",\n\"default\": false,\n\"description\": null,\n\n\"menus\": [\n  {\n    \"menu_id\": 901,\n    \"op_permissions\": [\"update\"]\n  },\n  {\n    \"menu_id\": 902,\n    \"op_permissions\": [\"update\"]\n  }\n]\n}",
+									"raw": "{\n    \"name\": \"test\",\n    \"description\": \"for test\",\n    \"modules\": [\n        {\n            \"module_id\": 10100, //模块\n            \"actions\": [ //操作权限\n                \"update\"\n            ]\n        },\n        {\n            \"module_id\": 10200,\n            \"actions\": [] //只读权限\n        },\n        {\n            \"module_id\": 10300,\n            \"actions\": [\n                \"update\"\n            ]\n        },\n        {\n            \"module_id\": 20100,\n            \"actions\": [\n                \"update\"\n            ]\n        },\n        {\n            \"module_id\": 20200,\n            \"actions\": [\n                \"update\"\n            ]\n        },\n        {\n            \"module_id\": 20300,\n            \"actions\": [\n                \"update\"\n            ]\n        },\n        {\n            \"module_id\": 20400,\n            \"actions\": [\n                \"update\"\n            ]\n        },\n        {\n            \"module_id\": 90100,\n            \"actions\": [\n                \"update\"\n            ]\n        },\n        {\n            \"module_id\": 90200,\n            \"actions\": [\n                \"update\"\n            ]\n        },\n        {\n            \"module_id\": 90300,\n            \"actions\": [\n                \"update\"\n            ]\n        },\n        {\n            \"module_id\": 90400,\n            \"actions\": [\n                \"update\"\n            ]\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -700,7 +776,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n\t\"default\": false,\r\n\t\"description\": null,\r\n\t\"id\": 2,\r\n\t\"menus\": [\r\n\t  {\r\n\t    \"menu_id\": 901,\r\n\t    \"op_permissions\": [\"update\"]\r\n\t  }\r\n\t],\r\n\t\"name\": \"test-x\"\r\n}",
+									"raw": "{\r\n    \"id\": 2,\r\n    \"modules\": [\r\n        {\r\n            \"module_id\": 10100,\r\n            \"actions\": []\r\n        },\r\n        {\r\n            \"module_id\": 10200,\r\n            \"actions\": []\r\n        },\r\n        {\r\n            \"module_id\": 10300,\r\n            \"actions\": []\r\n        },\r\n        {\r\n            \"module_id\": 20100,\r\n            \"actions\": [\r\n                \"update\"\r\n            ]\r\n        },\r\n        {\r\n            \"module_id\": 20200,\r\n            \"actions\": [\r\n                \"update\"\r\n            ]\r\n        },\r\n        {\r\n            \"module_id\": 20300,\r\n            \"actions\": [\r\n                \"update\"\r\n            ]\r\n        },\r\n        {\r\n            \"module_id\": 20400,\r\n            \"actions\": [\r\n                \"update\"\r\n            ]\r\n        },\r\n        {\r\n            \"module_id\": 90100,\r\n            \"actions\": [\r\n                \"update\"\r\n            ]\r\n        },\r\n        {\r\n            \"module_id\": 90200,\r\n            \"actions\": [\r\n                \"update\"\r\n            ]\r\n        },\r\n        {\r\n            \"module_id\": 90300,\r\n            \"actions\": [\r\n                \"update\"\r\n            ]\r\n        },\r\n        {\r\n            \"module_id\": 90400,\r\n            \"actions\": [\r\n                \"update\"\r\n            ]\r\n        }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1034,7 +1110,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"field_string\": \"Item-{{global_counter}}\",\n     \"field_integer\":{{global_counter}},\n     \"field_float\":1.0,\n     \"field_boolean\":true,\n     \"field_text\":\"for test\",\n    \"field_datetime\": \"2023-07-19T12:00\"\n}",
+									"raw": "{\n    \"field_string\": \"Item-{{global_counter}}\",\n     \"field_integer\":{{global_counter}},\n     \"field_float\":1.0,\n     \"field_boolean\":true,\n     \"field_text\":\"for test\",\n    \"field_datetime\": \"2023-07-20T18:00\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1767,7 +1843,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    //查询\r\n    \"search\": {\r\n        //模糊查询\r\n        \"like\": \"t\", // name like '%t%' OR description like '%t%',\r\n        \"like\": \"t%\", // name like 't%' OR description like 't%'\r\n        \"like\": \"%t\", // name like '%t' OR description like '%t'\r\n        \"like\": \"%' and id=1 and email like 't2\", // sql注入(结果为空)\r\n        //精确查询\r\n        \"name\": \"T1\", // name == T1\r\n        \"email\": \"t1@focus-ui.com\", // email == t1@focus-ui.com\r\n        \"email\": { // age BETWEEN 10 AND 20\r\n            \"like\": \"%emp1\"\r\n        },\r\n        //比较&条件\r\n        \"updated_at\": { // updated_at >= 2022-01-01 00:00:00\" AND updated_at <  2023-01-01 00:00:00\r\n            \">=\": \"2022-01-01 00:00:00\",\r\n            \"<\": \"2023-01-01 00:00:00\"\r\n        },\r\n        \"age\": { // age BETWEEN 10 AND 20\r\n            \"between\": [\r\n                10,\r\n                20\r\n            ]\r\n        }\r\n        // //高级or查询\r\n        // \"_ors\": { // email = t1@focus-ui.com OR email = t1@flaskz.com\r\n        //     \"email\": \"t1@focus-ui.com||t1@flaskz.com\"\r\n        // },\r\n        // //高级and查询\r\n        // \"_ands\": { // age >10 AND age<20\r\n        //     \"age\": {\r\n        //         \">\": 10,\r\n        //         \"<\": 20\r\n        //     }\r\n        // }\r\n    },\r\n    //排序\r\n    \"sort\": \"name\", // ORDER BY name ASC\r\n    \"sort\": { // ORDER BY name DESC\r\n        \"field\": \"name\",\r\n        \"order\": \"desc\"\r\n    },\r\n    \"sort\": [ // ORDER BY name ASC, age DESC\r\n        {\r\n            \"field\": \"name\",\r\n            \"order\": \"asc\" // asc/desc\r\n        },\r\n        {\r\n            \"field\": \"age\",\r\n            \"order\": \"desc\" // asc/desc\r\n        }\r\n    ],\r\n    //分页\r\n    \"page\": { // LIMIT ? OFFSET ? (20, 0)\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    },\r\n    //分组\r\n    \"group\": \"email\" //GROUP BY email\r\n}",
+											"raw": "{\r\n    //查询\r\n    \"search\": {\r\n        //模糊查询\r\n        \"like\": \"t\", // name like '%t%' OR description like '%t%',\r\n        \"like\": \"t%\", // name like 't%' OR description like 't%'\r\n        \"like\": \"%t\", // name like '%t' OR description like '%t'\r\n        \"like\": \"%' and id=1 and email like 't2\", // sql注入(结果为空)\r\n        //精确查询\r\n        \"name\": \"T1\", // name == T1\r\n        \"name\": {\r\n            \"==\": \"\" //name=‘’，默认会过滤掉空字符串“ ”\r\n        },\r\n        \"email\": \"t1@focus-ui.com\", // email == t1@focus-ui.com\r\n        \"email\": { // email like '%t%'\r\n            \"like\": \"t1\"\r\n        },\r\n        //比较&条件\r\n        \"updated_at\": { // updated_at >= 2022-01-01 00:00:00\" AND updated_at <  2023-01-01 00:00:00\r\n            \">=\": \"2022-01-01 00:00:00\",\r\n            \"<\": \"2023-01-01 00:00:00\"\r\n        },\r\n        \"age\": { // age BETWEEN 10 AND 20\r\n            \"between\": [\r\n                10,\r\n                20\r\n            ]\r\n        },\r\n        \"city\": { // city IN ('Paris','London')\r\n            \"in\": [\r\n                \"Paris\",\r\n                \"London\"\r\n            ]\r\n        }\r\n        // //高级or查询\r\n        // \"_ors\": { // email = t1@focus-ui.com OR email = t1@flaskz.com\r\n        //     \"email\": \"t1@focus-ui.com||t1@flaskz.com\"\r\n        // },\r\n        // \"_ors\": {\r\n        //     \"email\": {\r\n        //         \"in\": [\r\n        //             \"t1@focus-ui.com\",\r\n        //             \"t1@flaskz.com\"\r\n        //         ]\r\n        //     },\r\n        //     \"age\": {\r\n        //         \"between\": [\r\n        //             10,\r\n        //             20\r\n        //         ]\r\n        //     }\r\n        // }\r\n        // //高级and查询\r\n        // \"_ands\": { // age >10 AND age<20\r\n        //     \"age\": {\r\n        //         \">\": 10,\r\n        //         \"<\": 20\r\n        //     }\r\n        // }\r\n    },\r\n    //排序\r\n    \"sort\": \"name\", // ORDER BY name ASC\r\n    \"sort\": { // ORDER BY name DESC\r\n        \"field\": \"name\",\r\n        \"order\": \"desc\"\r\n    },\r\n    \"sort\": [ // ORDER BY name ASC, age DESC\r\n        {\r\n            \"field\": \"name\",\r\n            \"order\": \"asc\" // asc/desc\r\n        },\r\n        {\r\n            \"field\": \"age\",\r\n            \"order\": \"desc\" // asc/desc\r\n        }\r\n    ],\r\n    //分页\r\n    \"page\": { // LIMIT ? OFFSET ? (20, 0)\r\n        \"offset\": 0,\r\n        \"size\": 20\r\n    },\r\n    //分组\r\n    \"group\": \"email\" //GROUP BY email\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1927,7 +2003,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "[\n    {\n        \"name\": \"Emp-b{{global_counter}}-1\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-1@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-1\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-2\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-2@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-2\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-3\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-3@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-3\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-4\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-4@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-4\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-5\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-5@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-5\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-6\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-6@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-6\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-7\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-7@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-7\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-8\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-8@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-8\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-9\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-9@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-9\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-10\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-10@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-10\"\n    }\n]",
+									"raw": "[\n    {\n        \"name\": \"Emp-b{{global_counter}}-1\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-1@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-1\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-2\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-2@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-2\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-3\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-3@focus-ui.com\",\n        \"department_id\": 1,\n        \"description\": \"Employee,b{{global_counter}}-3\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-4\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-4@focus-ui.com\",\n        \"department_id\": 2,\n        \"description\": \"Employee,b{{global_counter}}-4\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-5\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-5@focus-ui.com\",\n        \"department_id\": 2,\n        \"description\": \"Employee,b{{global_counter}}-5\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-6\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-6@focus-ui.com\",\n        \"department_id\": 3,\n        \"description\": \"Employee,b{{global_counter}}-6\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-7\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-7@focus-ui.com\",\n        \"department_id\": 3,\n        \"description\": \"Employee,b{{global_counter}}-7\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-8\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-8@focus-ui.com\",\n        \"department_id\": 4,\n        \"description\": \"Employee,b{{global_counter}}-8\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-9\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-9@focus-ui.com\",\n        \"department_id\": 4,\n        \"description\": \"Employee,b{{global_counter}}-9\"\n    },\n    {\n        \"name\": \"Emp-b{{global_counter}}-10\",\n        \"age\": 18,\n        \"email\": \"Emp-b{{global_counter}}-10@focus-ui.com\",\n        \"department_id\": 5,\n        \"description\": \"Employee,b{{global_counter}}-10\"\n    }\n]",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2383,6 +2459,53 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "for-test",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/for-test/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"for-test",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
@@ -2508,6 +2631,14 @@
 		{
 			"key": "flaskz_server_url",
 			"value": "127.0.0.1:666"
+		},
+		{
+			"key": "global_counter",
+			"value": ""
+		},
+		{
+			"key": "flaskz_auth_refresh_token",
+			"value": ""
 		}
 	]
 }
