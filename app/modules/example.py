@@ -48,6 +48,7 @@ class DepartmentModel(ModelBase, ModelMixin, AutoModelMixin):
     description = Column(String(255))
     created_at = Column(DateTime(), default=datetime.now)  # 自动生成
     updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)  # 自动生成&自动更新
+    like_columns = ['name', description]  # field/Column -模糊查询列
 
 
 class EmployeeModel(ModelBase, ModelMixin):

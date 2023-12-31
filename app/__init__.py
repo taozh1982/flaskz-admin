@@ -80,11 +80,17 @@ def _init_license(app):
     License菜单path: APP_LICENSE_MENU_PATH = 'licenses' # 参考sys_mgmt/router.sys_auth_account_query()
     *在sys_mgmt.router中导入license路由from .license import router，否则alembic不能发现License模型类*
     """
-    # from .sys_mgmt import license
-    # license_manager = license.LicenseManager()
-    # license_manager.load_license(license.load_license)  # License加载函数(可自定义)
-    # license_manager.request_check(license.request_check_by_license)  # 请求时License检查函数(可自定义)
-    # license_manager.init_app(app)  # 启用License功能
+    """
+    from .sys_mgmt import license
+    license_manager = license.LicenseManager()
+    license_manager.load_license(license.load_license)  # License加载函数(可自定义)
+    license_manager.request_check(license.request_check_by_license)  # 请求时License检查函数(可自定义)
+    license_manager.init_app(app)  # 启用License功能
+    app_license = license_manager.get_license()
+    if app_license:
+        app_license.pop('Signature', None)
+    log.flaskz_logger.info('License = %s' % app_license)
+    """
     pass
 
 

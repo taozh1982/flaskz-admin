@@ -4,9 +4,9 @@ Flask-Login             # for user login management
 alembic                 # for database migration
 
 ## Install following packages as required
-# pycryptodome          # RSA&AES encryption，for license management
 # pymysql               # mysql driver
-# websockets            # websocket
 # redisz                # redisz
-# flask-cors            # for cross domain
+# pycryptodome          # RSA&AES encryption，for license management
+# websockets            # websocket
 # flasgger              # swagger
+# flask-cors            # for cross domain

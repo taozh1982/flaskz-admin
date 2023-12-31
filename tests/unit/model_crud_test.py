@@ -8,9 +8,10 @@ from datetime import datetime
 from flaskz import res_status_codes
 from flaskz.models import parse_pss
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
+from sqlalchemy.orm.exc import StaleDataError
 
 from app import create_app
-from app.modules.example import SimpleModel
+from app.modules.example import SimpleModel, DepartmentModel, EmployeeModel
 from tests.unit import print_test
 
 
@@ -19,12 +20,12 @@ class ModelMixinCRUDCase(unittest.TestCase):
 
     def setUp(self) -> None:
         self.app = create_app('unittest')
-        self.app_context = self.app.app_context()  # 测试flask.g session缓存
-        self.app_context.push()
+        # self.app_context = self.app.app_context()  # 测试flask.g session缓存
+        # self.app_context.push()
 
     def tearDown(self) -> None:
         SimpleModel.clear_db()
-        self.app_context.pop()
+        # self.app_context.pop()
         pass
 
     # ----------------------------------add----------------------------------
@@ -213,7 +214,7 @@ class ModelMixinCRUDCase(unittest.TestCase):
         # 3. 更新失败
         update_items[-1].pop('id', None)
         update_items[-2]['field_integer'] = 60
-        with self.assertRaises(InvalidRequestError):
+        with self.assertRaises((InvalidRequestError, StaleDataError)):  # 不同版本Error不同
             SimpleModel.bulk_update(update_items)
 
     # ----------------------------------query----------------------------------
@@ -299,6 +300,57 @@ class ModelMixinCRUDCase(unittest.TestCase):
         self.assertEqual(pss_result.get('count'), 100)
         # 3. 当前查询结果数据个数
         self.assertEqual(len(pss_result.get('data')), 10)
+
+    def test_query_pss_relation(self):
+        """
+        relation排序+查询测试
+        """
+        print_test(inspect.currentframe().f_code.co_name, self)
+
+        dept_items = []
+        for i in range(10):
+            dept_items.append({
+                'name': 'dept_' + str(i),
+                'description': 'dept_' + str(i) + "_" + str(datetime.now())
+            })
+        DepartmentModel.bulk_add(dept_items)
+        emp_items = []
+        for i in range(100):
+            emp_items.append({
+                'name': 'test_' + str(i),
+                'age': i + 1,
+                'email': 'test_' + str(i) + "@focus-ui.com",
+                'department_id': i // 10 + 1,
+            })
+        EmployeeModel.bulk_add(emp_items)
+
+        # 1. 分页+排序+查询
+        result, pss_result = EmployeeModel.query_pss(parse_pss(EmployeeModel, {
+            "search": {
+                "department.name": {
+                    'in': ['dept_0', 'dept_1', 'dept_2']
+                }
+            },
+            "sort": {
+                "field": "department.id",
+                "order": "desc"
+            },
+            "page": {
+                "offset": 0,
+                "size": 20
+            }
+        }))
+        self.assertIs(result, True)
+        self.assertIsInstance(pss_result, dict)
+        # 2. 查询结果总数
+        self.assertEqual(pss_result.get('count'), 30)
+        # 3. 当前查询结果数据个数
+        data = pss_result.get('data')
+        self.assertEqual(len(data), 20)
+        self.assertTrue(data[0].department_id > data[-1].department_id)
+
+        EmployeeModel.clear_db()
+        DepartmentModel.clear_db()
 
     def test_count(self):
         """

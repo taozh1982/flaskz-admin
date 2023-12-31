@@ -291,6 +291,9 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
     def check_update_data(cls, data):
         if data.get('status') == 'disable' and (current_user and current_user.id == int(data.get('id'))):  # 不能禁用当前用户
             return res_status_codes.db_data_in_use
+        password = data.get('password')
+        if type(password) is not str or password.strip() == '':  # password为空==不修改
+            del data['password']
         return super().check_update_data(data)
 
     # @classmethod

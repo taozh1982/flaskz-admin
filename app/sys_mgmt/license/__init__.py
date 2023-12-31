@@ -137,11 +137,14 @@ class LicenseManager:
             self._current_license = self._load()
             self._last_load_time = now
 
-        if self._current_license:
+        current_license = None
+        if type(self._current_license) is dict:
             if field is not None:
                 return self._current_license.get(field)
+            else:
+                current_license = dict(self._current_license)  # 避免被修改
 
-        return self._current_license
+        return current_license
 
     def request_check(self, _request_check):
         self._request_check = _request_check
@@ -181,12 +184,12 @@ if __name__ == '__main__':
         public_key = f.read()
 
 
-    def load_license():
+    def load_licensex():
         with open("license.dat", "r") as f:
             return f.read()
 
 
     license_manager = LicenseManager()
     license_manager.set_public_key(public_key)
-    license_manager.load_license(load_license)
+    license_manager.load_license(load_licensex)
     print(license_manager.get_license())

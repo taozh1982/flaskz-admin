@@ -6,7 +6,7 @@ from flaskz import res_status_codes
 from flaskz.log import flaskz_logger, get_log_data
 from flaskz.models import model_to_dict
 from flaskz.rest import get_rest_log_msg, rest_permission_required
-from flaskz.utils import create_response, get_app_config
+from flaskz.utils import create_response, get_app_config, pop_dict_keys
 
 from . import SysLicense
 from .util import parse_license
@@ -49,9 +49,22 @@ def sys_license_upload():
                     res_data = model_to_dict(res_data)
             else:
                 success, res_data = False, status_codes.file_format_not_allowed
-    log_operation('licenses', 'add', success, license_txt, get_log_data(res_data))
+
+    license_req_data = None
+    if license_txt:
+        license_txt_list = license_txt.split("Signature=")
+        license_req_data = license_txt_list[0].strip()
+        if len(license_txt_list) > 1:
+            license_req_data = license_req_data + '\nSignature=...'
+
+    license_res_data = res_data
+    if success is True:
+        license_res_data = dict(res_data)
+        pop_dict_keys(license_res_data, ['Signature', 'license', 'license_hash'])
+
+    log_operation('licenses', 'add', success, license_req_data, get_log_data(license_res_data))
     flaskz_logger.info(get_rest_log_msg('Upload license', license_txt, success, res_data))
-    return create_response(success, res_data)
+    return create_response(success, license_res_data)
 
 
 @sys_mgmt_bp.route('/licenses/', methods=['GET'])
@@ -64,9 +77,10 @@ def sys_license_query():
 
     current_license = get_app_license()
     for data in res_data:
-        signature = data.pop('Signature')
+        signature = data.get('Signature')
         if current_license and signature == current_license.get('Signature'):
             data['in_use'] = True
+        pop_dict_keys(data, ['Signature', 'license', 'license_hash'])
 
     flaskz_logger.debug(get_rest_log_msg('Query license', None, success, res_data))
     return create_response(success, res_data)

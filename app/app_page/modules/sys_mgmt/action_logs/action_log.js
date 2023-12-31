@@ -77,6 +77,7 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
                 title = JSON.stringify(JSON.parse(content), null, "  ")
             } catch (e) {
                 title = content;
+                // title = title.replace(/[\\]+n/g, "\n").replace(/[\\]+/g, "");
             }
             var label = content;
             var _this = this;
@@ -117,7 +118,7 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
         pro.FormUtil.initSelectOptions("#actionSelect", this.action_selects);
     },
     initModel: function () {
-        pro.AjaxCache.query('ajax_cache_action_logs_modules', {url: AjaxUrl.sys_action_log.modules}, function (data) {
+        pro.AjaxCache.query('ajax_cache_action_logs_modules', {url: AjaxUrl.sys_action_log.modules, success_notify: false}, function (data) {
             (data || []).forEach(function (item) {
                 item.module = data.name;//for select
             });

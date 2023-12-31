@@ -1,6 +1,6 @@
 # yang patch demo
 
-from .. import NSOApply
+from .. import NCSApply
 
 
 def _get_condition_obj(key, value, items):
@@ -12,13 +12,13 @@ def _get_condition_obj(key, value, items):
     return obj
 
 
-class SRPolicyNSOApply(NSOApply):
+class SRPolicyNCSApply(NCSApply):
     """
     Policy配置下发
     """
 
     @classmethod
-    def to_nso_data(cls, value, op_type):
+    def to_ncs_data(cls, value, op_type):
         if op_type == 'delete':
             return value
 
@@ -127,8 +127,8 @@ class SRPolicyNSOApply(NSOApply):
         }
 
     @classmethod
-    def to_nso_patch_data(cls, value, op_type):
-        data_list = [super().to_nso_patch_data(value, op_type)]
+    def to_ncs_patch_data(cls, value, op_type):
+        data_list = [super().to_ncs_patch_data(value, op_type)]
         candidate_paths = value.get('candidate_paths', [])
         for path in candidate_paths:
             if path.get('type') == 'explicit':
@@ -136,7 +136,7 @@ class SRPolicyNSOApply(NSOApply):
                 for seg in explicit_segment_lists:
                     if seg.get('new') is True:
                         seg['device_name'] = value.get('device_name')
-                        data_list.append(SRSegmentListNSOApply.to_nso_patch_data(seg, 'add'))
+                        data_list.append(SRSegmentListNCSApply.to_ncs_patch_data(seg, 'add'))
         return data_list
 
     @classmethod
@@ -148,13 +148,13 @@ class SRPolicyNSOApply(NSOApply):
         return 'srte:sr-policy'
 
 
-class SRSegmentListNSOApply(NSOApply):
+class SRSegmentListNCSApply(NCSApply):
     """
     Segment List配置下发
     """
 
     @classmethod
-    def to_nso_data(cls, value, op_type):
+    def to_ncs_data(cls, value, op_type):
         if op_type == 'delete':
             return value
 

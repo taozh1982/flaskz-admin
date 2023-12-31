@@ -3,12 +3,11 @@ import unittest
 
 from flaskz.ext.ssh import ssh_run_command, ssh_run_command_list, ssh_session
 from paramiko.ssh_exception import AuthenticationException, SSHException
-
 from tests.unit import print_test
 
 cisco_nxos_connect_kwargs = {'hostname': '10.124.206.26', 'username': 'admin', 'password': 'Admin@123'}
 cisco_ios_xe_connect_kwargs = {'hostname': '10.75.37.165', 'username': 'admin', 'password': 'Cisco123', 'secondary_password': 'Cisco123',
-                               'recv_endswith': ['# ', '$ ', ': ', '? ', '#', '>']}
+                               'recv_endswith': ['# ', '$ ', ': ', '? ', '#', '>'], 'recv_start_delay': 0.15}
 linux_connect_kwargs = {'hostname': '10.124.5.155', 'username': 'cisco', 'password': 'Cisco@123', 'secondary_password': 'Cisco@123'}
 
 
@@ -27,7 +26,7 @@ class SSHCase(unittest.TestCase):
         self.assertTrue(success)
         self.assertTrue(self._is_command_invalid(result))
 
-        success, result = ssh_run_command(cisco_nxos_connect_kwargs, ['show version', 'show clock'])
+        success, result = ssh_run_command(cisco_nxos_connect_kwargs, ['terminal length 0', 'show version', 'show clock', 'exit'])
         self.assertTrue(success)
         self.assertIsInstance(result, list)
 

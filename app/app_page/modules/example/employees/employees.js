@@ -63,7 +63,7 @@ var Employees = z.util.mergeObject(pro.template.CRUDTablePage, {
             z.dom.setAttribute(btn, 'data-dept-id', department_id);
             z.dom.setValue(btn, department_name);
             if (this._department_tree_select_type === "search") {
-                this.handleSearchChange(department_id);
+                this.handleDepartmentSearchChange(department_id);
             }
         }, this);
     },
@@ -87,7 +87,7 @@ var Employees = z.util.mergeObject(pro.template.CRUDTablePage, {
             }
             mutationsList.forEach(function (mutation) {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'data-dept-id') {
-                    z.form.Validator.validate("#modalDiv");
+                    z.form.Validator.validate(z.dom.query("#selectDepartmentBtn").parentNode);
                 }
             })
         }).observe(selectDepartmentBtn, {attributes: true, childList: false, subtree: false});
@@ -126,8 +126,8 @@ var Employees = z.util.mergeObject(pro.template.CRUDTablePage, {
                 this.initDepartmentSelect(departments);
             },
             context: this
-        })
-        this.handleSearchChange();
+        });
+        this.queryData();
     },
     initDepartmentSelect: function (departments) {
         var department_map = this.department_map;
@@ -160,7 +160,7 @@ var Employees = z.util.mergeObject(pro.template.CRUDTablePage, {
             class: "popover-select-dropdown nav-tree light"
         });
     },
-    handleSearchChange: function (department_id) {
+    handleDepartmentSearchChange: function (department_id) {
         var department_ids = [];
         department_id = department_id | 0;
         if (department_id !== 0) {

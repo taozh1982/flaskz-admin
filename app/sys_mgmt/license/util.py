@@ -112,7 +112,7 @@ def parse_license(public_key, license_txt):
     """
     try:
         kv_map = _parse_kv_text(license_txt)
-        ciphertext = kv_map.pop('Signature')
+        ciphertext = kv_map.pop('Signature', '')
         cipher_obj = parse_ciphertext(ciphertext)
 
         sign_txt = _gen_kv_text(kv_map, True)

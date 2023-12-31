@@ -82,7 +82,9 @@ def sys_auth_token_refresh():
         else:
             res_data = res_status_codes.account_not_found
 
-    log_operation('users', 'login', success, req_log_data, None)
+    log_operation('users', 'login', success, req_log_data, log_data={
+        'username': username
+    })
     flaskz_logger.info(get_rest_log_msg('User refresh login token', {'username': username}, success, res_data))
     return create_response(success, res_data)
 
@@ -168,10 +170,6 @@ def sys_auth_account_update():
     # role不可修改
     if 'role_id' in request_json:
         del request_json['role_id']
-    # password为空==不修改
-    password = request_json.get('password')
-    if type(password) is not str or password.strip() == '':
-        del request_json['password']
 
     result = SysUser.update(request_json)
     res_data = model_to_dict(result[1])

@@ -7,8 +7,8 @@ from flaskz.models import ModelMixin, ModelBase
 from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
 from sqlalchemy.orm import relationship
 
-from .apply.device_apply import DeviceNSOApply, AuthGroupNSOApply
-from .model import ModelNSOMixin
+from .apply.device_apply import DeviceNCSApply, AuthGroupNCSApply
+from .model import ModelNCSMixin
 
 
 class DeviceVendor(ModelBase, ModelMixin):
@@ -41,7 +41,7 @@ class DeviceNed(ModelBase, ModelMixin):
     oper_name = Column(String(255))  # oper ned name
 
 
-class DeviceAuth(ModelBase, ModelNSOMixin, ModelMixin):
+class DeviceAuth(ModelBase, ModelNCSMixin, ModelMixin):
     """授权组"""
     __tablename__ = 'device_auths'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -64,11 +64,11 @@ class DeviceAuth(ModelBase, ModelNSOMixin, ModelMixin):
         return result
 
     @classmethod
-    def get_nso_apply(cls):  # 指定NSOApply
-        return AuthGroupNSOApply
+    def get_ncs_apply(cls):  # 指定NCSApply
+        return AuthGroupNCSApply
 
 
-class Device(ModelBase, ModelNSOMixin, ModelMixin):  # 继承ModelNSOMixin以添加NSO调用功能
+class Device(ModelBase, ModelNCSMixin, ModelMixin):  # 继承ModelNCSMixin以添加NCS调用功能
     """设备"""
     __tablename__ = 'device_devices'
     # ---------------------------------------管理信息---------------------------------------
@@ -90,7 +90,7 @@ class Device(ModelBase, ModelNSOMixin, ModelMixin):  # 继承ModelNSOMixin以添
     vendor = relationship(DeviceVendor, uselist=False, lazy='joined')
 
     @classmethod
-    def get_nso_data(cls, json_data, op_type):  # 返回设备纳管所需参数
+    def get_ncs_data(cls, json_data, op_type):  # 返回设备纳管所需参数
         auth = DeviceAuth.query_by_pk(json_data.get('auth_id'))
         if auth is None:
             return None
@@ -103,8 +103,8 @@ class Device(ModelBase, ModelNSOMixin, ModelMixin):  # 继承ModelNSOMixin以添
         return json_data
 
     @classmethod
-    def get_nso_apply(cls):  # 指定NSOApply
-        return DeviceNSOApply
+    def get_ncs_apply(cls):  # 指定NCSApply
+        return DeviceNCSApply
 
     @classmethod
     def before_add(cls, json_data, preview=False):

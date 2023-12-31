@@ -1,4 +1,4 @@
-/*! Focus Pro v2.4.3rc1 | http://www.focus-ui.com | 2023-09-13 */
+/*! Focus Pro v2.5.0rc1 | http://www.focus-ui.com | 2023-12-29 */
 (function(window, undefined ) {
 z.$.setSysDefault({
     //grid button render option
@@ -49,6 +49,8 @@ z.$.setSysDefault({
     PRO_AJAX_UPLOAD_METHOD: "POST",
     PRO_AJAX_DOWNLOAD_TIPS: "Download",
     PRO_AJAX_NOTIFY_OPTIONS: {},
+    PRO_AJAX_SUCCESS_NOTIFY_OPTIONS: {},
+    PRO_AJAX_FAIL_NOTIFY_OPTIONS: {},
 
     //DataTime format
     PRO_TIME_FORMAT: "%Y-%m-%d %H:%M:%S",
@@ -1061,7 +1063,7 @@ var $AjaxCRUD = {
                 }
                 if (options.success_notify !== false) {
                     z.widget.notify(tips + z.getDefault("PRO_AJAX_SUCCESS_TIPS"), z.util.mergeObject(
-                        {type: "success", duration: 1000}, z.getDefault("PRO_AJAX_NOTIFY_OPTIONS")));
+                        {type: "success", duration: 1000}, z.getDefault("PRO_AJAX_NOTIFY_OPTIONS"), z.getDefault("PRO_AJAX_SUCCESS_NOTIFY_OPTIONS")));
                 }
                 if (options.success) {
                     options.success.apply(options.context, [result, httpRequest]);
@@ -1070,7 +1072,7 @@ var $AjaxCRUD = {
         }, options.ajax_options));
     },
     showError: function (error) {
-        z.widget.notify(error, z.util.mergeObject({type: "error", close_on_click: false}, z.getDefault("PRO_AJAX_NOTIFY_OPTIONS")));
+        z.widget.notify(error, z.util.mergeObject({type: "error", close_on_click: false}, z.getDefault("PRO_AJAX_NOTIFY_OPTIONS"), z.getDefault("PRO_AJAX_FAIL_NOTIFY_OPTIONS")));
     },
     _getURL: function (url, url_params) {
         if (z.type.isObject(url_params)) {

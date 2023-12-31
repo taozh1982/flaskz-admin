@@ -1,33 +1,42 @@
 ## 关于
 
-NSO扩展，用于将NSO操作从数据模型中解耦
+NCS扩展，用于将NCS操作从数据模型中解耦
 
 ## 使用
 
-- `apply`用于NSO下发，通过创建继承自`NSOApply`的子类和重写方法实现对不同网络服务的NSO操作
+- `apply`用于NCS下发，通过创建继承自`NCSApply`的子类和重写方法实现对不同网络服务的NCS操作
     - 重写`get_url/get_url_params`方法指定请求url及查询参数
-    - 重写`to_nso_data`方法返回调用NSO API的payload
-    - 除了支持单个NSO业务的操作，还支持通过`yang-patch`对多个业务的批量下发
+    - 重写`to_ncs_data`方法返回调用NCS API的payload
+    - 除了支持单个NCS业务的操作，还支持通过`yang-patch`对多个业务的批量下发
         - 重写`get_patch_value_key`方法返回yang path value的key ex)srte:sr-policy
         - 重写`get_patch_target`方法返回yang path的target
-- `nso_urls.py`中指定NSO请求的URL列表
-- `model`用于数据模型类的扩展，`ModelNSOMixin`重写了`before_add/before_update/before_delete`方法为业务模型增加NSO逻辑，可以通过创建继承自ModelNSOMixin的子类和重写方法实现对不同网络服务的NSO操作
-    - 重写`get_nso_apply`方法指定对应的apply(解耦)
-    - 重写`get_nso_data`方法返回供apply使用的数据，
+- `ncs_urls.py`中指定NCS请求的URL列表
+- `model`用于数据模型类的扩展，`ModelNCSMixin`重写了`before_add/before_update/before_delete`方法为业务模型增加NCS逻辑，可以通过创建继承自ModelNCSMixin的子类和重写方法实现对不同网络服务的NCS操作
+    - 重写`get_ncs_apply`方法指定对应的apply(解耦)
+    - 重写`get_ncs_data`方法返回供apply使用的数据，
 
-### apply.to_nso_data和model.get_nso_data的区别
+### apply.to_ncs_data和model.get_ncs_data的区别
 
 两者都用于返回参数，但是用途不太一样
 
-- **apply.to_nso_data返回的是调用NSO的payload**，一般不建议在其中再进行数据查询等操作
-- **model.get_nso_data返回的是供apply使用的数据**，包含apply所需的全部参数，可能需要在现有数据基础上附加一些NSO用到的信息，例如)添加设备时，需要附加ned和授权组相关的信息
+- **apply.to_ncs_data返回的是调用NCS的payload**，一般不建议在其中再进行数据查询等操作
+- **model.get_ncs_data返回的是供apply使用的数据**，包含apply所需的全部参数，可能需要在现有数据基础上附加一些NCS用到的信息，例如)添加设备时，需要附加ned和授权组相关的信息
+
+### 配置参数
+
+```python
+NCS_ENABLE = True  # 是否启用NCS
+NCS_URI = None  # NCS服务URI
+NCS_USERNAME = None  # NCS服务账号
+NCS_PASSWORD = None  # NCS服务密码
+```
 
 ## 示例
 
 1. 数据模型类
 
    ```python
-   class Device(ModelBase, ModelNSOMixin, ModelMixin):  # 继承ModelNSOMixin以添加NSO调用功能
+   class Device(ModelBase, ModelNCSMixin, ModelMixin):  # 继承ModelNCSMixin以添加NCS调用功能
        """设备"""
        __tablename__ = 'devices'
    
@@ -42,7 +51,7 @@ NSO扩展，用于将NSO操作从数据模型中解耦
        auth_id = Column(Integer, ForeignKey("device_auths.id")) # 授权组
    
        @classmethod
-       def get_nso_data(cls, json_data, op_type):       # 返回apply需要的全部参数
+       def get_ncs_data(cls, json_data, op_type):       # 返回apply需要的全部参数
            auth = DeviceAuth.query_by_pk(json_data.get('auth_id'))
            if auth is None:
                return None
@@ -55,17 +64,17 @@ NSO扩展，用于将NSO操作从数据模型中解耦
            return json_data
    
        @classmethod
-       def get_nso_apply(cls):      # 指定对应的NSOApply
-           return DeviceNSOApply
+       def get_ncs_apply(cls):      # 指定对应的NCSApply
+           return DeviceNCSApply
    ```
 
-2. NSO下发类
+2. NCS下发类
 
     ```python
-    class DeviceNSOApply(NSOApply):  # 用于NSO调用
+    class DeviceNCSApply(NCSApply):  # 用于NCS调用
     
         @classmethod
-        def to_nso_data(cls, value, op_type):  # 返回调用NSO的payload，value包含payload所需的全部参数
+        def to_ncs_data(cls, value, op_type):  # 返回调用NCS的payload，value包含payload所需的全部参数
             if op_type == 'delete' or op_type is None:
                 return value
     
@@ -105,6 +114,6 @@ NSO扩展，用于将NSO操作从数据模型中解耦
             }
     
         @classmethod
-        def get_url(cls, value):  # 指定NSO URL
-            return nso_urls.device
+        def get_url(cls, value):  # 指定NCS URL
+            return ncs_urls.device
     ```

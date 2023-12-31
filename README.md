@@ -28,6 +28,8 @@ Flaskz-admin是基于 [Flaskz](https://pypi.org/project/flaskz/) 的管理系统
 5. 启动[应用](./admin_app.py)
     1. 设置Flask环境变量 - `export FLASK_APP=admin_app.py`
     2. 启动Flask应用 - `flask run --host=0.0.0.0 --port=666`
+    3. 查看Flask进程 - `ps aux | grep 'python.*flask run'`
+    4. 停止Flask应用 - `pkill -f "python.*flask run"`
 6. 访问
     - 地址: [http://127.0.0.1:666](http://127.0.0.1:666)
     - 账号/密码: admin/admin
@@ -42,7 +44,7 @@ Flaskz-admin是基于 [Flaskz](https://pypi.org/project/flaskz/) 的管理系统
 - _syslog: 系统日志存放目录
 - **app**: 主应用目录
     - _ext: 扩展功能目录(按需使用)
-        - nso: NSO功能扩展
+        - ncs: NCS功能扩展
         - redis_ws: Redis+Websocket功能扩展
     - **api**: API目录，存放应用所有api封装
     - app_page: 前端页面静态文件目录(基于focus-ui)，也可通过nginx等代理软件实现文件服务功能(按需使用)
@@ -75,9 +77,13 @@ Email: taozh@cisco.com / taozh1982@gmail.com
 
 ## 版本
 
+- **2.0.1** `2024/01/01`
+    - [C] 移除License相关的操作日志和查询结果中的`Signature/license`等信息
+    - [F] `LicenseManager.get_license()`方法返回的license信息改为拷贝模式(避免被修改)
+
 - **2.0.0** `2023/12/01`
     - [A] `app._ext.redis_ws`添加对Redis哨兵模式url的支持
-    - [A] 添加Token刷新功能，APP_REFRESH_TOKEN_EXPIRES_IN配置项用于设置refresh token的有效时间
+    - [A] 添加Token刷新功能，`APP_REFRESH_TOKEN_EXPIRES_IN`配置项用于设置refresh token的有效时间
 
 - **1.6** `2023/06/16`
     - [F] 修复`app._ext.redis_ws.init_websocket`函数中app_config设置问题 -`2023/07/10`
