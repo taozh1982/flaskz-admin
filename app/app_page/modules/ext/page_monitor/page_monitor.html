@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page Monitor</title>
+    <script>
+        // window.FU_MONITOR_SERVICE_URL = "/sys-mgmt/page_monitor/" //后端API(POST)
+    </script>
+    <script src="../../../libs/focus-ui/fu-monitor.js"></script>
+    <script>
+        // window.FU_MONITOR_SERVICE_URL = ''; //服务端API
+        // window.FU_MONITOR_PERFORMANCE_NAVIGATION = {}; //导航性能检测阈值
+        // window.FU_MONITOR_PERFORMANCE_RESOURCE = ''; //资源性能检测阈值
+        // window.FU_MONITOR_SEND_INTERVAL = 10000; //最大发送间隔
+        // window.FU_MONITOR_SEND_MAX_COUNT = 100; //最大发送条数
+
+        window.abc.error = '123';
+        new Promise(function (resolve, reject) {
+            reject('promise reject');
+        });
+    </script>
+</head>
+<body>
+<img src="http://example.com/resource/a.png">
+<br>
+<img src="https://images3.alphacoders.com/117/1172538.jpg" width="300px">
+<script src="http://example.com/resource/a.js"></script>
+<link href="http://example.com/resource/a.css" rel="stylesheet">
+</body>
+</html>

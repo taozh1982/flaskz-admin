@@ -7,7 +7,7 @@ from flaskz.log import flaskz_logger, get_log_data
 from flaskz.models import model_to_dict, query_all_models
 from flaskz.rest import get_rest_log_msg, rest_login_required, rest_permission_required, register_model_route, register_model_query_pss_route, register_model_query_route, \
     register_model_delete_route
-from flaskz.utils import create_response, get_wrap_str, find_list, get_dict_mapping, get_app_config
+from flaskz.utils import create_response, get_wrap_str, find_list, get_dict_mapping, get_app_config, pop_dict_keys
 
 from . import sys_mgmt_bp, log_operation
 from .auth import verify_refresh_token, generate_token
@@ -123,8 +123,7 @@ def sys_auth_account_query():
             menu_item.get('actions').append(item.action)
 
     profile = current_user.to_dict({'cascade': 1})
-    profile.pop('role_id')
-    profile.pop('role')
+    pop_dict_keys(profile, ['role_id', 'role'])
     res_data = {
         'profile': profile,
         'menus': role_menus
@@ -278,13 +277,14 @@ register_model_query_pss_route(sys_mgmt_bp, SysActionLog, 'action-logs', 'action
 def sys_page_monitor():
     """
     Page Monitor.
+    用于前端异常/性能监控
     :return:
     """
-    flaskz_logger.warning(get_wrap_str('--Page Monitor', '--Data:', request.json))
+    flaskz_logger.warning(get_wrap_str('--Page Monitor', '--Data:', request.get_json(silent=True) or request.data))
     return create_response(True, {})
 
 
-# todo 如果不启用License功能，请移除以下代码
+# todo 如果不启用License功能，移除以下代码
 # for alembic
 from .license import router as license_router
 

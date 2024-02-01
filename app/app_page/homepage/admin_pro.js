@@ -20,11 +20,11 @@ z.util.mergeObject(Admin, {
     initModel: function () {
         pro.AjaxCRUD.query({
             url: AjaxUrl.sys_auth.query,
-            tips: "加载账户信息",
+            tips: z.i18n.t("HOMEPAGE_QUERY_ACCOUNT"),
             success_notify: false,
             success: function (result) {
-                this._initAccountMenus(result.data.menus);
                 this._initAccountProfile(result.data.profile);
+                this._initAccountMenus(result.data.menus);
                 this._initLicense(result.data.license);
             },
             context: this
@@ -69,6 +69,9 @@ z.util.mergeObject(Admin, {
         }
     },
     _initAccountProfile: function (profile) {
+        if (profile.hasOwnProperty("locale")) {
+            z.bom.setLocalStorage("locale", profile.locale);
+        }
         this._account_profile = profile;
         this.initAccountProfile(profile);
     }
@@ -155,6 +158,11 @@ z.util.mergeObject(Admin, {
         var map = {};
         var rootMenus = [];
         menus.forEach(function (item) {
+            var name = item.name;
+            if (name) {
+                item.name = z.i18n.t("MODULE_" + name.trim().replace(/[- ]/g, "_").toUpperCase()) ||
+                    z.i18n.t("MODULE_" + name.trim().toUpperCase()) || name;
+            }
             map[item.id] = item;
             item.children = [];
             if (item.parent_id == null) {

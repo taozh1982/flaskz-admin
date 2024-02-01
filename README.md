@@ -77,10 +77,11 @@ Email: taozh@cisco.com / taozh1982@gmail.com
 
 ## 版本
 
+- **2.1.0** `2024/02/01`
+    - [A] 页面国际化(登录/系统导航/系统管理)
 - **2.0.1** `2024/01/01`
     - [C] 移除License相关的操作日志和查询结果中的`Signature/license`等信息
     - [F] `LicenseManager.get_license()`方法返回的license信息改为拷贝模式(避免被修改)
-
 - **2.0.0** `2023/12/01`
     - [A] `app._ext.redis_ws`添加对Redis哨兵模式url的支持
     - [A] 添加Token刷新功能，`APP_REFRESH_TOKEN_EXPIRES_IN`配置项用于设置refresh token的有效时间
@@ -101,7 +102,6 @@ Email: taozh@cisco.com / taozh1982@gmail.com
     - [A] `config.py`和`config.ini` 添加`UnittestConfig`配置项，用于单元测试 -`2023/09/27`
     - [A] `tests`添加`perf`和`unit`测试项，用于性能和单元测试 -`2023/09/27`
     - [A] `app._ext`添加`swagger`扩展，用于生成Swagger文档 -`2023/10/26`
-
 - **1.5** `2023/05/01`
     - [C] 重构系统RBAC [权限管理](http://zhangyiheng.com/blog/articles/py_flaskz_admin.html#toc-rbac) 模块(sys_mgmt)
     - [C] 重构系统管理API(参考[开发规范](http://zhangyiheng.com/blog/articles/dev_spec.html))

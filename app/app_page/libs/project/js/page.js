@@ -4,6 +4,7 @@ var refreshMenuByPath = function (paths) {
         admin.refreshMenu(paths)
     }
 };
+
 z.setDefault({
     "AJAX_BEFORE_SEND": function (httpRequest) {
         httpRequest.setRequestHeader("Authorization", z.bom.getLocalStorage("auth-token"));
@@ -24,7 +25,7 @@ z.setDefault({
                         if (pathname === "/" || pathname === "/index" || pathname === "index") {
                             window.top.location.href = "/login";
                         } else {
-                            z.widget.alert("请先登录!!", "提示", function (result) {//callback
+                            z.widget.alert(z.i18n.t("LOGIN_REQUIRED"), z.i18n.t("PRO_MESSAGE_TIPS"), function (result) {//callback
                                 window.top.location.href = "/login";
                             });
                         }

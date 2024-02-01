@@ -33,7 +33,7 @@ var Employees = z.util.mergeObject(pro.template.CRUDTablePage, {
                     }
                 },
                 {
-                    name: "操作", width: 130, sortable: false, filter: false,
+                    name: "操作", width: 150, sortable: false, filter: false,
                     visible: pro.AccessControl.hasUpdatePermission(),
                     render: function (td, data, column) {
                         pro.template.CRUDTablePage.renderUpdateColumn(td, data, column);

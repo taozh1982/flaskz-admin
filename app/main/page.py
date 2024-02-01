@@ -22,6 +22,7 @@ page_mapping = {
     # Ext
     'ext-nav': './modules/ext/nav/nav.html',
     'ext-websocket': './modules/ext/websocket/websocket.html',
+    'ext-page-monitor': './modules/ext/page_monitor/page_monitor.html',
 
     # System
     'roles': './modules/sys_mgmt/roles/role.html',

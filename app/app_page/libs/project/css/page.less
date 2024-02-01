@@ -126,13 +126,13 @@ html, body {
   }
 
   & > .body .center tbody:empty:before {
-    content: "数据为空";
     display: inline-block;
     width: 100%;
     text-align: center;
     color: #CCCCCC;
     font-size: 92%;
     padding: 1em;
+    white-space: pre-wrap;
   }
 }
 
@@ -169,6 +169,10 @@ html, body {
   }
 }
 
+.z-validator-message {
+  display: inline-block;
+}
+
 body > .z-modal {
   position: fixed;
 }
@@ -195,6 +199,19 @@ body > .z-modal {
   .z-treegrid {
     .tree-column {
       padding-left: 1.4em !important;
+    }
+  }
+}
+
+
+html {
+  .z-grid > .body .center tbody:empty:before {
+    content: "No data";
+  }
+
+  &[lang="zh"] {
+    .z-grid > .body .center tbody:empty:before {
+      content: "数据为空";
     }
   }
 }

@@ -33,6 +33,7 @@ body {
   text-align: center;
   display: block;
   font-size: 1.6em;
+  line-height: 1.6em;
   font-weight: bold;
 }
 .fill-container .content label {
@@ -46,7 +47,11 @@ body {
 .fill-container .content .error-msg {
   text-align: center;
 }
-.fill-container .content.inline .grid-row input:not([type='checkbox']) {
+.fill-container .content.inline .grid-row > * {
+  line-height: 1.2em;
+}
+.fill-container .content.inline .grid-row input:not([type='checkbox']),
+.fill-container .content.inline .grid-row select {
   display: inline-block;
   width: 75% !important;
 }
@@ -66,4 +71,3 @@ body {
 .fill-container .content.inline .grid-row .z-validator-message {
   margin-left: 25%;
 }
-/*# sourceMappingURL=login.css.map */

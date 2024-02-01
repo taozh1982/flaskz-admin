@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Flaskz Admin</title>
+    <title i18n="COMMON_ACTION_LOGIN"></title>
     <link rel="stylesheet" href="./libs/focus-ui/theme/bootstrap.min.css">
     <link rel="stylesheet" href="./libs/focus-ui/fu-pro.css">
     <link rel="stylesheet" href="./login/login.css">
@@ -19,25 +19,33 @@
         <div class="grid-row">
             <img src="./homepage/logo.png" alt="logo.png" style="margin: 0 auto;height: 5em">
         </div>
-        <div class="grid-row title">Flaskz Admin</div>
+        <div class="grid-row title" i18n="SYSTEM_TITLE">&nbsp;</div>
         <div class="grid-row">
-            <label for="usernameInput">账号</label>
+            <label for="usernameInput" i18n="LOGIN_USERNAME"></label>
             <input id="usernameInput" name="z_username"
-                   ze-model="username" v-rules="required" v-message="请输入账号"
+                   ze-model="username" v-rules="required" i18n-v-message="LOGIN_USERNAME_REQUIRED"
                    placeholder="Username" autofocus>
         </div>
         <div class="grid-row">
-            <label for="pwdInput">密码</label>
+            <label for="pwdInput" i18n="LOGIN_PASSWORD"></label>
             <input id="pwdInput"
-                   ze-model="password" v-rules="required" v-message="请输入密码"
+                   ze-model="password" v-rules="required" i18n-v-message="LOGIN_PASSWORD_REQUIRED"
                    type="password" placeholder="*********">
         </div>
         <div class="grid-row">
-            <label class="check-label" style="width: 100%"><input type="checkbox" class="check-input" id="rememberCheck" ze-model="remember_me">记住我</label>
+            <label for="localeSelect" i18n="LOGIN_LOCALE"></label>
+            <select id="localeSelect" ze-model="locale">
+                <option value="zh">中文</option>
+                <option value="en">English</option>
+            </select>
+        </div>
+        <div class="grid-row">
+            <label class="check-label"><input type="checkbox" class="check-input" id="rememberCheck" ze-model="remember_me"><span
+                    i18n="LOGIN_REMEMBER_ME"></span></label>
         </div>
         <div id="errDiv" class="color-danger error-msg"></div>
         <div class="grid-row">
-            <button id="loginBtn" class="btn btn-primary">登录</button>
+            <button id="loginBtn" class="btn btn-primary" i18n="LOGIN_ACTION_LOGIN"></button>
         </div>
     </div>
 </div>

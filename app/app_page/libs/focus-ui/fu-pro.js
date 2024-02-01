@@ -1,4 +1,4 @@
-/*! Focus Pro v2.5.0rc1 | http://www.focus-ui.com | 2023-12-29 */
+/*! Focus Pro v2.5.1 | http://www.focus-ui.com | 2024-02-01 */
 (function(window, undefined ) {
 z.$.setSysDefault({
     //grid button render option
@@ -101,7 +101,147 @@ z.$.setSysDefault({
     PRO_SHEET_VALUE_FIELD: "_value",//
     PRO_SHEET_PROPERTY_FIELD: "property"//set/get  ex)attr.value
 });
+z.i18n.init({
+    en: {
+        PRO_GRID_OPERATE_UPDATE_LABEL: "Edit",
+        PRO_GRID_OPERATE_DELETE_LABEL: "Delete",
 
+        PRO_GRID_RESULT_SUCCESS_LABEL: "Success",
+        PRO_GRID_RESULT_FAIL_LABEL: "Fail",
+
+        PRO_AJAX_QUERY_TIPS: "Query",
+        PRO_AJAX_ADD_TIPS: "Add",
+        PRO_AJAX_CREATE_TIPS: "Create",
+        PRO_AJAX_READ_TIPS: "Read",
+        PRO_AJAX_UPDATE_TIPS: "Update",
+        PRO_AJAX_DELETE_TIPS: "Delete",
+
+        //AjaxCRUD response option
+        PRO_AJAX_TIMEOUT_TIPS: " Timeout",
+        PRO_AJAX_FORBIDDEN_TIPS: " Forbidden",
+        PRO_AJAX_EXCEPTION_TIPS: " Exception",
+        PRO_AJAX_CLIENT_ERROR_TIPS: " Client Error",
+        PRO_AJAX_SERVER_ERROR_TIPS: " Server Error",
+        PRO_AJAX_SUCCESS_TIPS: " Success",
+        PRO_AJAX_FAIL_TIPS: " Fail",
+
+        //Ajax file upload option
+        PRO_AJAX_UPLOAD_TIPS: "Upload",
+        PRO_AJAX_DOWNLOAD_TIPS: "Download",
+
+        //Operation tips
+        PRO_MESSAGE_TIPS: "Tips",
+        PRO_MESSAGE_DELETE_CONFIRM: "Confirm Delete?",
+
+        //Model option
+        PRO_MODAL_UPDATE_TITLE: "Edit",
+        PRO_MODAL_ADD_TITLE: "Add",
+        PRO_MODAL_VIEW_TITLE: "View",
+        PRO_MODAL_CONFIRM_TEXT: "Ok",
+        PRO_MODAL_CANCEL_TEXT: "Cancel",
+
+        //GView toolbar option
+        PRO_GVIEW_TOOLBAR_ZOOM_IN_TITLE: "Zoom In",
+        PRO_GVIEW_TOOLBAR_ZOOM_OUT_TITLE: "Zoom Out",
+        PRO_GVIEW_TOOLBAR_ZOOM_FIT_TITLE: "Zoom Fit",
+        PRO_GVIEW_TOOLBAR_RESET_TITLE: "Reset",
+        PRO_GVIEW_TOOLBAR_SAVE_IMAGE_TITLE: "Save Image",
+
+        PRO_SHEET_PROPERTY_COLUMN_NAME: "Property",//column render
+        PRO_SHEET_VALUE_COLUMN_NAME: "Value",//column render
+
+        //Ajax
+        AJAX_STATUS_DB_ADD_ERR: "Database Add Error",
+        AJAX_STATUS_DB_DELETE_ERR: "Database Delete Error",
+        AJAX_STATUS_DB_UPDATE_ERR: "Database Update Error",
+        AJAX_STATUS_DB_QUERY_ERR: "Database Query Error",
+        AJAX_STATUS_DB_DATA_NOT_FOUND: "Data Not Found",
+        AJAX_STATUS_DB_DATA_ALREADY_EXIST: "Data Already Exists",
+        AJAX_STATUS_DB_DATA_IN_USE: "Data In Use",
+        AJAX_STATUS_API_REQUEST_ERR: "Remote api request error",
+        AJAX_STATUS_URI_UNAUTHORIZED: "Unauthorized",
+        AJAX_STATUS_URI_FORBIDDEN: "Forbidden",
+        AJAX_STATUS_URI_NOT_FOUND: "Not Found",
+        AJAX_STATUS_METHOD_NOT_ALLOWED: "Method Not Allowed",
+        AJAX_STATUS_INTERNAL_SERVER_ERROR: "Internal Server Error",
+        AJAX_STATUS_BAD_REQUEST: "Bad Request",
+        AJAX_STATUS_ACCOUNT_NOT_FOUND: "No Account Found",
+        AJAX_STATUS_ACCOUNT_DISABLED: "Account Disabled",
+        AJAX_STATUS_ACCOUNT_VERIFY_ERR: "Wrong Password",
+        AJAX_STATUS_FILE_FORMAT_NOT_ALLOWED: "File Format Not Allowed",
+        AJAX_STATUS_LICENSE_PARSE_ERROR: "License Parse Error",
+        AJAX_STATUS_LICENSE_NOT_FOUND: "License Not Found",
+        AJAX_STATUS_LICENSE_PUBLIC_KEY_NOT_FOUND: "License Public Key Not Found",
+        AJAX_STATUS_REFRESH_TOKEN_ERR: "Refresh Token Error"
+    },
+    zh: {
+        PRO_GRID_OPERATE_UPDATE_LABEL: "编辑",
+        PRO_GRID_OPERATE_DELETE_LABEL: "删除",
+
+        PRO_GRID_RESULT_SUCCESS_LABEL: "成功",
+        PRO_GRID_RESULT_FAIL_LABEL: "失败",
+
+        PRO_AJAX_QUERY_TIPS: "查询",
+        PRO_AJAX_ADD_TIPS: "添加",
+        PRO_AJAX_CREATE_TIPS: "创建",
+        PRO_AJAX_READ_TIPS: "读取",
+        PRO_AJAX_UPDATE_TIPS: "编辑",
+        PRO_AJAX_DELETE_TIPS: "删除",
+
+        PRO_AJAX_TIMEOUT_TIPS: "请求超时",
+        PRO_AJAX_FORBIDDEN_TIPS: "禁止访问",
+        PRO_AJAX_EXCEPTION_TIPS: "请求异常",
+        PRO_AJAX_CLIENT_ERROR_TIPS: "请求错误",
+        PRO_AJAX_SERVER_ERROR_TIPS: "服务器错误",
+        PRO_AJAX_SUCCESS_TIPS: "请求成功",
+        PRO_AJAX_FAIL_TIPS: "请求失败",
+
+        PRO_AJAX_UPLOAD_TIPS: "上传",
+        PRO_AJAX_DOWNLOAD_TIPS: "下载",
+
+        PRO_MESSAGE_TIPS: "提示",
+        PRO_MESSAGE_DELETE_CONFIRM: "确认删除?",
+
+        PRO_MODAL_UPDATE_TITLE: "编辑",
+        PRO_MODAL_ADD_TITLE: "添加",
+        PRO_MODAL_VIEW_TITLE: "查看",
+        PRO_MODAL_CONFIRM_TEXT: "确认",
+        PRO_MODAL_CANCEL_TEXT: "取消",
+
+        //GView toolbar option
+        PRO_GVIEW_TOOLBAR_ZOOM_IN_TITLE: "放大",
+        PRO_GVIEW_TOOLBAR_ZOOM_OUT_TITLE: "缩小",
+        PRO_GVIEW_TOOLBAR_ZOOM_FIT_TITLE: "显示全部",
+        PRO_GVIEW_TOOLBAR_RESET_TITLE: "重置",
+        PRO_GVIEW_TOOLBAR_SAVE_IMAGE_TITLE: "保存图片",
+
+        PRO_SHEET_PROPERTY_COLUMN_NAME: "属性",//column render
+        PRO_SHEET_VALUE_COLUMN_NAME: "值",//column render
+        //Ajax
+        AJAX_STATUS_DB_ADD_ERR: "数据添加异常",
+        AJAX_STATUS_DB_DELETE_ERR: "数据删除异常",
+        AJAX_STATUS_DB_UPDATE_ERR: "数据更新异常",
+        AJAX_STATUS_DB_QUERY_ERR: "数据查询异常",
+        AJAX_STATUS_DB_DATA_NOT_FOUND: "数据不存在",
+        AJAX_STATUS_DB_DATA_ALREADY_EXIST: "数据已存在",
+        AJAX_STATUS_DB_DATA_IN_USE: "数据使用中",
+        AJAX_STATUS_API_REQUEST_ERR: "远端API请求异常",
+        AJAX_STATUS_URI_UNAUTHORIZED: "未登录",
+        AJAX_STATUS_URI_FORBIDDEN: "无访问权限",
+        AJAX_STATUS_URI_NOT_FOUND: "找不到请求资源",
+        AJAX_STATUS_METHOD_NOT_ALLOWED: "资源不支持请求方法",
+        AJAX_STATUS_INTERNAL_SERVER_ERROR: "服务器异常",
+        AJAX_STATUS_BAD_REQUEST: "客户端请求错误",
+        AJAX_STATUS_ACCOUNT_NOT_FOUND: "账号不存在",
+        AJAX_STATUS_ACCOUNT_DISABLED: "账号被禁用",
+        AJAX_STATUS_ACCOUNT_VERIFY_ERR: "密码错误",
+        AJAX_STATUS_FILE_FORMAT_NOT_ALLOWED: "非法文件格式",
+        AJAX_STATUS_LICENSE_PARSE_ERROR: "License解析错误",
+        AJAX_STATUS_LICENSE_NOT_FOUND: "系统未授权",
+        AJAX_STATUS_LICENSE_PUBLIC_KEY_NOT_FOUND: "未发现授权公钥",
+        AJAX_STATUS_REFRESH_TOKEN_ERR: "刷新TOKEN失败"
+    }
+})
 //中文，如果需要取消注释
 /*
 z.setDefault({
@@ -301,6 +441,157 @@ var $DomUtil = {
         });
     }
 }
+var $DomI18n = {
+    initI18n: function (option) {
+        option = $DomI18n._getOption(option);
+        var locale = $DomI18n.getBomLocale(option.locale);
+        $DomI18n.setLocale(locale);
+        $DomI18n._initDomI18n(option);
+    },
+    /**
+     * 只初始化Dom中的i18n
+     * @param option
+     */
+    initDomI18n: function (option) {
+        option = $DomI18n._getOption(option);
+        $DomI18n._initDomI18n(option);
+    },
+    /**
+     * 设置页面中的locale(i18n+html.lang)
+     * @param locale
+     */
+    setLocale: function (locale) {
+        if (locale) {
+            z.i18n.setLocale(locale);
+            document.documentElement.setAttribute('lang', locale);
+        }
+    },
+    /**
+     * 返回dom默认的lang
+     * @param locale
+     * @return {string|Object|Array|*}
+     */
+    getBomLocale: function (locale) {
+        return locale ||
+            z.bom.getLocationSearchParam("lang") ||
+            z.bom.getURLSearchParam(window.top.location.href, "lang") ||
+            z.bom.getSessionStorage("locale") ||
+            z.bom.getLocalStorage("locale");
+    },
+    /**
+     * 返回浏览器的lang
+     *
+     * @return {string}
+     */
+    getBomLang: function () {
+        var lang = window.navigator.language || window.navigator.userLanguage;
+        if (lang) {
+            return lang.toLowerCase().split("-")[0]
+        }
+    },
+    /**
+     * 返回key对应的i18n值
+     *
+     * @param key
+     * @return {string}
+     */
+    getI18nLabel: function (key) {
+        return z.i18n.t(key)
+    },
+
+    _initDomI18n: function (option) {
+        var root = z.dom.query(option.root) || document.documentElement;
+        z.util.eachArray(z.dom.queryAll("*", root), function (ele) {
+            var i18n_attrs = $DomI18n._getElementI18nAttrs(ele, option);
+            $DomI18n._updateElementI18n(ele, i18n_attrs, option);
+        });
+    },
+    _getOption: function (option) {
+        return z.util.mergeObject({
+            key: "i18n", //前缀
+            kv_separator: "=", //k=v分隔符
+            separator: ";", //多个i18n项的分隔符
+            default: "innerHTML", //不指定attr时，默认设置的属性，innerHTML可以支持font icon
+            text_mapping: {//文本属性映射，attribute不区分大小写
+                "textcontent": "textContent",
+                "innerhtml": "innerHTML",
+                "innertext": "innerText"
+            }
+        }, option);
+    },
+    /**
+     * 返货Element所有的attribute属性
+     * @param ele
+     * @param option
+     * @return {{}}
+     * @private
+     */
+    _getElementI18nAttrs: function (ele, option) {
+        var i18n_key = option.key;
+        var i18n_default = option.default;
+        var i18n_kv_separator = option.kv_separator;//"="
+        var i18n_separator = option.separator;//";"
+        var all_attrs = z.dom.getAttributes(ele);
+        var i18n_attrs = {};
+        var key_start = i18n_key.length + 1;
+        z.util.eachObject(all_attrs, function (key, value) {
+            if (key !== i18n_key && key.startsWith(i18n_key)) {//i18n-placeholder
+                i18n_attrs[key.substring(key_start)] = value;//不区分大小写
+            }
+        });
+        var i18n_attr_values = (all_attrs[i18n_key] || "").split(i18n_separator);//i18n
+        z.util.eachArray(i18n_attr_values, function (item) {
+            item = item.trim();
+            if (item === "") {
+                return
+            }
+            var kvs = item.split(i18n_kv_separator);
+            if (kvs.length === 2) {
+                i18n_attrs[kvs[0]] = kvs[1]
+            } else {
+                i18n_attrs[i18n_default] = item;
+            }
+        })
+        return i18n_attrs;
+    },
+    /**
+     * 更新Element的i18n文本和attribute
+     * @param ele
+     * @param i18n_attrs
+     * @param option
+     * @private
+     */
+    _updateElementI18n: function (ele, i18n_attrs, option) {
+        var text_mapping = option.text_mapping;
+        z.util.eachObject(i18n_attrs, function (key, value) {
+            key = key.trim();
+            value = value.trim();
+            if (key === "" || value === "") {
+                return
+            }
+            var label = $DomI18n.getI18nLabel(value);
+            var key_lower_case = key.toLowerCase();
+            if (text_mapping.hasOwnProperty(key_lower_case)) {
+                if (label == null) {//没有对应的i18n值-->已有值
+                    label = (ele[text_mapping[key_lower_case]] || "").trim();
+                    if (label === "") {
+                        label = value;
+                    }
+                }
+                ele[text_mapping[key_lower_case]] = label;
+            } else {
+                if (label == null) {//没有对应的i18n值-->已有值
+                    label = (ele.getAttribute(key) || "").trim();
+                    if (label === "") {
+                        label = value;
+                    }
+                }
+                ele.setAttribute(key, label)
+            }
+        })
+    }
+};
+
 var $FormUtil = {
     initSelectOptions: function (selects, selectOptions, initOption) {
         return z.dom.initSelectOptions(selects, selectOptions, initOption);
@@ -315,10 +606,10 @@ var $GridUtil = {
             key: z.getDefault("PRO_GRID_RESULT_KEY"),
             success_value: z.getDefault("PRO_GRID_RESULT_SUCCESS_VALUE"),
             success_class: z.getDefault("PRO_GRID_RESULT_SUCCESS_CLASS"),
-            success_label: z.getDefault("PRO_GRID_RESULT_SUCCESS_LABEL"),
+            success_label: z.i18n.t("PRO_GRID_RESULT_SUCCESS_LABEL"),
             fail_value: z.getDefault("PRO_GRID_RESULT_FAIL_VALUE"),
             fail_class: z.getDefault("PRO_GRID_RESULT_FAIL_CLASS"),
-            fail_label: z.getDefault("PRO_GRID_RESULT_FAIL_LABEL")
+            fail_label: z.i18n.t("PRO_GRID_RESULT_FAIL_LABEL")
         }, opts);
         var result;
         if (opts.hasOwnProperty("value")) {
@@ -435,13 +726,13 @@ var $GridUtil = {
     renderUpdateOperateButton: function (grid, data, columnOrField, td, onclick, option) {
         return $GridUtil.renderOperateButton(grid, data, columnOrField, td, onclick, z.util.mergeObject({
             className: z.getDefault("PRO_GRID_OPERATE_UPDATE_CLASS"),
-            label: z.getDefault("PRO_GRID_OPERATE_UPDATE_LABEL")
+            label: z.i18n.t("PRO_GRID_OPERATE_UPDATE_LABEL")
         }, option))
     },
     renderDeleteOperateButton: function (grid, data, columnOrField, td, onclick, option) {
         return $GridUtil.renderOperateButton(grid, data, columnOrField, td, onclick, z.util.mergeObject({
             className: z.getDefault("PRO_GRID_OPERATE_DELETE_CLASS"),
-            label: z.getDefault("PRO_GRID_OPERATE_DELETE_LABEL")
+            label: z.i18n.t("PRO_GRID_OPERATE_DELETE_LABEL")
         }, option))
     },
     renderUpdateDeleteOperateButton: function (grid, data, columnOrField, td, onUpdate, onDelete, option) {
@@ -671,11 +962,11 @@ z.util.mergeObject($GridUtil, {
     },
     createUpdateOPButton: function (td, data, column, onClick, opts) {
         opts = z.util.mergeObject({className: z.getDefault("PRO_GRID_OPERATE_UPDATE_CLASS")}, opts);
-        return $GridUtil.createOPButton(td, data, "update", z.getDefault("PRO_GRID_OPERATE_UPDATE_LABEL"), onClick, opts);
+        return $GridUtil.createOPButton(td, data, "update", z.i18n.t("PRO_GRID_OPERATE_UPDATE_LABEL"), onClick, opts);
     },
     createDeleteOPButton: function (td, data, column, onClick, opts) {
         opts = z.util.mergeObject({className: z.getDefault("PRO_GRID_OPERATE_DELETE_CLASS")}, opts);
-        return $GridUtil.createOPButton(td, data, "delete", z.getDefault("PRO_GRID_OPERATE_DELETE_LABEL"), onClick, opts);
+        return $GridUtil.createOPButton(td, data, "delete", z.i18n.t("PRO_GRID_OPERATE_DELETE_LABEL"), onClick, opts);
     },
     createUpdateDeleteOPButton: function (td, data, column, onEditClick, onRemoveClick, opts) {
         $GridUtil.createUpdateOPButton(td, data, column, onEditClick, opts);
@@ -844,10 +1135,10 @@ var $ModalUtil = {
     createModal: function (options) {
         options = z.util.mergeObject({
             confirm_class: z.getDefault("PRO_MODAL_CONFIRM_CLASS"),
-            confirm_text: z.getDefault("PRO_MODAL_CONFIRM_TEXT"),
+            confirm_text: z.i18n.t("PRO_MODAL_CONFIRM_TEXT"),
 
             cancel_class: z.getDefault("PRO_MODAL_CANCEL_CLASS"),
-            cancel_text: z.getDefault("PRO_MODAL_CANCEL_TEXT")
+            cancel_text: z.i18n.t("PRO_MODAL_CANCEL_TEXT")
         }, options);
         var modal_class = "zw-modal";
         if (options.modal_class) {
@@ -898,10 +1189,10 @@ var $ModalUtil = {
     /*showModal: function (content_options, modal_options) {
         content_options = z.util.mergeObject({
             ok_button_class: z.getDefault("PRO_MODAL_CONFIRM_CLASS"),
-            ok_button_text: z.getDefault("PRO_MODAL_CONFIRM_TEXT"),
+            ok_button_text: z.i18n.t("PRO_MODAL_CONFIRM_TEXT"),
 
             cancel_button_class: z.getDefault("PRO_MODAL_CANCEL_CLASS"),
-            cancel_button_text: z.getDefault("PRO_MODAL_CANCEL_TEXT")
+            cancel_button_text: z.i18n.t("PRO_MODAL_CANCEL_TEXT")
         }, content_options);
         var modal_class = "zw-modal";
         if (content_options.modal_class) {
@@ -956,32 +1247,32 @@ var $ModalUtil = {
 var $AjaxCRUD = {
     query: function (options) {
         $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, {
-            method: z.getDefault("PRO_AJAX_QUERY_METHOD"), tips: z.getDefault("PRO_AJAX_QUERY_TIPS")
+            method: z.getDefault("PRO_AJAX_QUERY_METHOD"), tips: z.i18n.t("PRO_AJAX_QUERY_TIPS")
         }));
     },
     add: function (options) {
         $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, {
-            method: z.getDefault("PRO_AJAX_ADD_METHOD"), tips: z.getDefault("PRO_AJAX_ADD_TIPS")
+            method: z.getDefault("PRO_AJAX_ADD_METHOD"), tips: z.i18n.t("PRO_AJAX_ADD_TIPS")
         }));
     },
     create: function (options) {
         $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, {
-            method: z.getDefault("PRO_AJAX_CREATE_METHOD"), tips: z.getDefault("PRO_AJAX_CREATE_TIPS")
+            method: z.getDefault("PRO_AJAX_CREATE_METHOD"), tips: z.i18n.t("PRO_AJAX_CREATE_TIPS")
         }));
     },
     read: function (options) {
         $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, {
-            method: z.getDefault("PRO_AJAX_READ_METHOD"), tips: z.getDefault("PRO_AJAX_READ_TIPS")
+            method: z.getDefault("PRO_AJAX_READ_METHOD"), tips: z.i18n.t("PRO_AJAX_READ_TIPS")
         }));
     },
     update: function (options) {
         $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, {
-            method: z.getDefault("PRO_AJAX_UPDATE_METHOD"), tips: z.getDefault("PRO_AJAX_UPDATE_TIPS")
+            method: z.getDefault("PRO_AJAX_UPDATE_METHOD"), tips: z.i18n.t("PRO_AJAX_UPDATE_TIPS")
         }));
     },
     delete: function (options) {
         $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, {
-            method: z.getDefault("PRO_AJAX_DELETE_METHOD"), tips: z.getDefault("PRO_AJAX_DELETE_TIPS")
+            method: z.getDefault("PRO_AJAX_DELETE_METHOD"), tips: z.i18n.t("PRO_AJAX_DELETE_TIPS")
         }));
     },
     /**
@@ -1031,18 +1322,18 @@ var $AjaxCRUD = {
                 var codeType = status / 100 | 0;
                 if (codeType === 2) {
                     if (result.hasOwnProperty("status") && result.status !== z.getDefault("PRO_AJAX_SUCCESS_STATE")) {
-                        failContent = z.getDefault("PRO_AJAX_FAIL_TIPS");
+                        failContent = z.i18n.t("PRO_AJAX_FAIL_TIPS");
                     }
                 } else if (codeType === 4) {
                     if (status === 408) {
-                        failContent = tips + z.getDefault("PRO_AJAX_TIMEOUT_TIPS");
+                        failContent = tips + z.i18n.t("PRO_AJAX_TIMEOUT_TIPS");
                     } else {
-                        failContent = z.getDefault("PRO_AJAX_CLIENT_ERROR_TIPS");
+                        failContent = z.i18n.t("PRO_AJAX_CLIENT_ERROR_TIPS");
                     }
                 } else if (codeType === 5) {
-                    failContent = z.getDefault("PRO_AJAX_SERVER_ERROR_TIPS");
+                    failContent = z.i18n.t("PRO_AJAX_SERVER_ERROR_TIPS");
                 } else {
-                    failContent = tips + z.getDefault("PRO_AJAX_EXCEPTION_TIPS");
+                    failContent = tips + z.i18n.t("PRO_AJAX_EXCEPTION_TIPS");
                 }
                 if (options.complete) {
                     options.complete.apply(options.context, [result, httpRequest]);
@@ -1050,7 +1341,7 @@ var $AjaxCRUD = {
 
                 if (failContent != null) {
                     if (z.type.isObject(result)) {
-                        failContent = result.message || failContent;
+                        failContent = $AjaxCRUD.getResponseMessage(result, httpRequest) || failContent;
                     }
                     if (options.fail_notify !== false) {
                         $AjaxCRUD.showError(failContent);
@@ -1062,7 +1353,7 @@ var $AjaxCRUD = {
                     return;
                 }
                 if (options.success_notify !== false) {
-                    z.widget.notify(tips + z.getDefault("PRO_AJAX_SUCCESS_TIPS"), z.util.mergeObject(
+                    z.widget.notify(tips + z.i18n.t("PRO_AJAX_SUCCESS_TIPS"), z.util.mergeObject(
                         {type: "success", duration: 1000}, z.getDefault("PRO_AJAX_NOTIFY_OPTIONS"), z.getDefault("PRO_AJAX_SUCCESS_NOTIFY_OPTIONS")));
                 }
                 if (options.success) {
@@ -1070,6 +1361,9 @@ var $AjaxCRUD = {
                 }
             }
         }, options.ajax_options));
+    },
+    getResponseMessage: function (result, httpRequest) {
+        return result.message;
     },
     showError: function (error) {
         z.widget.notify(error, z.util.mergeObject({type: "error", close_on_click: false}, z.getDefault("PRO_AJAX_NOTIFY_OPTIONS"), z.getDefault("PRO_AJAX_FAIL_NOTIFY_OPTIONS")));
@@ -1174,7 +1468,7 @@ var $FileUtil = {
     },
     ajaxDownload: function (url, urlParameters) {
         pro.AjaxCRUD.query({
-            tips: z.getDefault("PRO_AJAX_DOWNLOAD_TIPS"),
+            tips: z.i18n.t("PRO_AJAX_DOWNLOAD_TIPS"),
             url: z.$.StrUtil.replaceVars(url, urlParameters), success: function (result, httpRequest) {
                 var filename = $FileUtil._getContentDispositionFilename(httpRequest);
                 $FileUtil.saveFile(httpRequest.response, filename); // 保存文件
@@ -1202,7 +1496,7 @@ var $FileUtil = {
         }
         return $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, {
             method: z.getDefault("PRO_AJAX_UPLOAD_METHOD"),
-            tips: z.getDefault("PRO_AJAX_UPLOAD_TIPS"),
+            tips: z.i18n.t("PRO_AJAX_UPLOAD_TIPS"),
             data: formData,
             ajax_options: {
                 headers: {"Content-Type": false}
@@ -2204,13 +2498,13 @@ var $CRUDTablePage = {
         var modal_title;
         switch (editType) {
             case "add":
-                modal_title = z.getDefault("PRO_MODAL_ADD_TITLE");
+                modal_title = z.i18n.t("PRO_MODAL_ADD_TITLE");
                 break;
             case "update":
-                modal_title = z.getDefault("PRO_MODAL_UPDATE_TITLE");
+                modal_title = z.i18n.t("PRO_MODAL_UPDATE_TITLE");
                 break;
             case "view":
-                modal_title = z.getDefault("PRO_MODAL_VIEW_TITLE");
+                modal_title = z.i18n.t("PRO_MODAL_VIEW_TITLE");
                 break;
             default:
                 modal_title = " "
@@ -2345,15 +2639,15 @@ var $CRUDTablePage = {
         if (confirm === false) {
             ajaxDelete();
         } else {
-            z.widget.confirm(z.getDefault("PRO_MESSAGE_DELETE_CONFIRM"), z.getDefault("PRO_MESSAGE_TIPS"), function (result) {//callback
+            z.widget.confirm(z.i18n.t("PRO_MESSAGE_DELETE_CONFIRM"), z.i18n.t("PRO_MESSAGE_TIPS"), function (result) {//callback
                 if (result) {
                     ajaxDelete();
                 }
             }, {
                 confirm_class: z.getDefault("PRO_MODAL_CONFIRM_CLASS"),
                 cancel_class: z.getDefault("PRO_MODAL_CANCEL_CLASS"),
-                confirm_text: z.getDefault("PRO_MODAL_CONFIRM_TEXT"),
-                cancel_text: z.getDefault("PRO_MODAL_CANCEL_TEXT")
+                confirm_text: z.i18n.t("PRO_MODAL_CONFIRM_TEXT"),
+                cancel_text: z.i18n.t("PRO_MODAL_CANCEL_TEXT")
             });
         }
     },
@@ -3119,10 +3413,10 @@ var $PropertySheet = function () {
     var _this = this;
     this.setColumns([
         z.util.mergeObject({
-            name: z.getDefault("PRO_SHEET_PROPERTY_COLUMN_NAME"), field: z.getDefault("PRO_SHEET_PROPERTY_COLUMN_FIELD"), sortable: true
+            name: z.i18n.t("PRO_SHEET_PROPERTY_COLUMN_NAME"), field: z.getDefault("PRO_SHEET_PROPERTY_COLUMN_FIELD"), sortable: true
         }, this.get("property_column_properties")),
         z.util.mergeObject({
-            name: z.getDefault("PRO_SHEET_VALUE_COLUMN_NAME"), filter: false,
+            name: z.i18n.t("PRO_SHEET_VALUE_COLUMN_NAME"), filter: false,
             render: function (td, propertyRowData) {
                 if (_this._getPropertyField(propertyRowData)) {//'attr.name'
                     var editType = _this._getEditType(propertyRowData);//edit/view
@@ -3769,32 +4063,32 @@ z.util.mergeObject($GVUtil, {
         var toolbar = z.dom.create("div", 'gv-toolbar');
         $GVUtil.createToolbarBtn(toolbar,
             '<svg><line x1="11" y1="3" x2="11" y2="19"></line><line x1="3" y1="11" x2="19" y2="11"></line></svg>',
-            z.getDefault("PRO_GVIEW_TOOLBAR_ZOOM_IN_TITLE"),
+            z.i18n.t("PRO_GVIEW_TOOLBAR_ZOOM_IN_TITLE"),
             function () {
                 gView.zoomIn(false);
             });
         $GVUtil.createToolbarBtn(toolbar,
             '<svg><line x1="3" y1="11" x2="19" y2="11"></line></svg>',
-            z.getDefault("PRO_GVIEW_TOOLBAR_ZOOM_OUT_TITLE"),
+            z.i18n.t("PRO_GVIEW_TOOLBAR_ZOOM_OUT_TITLE"),
             function () {
                 gView.zoomOut(false);
             });
         $GVUtil.createToolbarBtn(toolbar,
             '<svg><path d="M8 3H4a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M2 16v3a2 2 0 002 2h3"></path></svg>',
-            z.getDefault("PRO_GVIEW_TOOLBAR_ZOOM_FIT_TITLE"),
+            z.i18n.t("PRO_GVIEW_TOOLBAR_ZOOM_FIT_TITLE"),
             function () {
                 gView.zoomFit();
             });
         $GVUtil.createToolbarBtn(toolbar,
             '<svg><polyline points="17 2 20 5 17 8"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h13"></path><polyline points="7 20 3 17 7 14"></polyline><path d="M20 11v2a4 4 0 0 1-4 4H3"></path></svg>',
-            z.getDefault("PRO_GVIEW_TOOLBAR_RESET_TITLE"),
+            z.i18n.t("PRO_GVIEW_TOOLBAR_RESET_TITLE"),
             function () {
                 gView.resetTransform();
             });
         toolbar.appendChild(z.dom.create("br"));
         $GVUtil.createToolbarBtn(toolbar,
             '<svg><rect x="2" y="2" width="18" height="18" rx="2" ry="2"></rect><circle cx="8" cy="8" r="1.5"></circle><polyline points="20 14 15 9 4 20"></polyline></svg>',
-            z.getDefault("PRO_GVIEW_TOOLBAR_SAVE_IMAGE_TITLE"),
+            z.i18n.t("PRO_GVIEW_TOOLBAR_SAVE_IMAGE_TITLE"),
             function () {
                 $GVUtil._saveAsImg(gView.toImage(), "gv.png");
             });
@@ -6003,6 +6297,7 @@ var $GifNode = z.util.newClass(z.gv.Node, function () {
 var pro = {
     Util: $Util,
     DomUtil: $DomUtil,
+    DomI18n: $DomI18n,
 
     AjaxCRUD: $AjaxCRUD,
     AjaxCache: $AjaxCache,
@@ -6037,7 +6332,7 @@ var pro = {
     gv: {
         GifUtil: $GifUtil,
         GifNode: $GifNode,
-        GeoJSONParser:$GeoJSONParser,
+        GeoJSONParser: $GeoJSONParser,
         layout: {
             GridLayout: $GridLayout,
             RingLayout: $RingLayout,

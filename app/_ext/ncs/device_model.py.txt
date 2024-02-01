@@ -7,7 +7,7 @@ from flaskz.models import ModelMixin, ModelBase
 from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
 from sqlalchemy.orm import relationship
 
-from .apply.device_apply import DeviceNCSApply, AuthGroupNCSApply
+from .apply.device_apply import DeviceNCSApply, DeviceAuthNCSApply
 from .model import ModelNCSMixin
 
 
@@ -27,18 +27,18 @@ class DeviceModel(ModelBase, ModelMixin):
     code = Column(String(32), unique=True, nullable=False)  # 设备型号编码
     name = Column(String(32), nullable=False)  # 设备型号名称 ASA/USD6000/Big-IP
     type = Column(String(32))  # 设备类型，firewall/switch/router
-    ned = relationship("DeviceNed", uselist=False, cascade='all,delete-orphan', lazy='joined')  # 对应的NED
+    driver = relationship("DeviceDriver", uselist=False, cascade='all,delete-orphan', lazy='joined')  # 对应的NED
 
 
-class DeviceNed(ModelBase, ModelMixin):
+class DeviceDriver(ModelBase, ModelMixin):
     """设备NED(用于配置下发)"""
-    __tablename__ = 'device_neds'
+    __tablename__ = 'device_drivers'
     id = Column(Integer, primary_key=True, autoincrement=True)
     # Manufacturer.code+DeviceModel.code
     model_id = Column(Integer, ForeignKey("device_models.id", ondelete='CASCADE'), nullable=False)  # 设备型号id
     name = Column(String(255), nullable=False)  # NED名称，用于设备纳管
     type = Column(String(32), nullable=False)  # NED类型('cli|netconf|generic')
-    oper_name = Column(String(255))  # oper ned name
+    oper_name = Column(String(255))  # oper driver name
 
 
 class DeviceAuth(ModelBase, ModelNCSMixin, ModelMixin):
@@ -65,7 +65,7 @@ class DeviceAuth(ModelBase, ModelNCSMixin, ModelMixin):
 
     @classmethod
     def get_ncs_apply(cls):  # 指定NCSApply
-        return AuthGroupNCSApply
+        return DeviceAuthNCSApply
 
 
 class Device(ModelBase, ModelNCSMixin, ModelMixin):  # 继承ModelNCSMixin以添加NCS调用功能
@@ -98,8 +98,8 @@ class Device(ModelBase, ModelNCSMixin, ModelMixin):  # 继承ModelNCSMixin以添
         if dev_model is None:
             return None
         json_data['auth'] = {'id': auth.id, 'name': auth.name}
-        json_data['ned'] = {'type': dev_model.ned.type, 'name': dev_model.ned.name,
-                            'oper_name': dev_model.ned.oper_name}
+        json_data['driver'] = {'type': dev_model.driver.type, 'name': dev_model.driver.name,
+                            'oper_name': dev_model.driver.oper_name}
         return json_data
 
     @classmethod
@@ -111,8 +111,8 @@ class Device(ModelBase, ModelNCSMixin, ModelMixin):  # 继承ModelNCSMixin以添
         try:
             dev_model = DeviceModel.query_by_pk(json_data.get("model_id"))
             if dev_model:
-                ned = dev_model.ned
-                if ned.type != 'cli':
+                driver = dev_model.driver
+                if driver.type != 'cli':
                     json_data.pop('protocol', None)
         except Exception as e:
             flaskz_logger.exception(e)

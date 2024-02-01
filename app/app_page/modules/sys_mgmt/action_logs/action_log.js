@@ -1,10 +1,10 @@
 var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
     action_selects: [
-        {name: "全部", value: ""},
-        {name: "添加", value: "add"},
-        {name: "删除", value: "delete"},
-        {name: "更新", value: "update"},
-        {name: "登录", value: "login"}
+        {name: z.i18n.t("COMMON_ALL"), value: ""},
+        {name: z.i18n.t("COMMON_ACTION_ADD"), value: "add"},
+        {name: z.i18n.t("COMMON_ACTION_DELETE"), value: "delete"},
+        {name: z.i18n.t("COMMON_ACTION_UPDATE"), value: "update"},
+        {name: z.i18n.t("COMMON_ACTION_LOGIN"), value: "login"}
     ],
     /*ext_modules: [
         {
@@ -19,9 +19,15 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
         grid_options: {
             pageable: true,
             columns: [
-                {name: "模块", field: "module", width: 160},
                 {
-                    name: "用户", field: "username", width: 180,
+                    name: z.i18n.t("SYS_ACTION_LOGS_MODULE"), field: "module", width: 160,
+                    render: function (td, data) {
+                        var module = data.get("module");
+                        td.innerHTML = ActionLog._getModuleI18nName(module);
+                    }
+                },
+                {
+                    name: z.i18n.t("SYS_ACTION_LOGS_USER"), field: "username", width: 180,
                     render: function (td, data) {
                         var user_name = data.get("user_name") || "";
                         var username = data.get("username") || "";
@@ -32,39 +38,39 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
                         }
                     }
                 },
-                {name: "IP地址", field: "user_ip", width: 150},
+                {name: z.i18n.t("SYS_ACTION_LOGS_IP"), field: "user_ip", width: 150},
                 {
-                    name: "操作", field: "action", width: 120,
+                    name: z.i18n.t("COMMON_ACTION"), field: "action", width: 120,
                     render: function (td, data) {
                         var action = data.get("action");
                         td.innerHTML = ActionLog.getActionName(action) || action || "";
                     }
                 },
                 {
-                    name: "操作结果", field: "result", width: 100,
+                    name: z.i18n.t("SYS_ACTION_LOGS_ACTION_RESULT"), field: "result", width: 100,
                     render: function (td, data) {
                         pro.GridUtil.renderResult(td, data);
                     }
                 },
                 {
-                    name: "请求数据", field: "req_data",
+                    name: z.i18n.t("SYS_ACTION_LOGS_REQ_RESULT"), field: "req_data",
                     render: function (td, data) {
                         ActionLog.renderDetail(td, data, "req_data")
                     }
                 },
                 {
-                    name: "结果数据", field: "res_data",
+                    name: z.i18n.t("SYS_ACTION_LOGS_RES_RESULT"), field: "res_data",
                     render: function (td, data) {
                         ActionLog.renderDetail(td, data, "res_data")
                     }
                 },
                 {
-                    name: "时间", field: "created_at", width: 160,
+                    name: z.i18n.t("SYS_ACTION_LOGS_AT"), field: "created_at", width: 160,
                     render: function (td, data) {
                         td.innerHTML = pro.TimeUtil.format(data.get("created_at"))
                     }
                 },
-                {name: "备注", field: "description", minimized: true, minimizable: true}
+                {name: z.i18n.t("COMMON_DESCRIPTION"), field: "description", minimized: true, minimizable: true}
             ]
         }
     },
@@ -100,7 +106,7 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
         }
         var field = target.getAttribute("field");
         this.showFormModal("view", {
-            modal_title: field === "req_data" ? "请求数据" : "结果数据",
+            modal_title: field === "req_data" ? z.i18n.t("SYS_ACTION_LOGS_REQ_RESULT") : z.i18n.t("SYS_ACTION_LOGS_RES_RESULT"),
             detail: target.getAttribute("title")
         })
     },
@@ -119,10 +125,10 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
     },
     initModel: function () {
         pro.AjaxCache.query('ajax_cache_action_logs_modules', {url: AjaxUrl.sys_action_log.modules, success_notify: false}, function (data) {
-            (data || []).forEach(function (item) {
-                item.module = data.name;//for select
-            });
-            var modules = z.util.mergeArray([{name: "全部", module: ""}], data)
+            var modules = z.util.mergeArray([{name: z.i18n.t("COMMON_ALL"), module: ""}], data)
+            modules.forEach(function (item) {
+                this._updateModuleItem(item);
+            }, this);
             var ext_modules = this.ext_modules || [];
             if (ext_modules.length > 0) {
                 modules = z.util.mergeArray(modules, ext_modules)
@@ -141,6 +147,23 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
         });
 
         this.handleSearchChange();
+    },
+    _updateModuleItem: function (item) {
+        var name = item.name;
+        if (name) {
+            if (!item.hasOwnProperty("module")) {
+                item.module = name;
+            }
+            // var i18n_key = "MENU_" + name.replace(/[- ]/g, "_").toUpperCase();
+            item.name = this._getModuleI18nName(name);//z.i18n.t(i18n_key) || name
+        }
+        z.util.eachArray(item.children || [], function (child) {
+            this._updateModuleItem(child);
+        }, this)
+    },
+    _getModuleI18nName: function (module) {
+        return z.i18n.t("MODULE_" + module.trim().replace(/[- ]/g, "_").toUpperCase()) ||
+            z.i18n.t("MODULE_" + module.trim().toUpperCase()) || module;
     },
     initController: function () {
         this.queryForm = z.form.Form(".module>.toolbar");

@@ -11,5 +11,5 @@ z.setDefault({
     PRO_CRUDTABLEPAGE_MODAL_OPTIONS: {open_animation: "z-animation-fadeInLeft", close_animation: "z-animation-fadeOutRight"},
     PRO_CRUDTABLEPAGE_NESTED_MODAL_OPTIONS: {open_animation: "z-animation-fadeInUp", close_animation: "z-animation-fadeOutDown"},
 
-    DATE_LOCAL_TIMEZONE_OFFSET:null
+    DATE_LOCAL_TIMEZONE_OFFSET: null
 });

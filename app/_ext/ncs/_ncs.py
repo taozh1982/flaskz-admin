@@ -136,9 +136,8 @@ class NCSApply:
     def _get_url(cls, op_type, value=None, preview=False):
         url_dict = {}
         url_dict.update(cls.get_url(value).get(op_type))
-        url = url_dict.get('url')
         if preview is True:
-            url_dict['url'] = ncs_util.add_dryrun_query(url)
+            url_dict['url'] = ncs_util.add_dryrun_query(url_dict.get('url'))
         return url_dict
 
     # -------------------------------------------yang patch-------------------------------------------

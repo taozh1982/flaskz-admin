@@ -3,21 +3,21 @@ var Role = z.util.mergeObject(pro.template.CRUDTablePage, {
             url: AjaxUrl.sys_role,
             grid_options: {
                 columns: [
-                    {name: "角色名称", field: "name"},
-                    {name: "描述", field: "description", "minimizable": true},
+                    {name: z.i18n.t("SYS_ROLE_NAME"), field: "name"},
+                    {name: z.i18n.t("COMMON_DESCRIPTION"), field: "description", "minimizable": true},
                     {
-                        name: "权限列表", field: "modules", sortable: false, filter: false, "minimizable": true, "minimized": true,
+                        name: z.i18n.t("SYS_ROLE_MODULES"), field: "modules", sortable: false, filter: false, "minimizable": true, "minimized": true,
                         render: function (td, data) {
                             td.innerHTML = "<small>" + Role.getModulesName(data.get("modules")) + "</small>";
                         }
                     },
                     {
-                        name: "更新时间", field: "updated_at", "minimizable": true, render: function (td, data) {
+                        name: z.i18n.t("COMMON_UPDATED_AT"), field: "updated_at", "minimizable": true, render: function (td, data) {
                             td.innerHTML = pro.TimeUtil.format(data.get("updated_at"))
                         }
                     },
                     {
-                        name: "操作", width: 180, sortable: false, filter: false,
+                        name: z.i18n.t("COMMON_ACTION"), width: 180, sortable: false, filter: false,
                         visible: pro.AccessControl.hasUpdatePermission(),
                         render: function (td, data, column) {
                             pro.template.CRUDTablePage.renderUpdateColumn(td, data, column);
@@ -50,7 +50,7 @@ var Role = z.util.mergeObject(pro.template.CRUDTablePage, {
             if (value) {
                 var modules = this._getModuleGridValue();
                 if (modules.length === 0) {
-                    z.widget.notify("请选择功能模块", {type: "info", duration: 1200});
+                    z.widget.notify(z.i18n.t("SYS_ROLE_MODULES_REQUIRED"), {type: "info", duration: 1200});
                     return null;
                 }
                 value.modules = modules;
@@ -62,8 +62,15 @@ var Role = z.util.mergeObject(pro.template.CRUDTablePage, {
             pro.AjaxCRUD.query({
                 url: AjaxUrl.sys_role.query,
                 success: function (result) {
-                    var data = result.data;
-                    this._moduleArr = data.modules;
+                    var data = result.data || {};
+                    this._moduleArr = data.modules || [];
+                    this._moduleArr.forEach(function (item) {
+                        var name = item.name;
+                        if (name) {
+                            item.name = z.i18n.t("MODULE_" + name.trim().replace(/[- ]/g, "_").toUpperCase()) ||
+                                z.i18n.t("MODULE_" + name.trim().toUpperCase()) || name;
+                        }
+                    });
                     this.grid.setData(data.roles);
                 },
                 context: this
@@ -71,11 +78,10 @@ var Role = z.util.mergeObject(pro.template.CRUDTablePage, {
         },
         getModulesName: function (modules) {
             if (!this._moduleMap) {
-                var map = {};
+                var map = this._moduleMap = {};
                 this._moduleArr.forEach(function (item) {
                     map[item.id] = item;
                 });
-                this._moduleMap = map;
             }
             var _this = this;
             var labelArr = [];

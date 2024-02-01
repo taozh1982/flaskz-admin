@@ -2,10 +2,11 @@
 import multiprocessing
 import os
 
-_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '_gunicorn'))  # 创建_gunicorn文件夹用于存放日志等文件
-_VAR = os.path.join(_ROOT, 'var')
+_GUNICORN_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '_gunicorn'))  # 创建_gunicorn/var/gunicorn_log文件夹用于存放日志等文件
+_LOG_PATH = os.path.join(_GUNICORN_PATH, 'log')
 # _ETC = os.path.join(_ROOT, 'etc')
-
+if not os.path.exists(_LOG_PATH):
+    os.makedirs(_LOG_PATH)
 # ------------------------------------log------------------------------------
 # loglevel = ''     # The granularity of Error log outputs.
 # :debug/info/warning/error/critical
@@ -15,12 +16,12 @@ loglevel = 'info'
 # :--access-logfile FILE    # os.path.join(_VAR, 'log/wsgi-access.log')
 # :None
 # :'-'   # log to stdout
-accesslog = os.path.join(_VAR, 'gunicorn_log', 'wsgi-access.log')
+accesslog = os.path.join(_LOG_PATH, 'wsgi-access.log')
 
 # errorlog = '-'   # The Error log file to write to.
 # :--error-logfile FILE, --log-file FILE    # os.path.join(_VAR, 'log/wsgi-error.log')
 # :'-'   # log to stderr.
-errorlog = os.path.join(_VAR, 'gunicorn_log', 'wsgi-error.log')
+errorlog = os.path.join(_LOG_PATH, 'wsgi-error.log')
 
 # pidfile = '' # The filename to use for the PID file. If not set, no PID file will be written.
 # pidfile = os.path.join(_VAR, 'gunicorn_log', 'wsgi-pid.log')

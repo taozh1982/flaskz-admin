@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>操作日志</title>
+    <title i18n="SYS_ACTION_LOGS_TITLE"></title>
     <link rel="stylesheet" href="../../../libs/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../../libs/project/proj.css">
 
@@ -38,25 +38,25 @@
 <body class="fu-pro">
 <div class="module">
     <div class="toolbar controls">
-        <label class="col-form-label">模块:</label>
+        <label class="col-form-label"><span i18n="SYS_ACTION_LOGS_MODULE"></span>:</label>
         <select id="moduleSelect" ze-model="module"></select>
 
-        <label class="col-form-label">操作:</label>
+        <label class="col-form-label"><span i18n="COMMON_ACTION"></span>:</label>
         <select id="actionSelect" ze-model="action"> </select>
 
-        <label class="col-form-label">操作结果:</label>
+        <label class="col-form-label"><span i18n="SYS_ACTION_LOGS_ACTION_RESULT"></span>:</label>
         <select id="resultSelect" ze-model="result">
-            <option value="">全部</option>
-            <option value="success">成功</option>
-            <option value="fail">失败</option>
+            <option value="" i18n="COMMON_ALL"></option>
+            <option value="success" i18n="COMMON_SUCCESS"></option>
+            <option value="fail" i18n="COMMON_FAIL"></option>
         </select>
 
-        <label class="col-form-label">时间:</label>
+        <label class="col-form-label"><span i18n="SYS_ACTION_LOGS_AT"></span>:</label>
         <select id="dateRangeSelect" ze-model="created_at">
-            <option value="">全部</option>
-            <option value="previous_24_hours">最近24小时</option>
-            <option value="previous_7_days">最近7天</option>
-            <option value="previous_30_days">最近30天</option>
+            <option value="" i18n="COMMON_ALL"></option>
+            <option value="previous_24_hours" i18n="SYS_ACTION_LOGS_PREVIOUS_24_HOURS"></option>
+            <option value="previous_7_days" i18n="SYS_ACTION_LOGS_PREVIOUS_7_DAYS"></option>
+            <option value="previous_30_days" i18n="SYS_ACTION_LOGS_PREVIOUS_30_DAYS"></option>
             <!--<option disabled="true">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</option>
             <option value="previous_month">上个月</option>
             <option value="previous_2_months">上2个月</option>
@@ -76,7 +76,7 @@
                     <pre ze-model="detail"></pre>
                 </div>
                 <div class="footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" i18n="COMMON_ACTION_CLOSE"></button>
                 </div>
             </div>
         </div>

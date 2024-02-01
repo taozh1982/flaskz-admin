@@ -1,5 +1,7 @@
-./i18n_zh.js
 ./init.js
+./i18n/en.js
+./i18n/zh.js
+./i18n/init.js
 ./AjaxUrl.js
 ./page.js
 

@@ -20,7 +20,7 @@ NCS扩展，用于将NCS操作从数据模型中解耦
 两者都用于返回参数，但是用途不太一样
 
 - **apply.to_ncs_data返回的是调用NCS的payload**，一般不建议在其中再进行数据查询等操作
-- **model.get_ncs_data返回的是供apply使用的数据**，包含apply所需的全部参数，可能需要在现有数据基础上附加一些NCS用到的信息，例如)添加设备时，需要附加ned和授权组相关的信息
+- **model.get_ncs_data返回的是供apply使用的数据**，包含apply所需的全部参数，可能需要在现有数据基础上附加一些NCS用到的信息，例如)添加设备时，需要附加driver和授权相关的信息
 
 ### 配置参数
 
@@ -48,7 +48,7 @@ NCS_PASSWORD = None  # NCS服务密码
        ip_address = Column(String(32))  # 地址
        protocol = Column(String(32))    # 管理协议(ssh/telnet)
        port = Column(Integer)   # 管理端口
-       auth_id = Column(Integer, ForeignKey("device_auths.id")) # 授权组
+       auth_id = Column(Integer, ForeignKey("device_auths.id")) # 授权
    
        @classmethod
        def get_ncs_data(cls, json_data, op_type):       # 返回apply需要的全部参数
@@ -59,8 +59,8 @@ NCS_PASSWORD = None  # NCS服务密码
            if dev_model is None:
                return None
            json_data['auth'] = {'id': auth.id, 'name': auth.name}
-           json_data['ned'] = {'type': dev_model.ned.type, 'name': dev_model.ned.name,
-                               'oper_name': dev_model.ned.oper_name}
+           json_data['driver'] = {'type': dev_model.driver.type, 'name': dev_model.driver.name,
+                               'oper_name': dev_model.driver.oper_name}
            return json_data
    
        @classmethod
@@ -78,18 +78,18 @@ NCS_PASSWORD = None  # NCS服务密码
             if op_type == 'delete' or op_type is None:
                 return value
     
-            ned = value.get('ned', {})
+            driver = value.get('driver', {})
             auth_name = value.get('auth').get('name')
-            ned_type = ned.get('type')
-            ned_oper_name = ned.get('oper_name')
-            ned_id = ned_oper_name or ned.get('name')
+            driver_type = driver.get('type')
+            driver_oper_name = driver.get('oper_name')
+            driver_id = driver_oper_name or driver.get('name')
             device_type = {
-                ned_type: {
-                    'ned-id': ned_id,
+                driver_type: {
+                    'ned-id': driver_id,
                 }
             }
-            if ned_type != 'netconf':
-                device_type[ned_type]['protocol'] = value.get('protocol')
+            if driver_type != 'netconf':
+                device_type[driver_type]['protocol'] = value.get('protocol')
     
             response = {
                 'name': value.get('name'),
@@ -102,7 +102,7 @@ NCS_PASSWORD = None  # NCS服务密码
                 }
             }
     
-            if ned_oper_name:
+            if driver_oper_name:
                 response['live-status-protocol'] = [{
                     'name': '',
                     'authgroup': auth_name,

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>License</title>
+    <title i18n="SYS_LICENSES_TITLE"></title>
     <link rel="stylesheet" href="../../../libs/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../../libs/project/proj.css">
 
@@ -15,30 +15,30 @@
 <body class="fu-pro">
 <div class="module">
     <div class="toolbar controls">
-        <button id="addBtn" class="btn btn-primary" ac-action="update">上传</button>
-        <input id="filterInput" placeholder="过滤" autofocus name="user_filter">
+        <button id="addBtn" class="btn btn-primary" ac-action="update" i18n="COMMON_ACTION_UPLOAD"></button>
+        <input id="filterInput" i18n-placeholder="COMMON_ACTION_FILTER" autofocus name="license_filter">
     </div>
     <div id="gridDiv" class="content"></div>
     <div class="modal-form">
         <div id="modalDiv" class="zw-modal drawer controls label-align-right">
             <div class="content">
                 <div class="header">
-                    <span id="titleDiv" class="title"><i class="fa fa-plus-square"></i> License上传</span>
+                    <span id="titleDiv" class="title"><i class="fa fa-plus-square"></i> <span i18n="COMMON_ACTION_UPLOAD"></span></span>
                     <span class="close" data-dismiss="modal">×</span>
                 </div>
                 <div class="body">
                     <div class="grid-row">
-                        <label class="grid-col-3-12 required" for-ze-model="username">License文件</label>
+                        <label class="grid-col-3-12 required" for-ze-model="username" i18n="SYS_LICENSES_FILE"></label>
                         <div class="grid-col-8-12">
                             <input id="fileInput" ze-model="file"
-                                   v-rules="required" v-message="请选择License文件" type="file"
-                                   autofocus style="padding: 0.375rem 0.7rem">
+                                   v-rules="required" i18n-v-message="SYS_LICENSES_FILE_REQUIRED" type="file"
+                                   autofocus style="padding: 0.375rem 0.7rem" accept=".dat">
                         </div>
                     </div>
                 </div>
                 <div class="footer">
-                    <button type="button" id="modalOkBtn" class="btn btn-primary" autofocus>确认</button>
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" id="modalOkBtn" class="btn btn-primary" i18n="COMMON_ACTION_OK" autofocus></button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" i18n="COMMON_ACTION_CANCEL"></button>
                 </div>
             </div>
         </div>

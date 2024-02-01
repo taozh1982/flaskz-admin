@@ -3,10 +3,16 @@ var License = z.util.mergeObject(pro.template.CRUDTablePage, {
         url: AjaxUrl.sys_license,
         grid_options: {
             columns: [
-                {name: "用户", field: "user"},
-                {name: "类型", field: "type"},
+                {name: z.i18n.t("SYS_LICENSES_USER"), field: "user"},
                 {
-                    name: "起止日期", field: "start_date", render: function (td, data) {
+                    name: z.i18n.t("SYS_LICENSES_TYPE"), field: "type",
+                    render: function (td, data) {
+                        td.innerHTML = License.getLicenseType(data.get("type"));
+                    }
+                },
+                {
+                    name: z.i18n.t("SYS_LICENSES_START_END_DATE"), field: "start_date",
+                    render: function (td, data) {
                         var txt = data.get("start_date") + " - " + data.get("end_date");
                         if (data.get('in_use') === true) {
                             txt += " <span class='color-success'><i class='fa fa-check'></i></span>"
@@ -14,7 +20,8 @@ var License = z.util.mergeObject(pro.template.CRUDTablePage, {
                         td.innerHTML = txt;
                     }
                 }, {
-                    name: "上传时间", field: "created_at", render: function (td, data) {
+                    name: z.i18n.t("SYS_LICENSES_UPLOAD_AT"), field: "created_at",
+                    render: function (td, data) {
                         td.innerHTML = pro.TimeUtil.format(data.get("created_at"));
                     }
                 },
@@ -26,10 +33,15 @@ var License = z.util.mergeObject(pro.template.CRUDTablePage, {
                 }
             ]
         }
+    },
+    getLicenseType: function (type) {
+        var typeMap = {
+            "EVALUATION": z.i18n.t("SYS_LICENSES_TYPE_EVALUATION"),
+            "RUNTIME": z.i18n.t("SYS_LICENSES_TYPE_RUNTIME")
+        }
+        return typeMap[type] || type;
     }
 }, {
-    init: function () {
-    },
     initFormModalValue: function () {
         z.dom.setValue("#fileInput", "");
     },
@@ -39,7 +51,7 @@ var License = z.util.mergeObject(pro.template.CRUDTablePage, {
             files: z.dom.getValue("#fileInput"),
             url: AjaxUrl.sys_license.add,
             success: function () {
-                z.widget.alert("License上传成功", z.getDefault("PRO_MESSAGE_TIPS"), function () {
+                z.widget.alert(z.i18n.t("SYS_LICENSES_UPLOAD_SUCCESS_MSG"), z.i18n.t("PRO_MESSAGE_TIPS"), function () {
                     window.top.location.reload();
                 });
             }

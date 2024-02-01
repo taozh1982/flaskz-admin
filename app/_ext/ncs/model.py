@@ -112,7 +112,7 @@ class ModelNCSMixin:
     @classmethod
     def get_ncs_data(cls, json_data, action):
         """
-        将json数据转化为ncs数据，要添加附加信息，ex)ned/authgroup
+        将json数据转化为ncs数据，要添加附加信息，ex)driver/auth
         :param json_data:
         :param action:
         :return:

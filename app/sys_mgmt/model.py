@@ -293,7 +293,7 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
             return res_status_codes.db_data_in_use
         password = data.get('password')
         if type(password) is not str or password.strip() == '':  # password为空==不修改
-            del data['password']
+            data.pop('password', None)
         return super().check_update_data(data)
 
     # @classmethod

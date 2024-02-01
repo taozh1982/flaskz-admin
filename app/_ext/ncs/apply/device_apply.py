@@ -4,7 +4,7 @@ from flaskz.log import flaskz_logger
 from .. import NCSApply, ncs_request, ncs_urls
 
 
-class AuthGroupNCSApply(NCSApply):
+class DeviceAuthNCSApply(NCSApply):
     @classmethod
     def to_ncs_data(cls, value, op_type):
         if op_type == 'delete':
@@ -22,7 +22,7 @@ class AuthGroupNCSApply(NCSApply):
 
     @classmethod
     def get_url(cls, value):
-        return ncs_urls.auth_group
+        return ncs_urls.device_auth
 
 
 class DeviceNCSApply(NCSApply):
@@ -40,18 +40,18 @@ class DeviceNCSApply(NCSApply):
         if op_type == 'delete' or op_type is None:
             return value
 
-        ned = value.get('ned', {})
+        driver = value.get('driver', {})
         auth_name = value.get('auth').get('name')
-        ned_type = ned.get('type')
-        ned_oper_name = ned.get('oper_name')
-        ned_id = ned_oper_name or ned.get('name')
+        driver_type = driver.get('type')
+        driver_oper_name = driver.get('oper_name')
+        driver_id = driver_oper_name or driver.get('name')
         device_type = {
-            ned_type: {
-                'ned-id': ned_id,
+            driver_type: {
+                'ned-id': driver_id,
             }
         }
-        if ned_type != 'netconf':
-            device_type[ned_type]['protocol'] = value.get('protocol')
+        if driver_type != 'netconf':
+            device_type[driver_type]['protocol'] = value.get('protocol')
 
         response = {
             'name': value.get('name'),
@@ -64,7 +64,7 @@ class DeviceNCSApply(NCSApply):
             }
         }
 
-        if ned_oper_name:
+        if driver_oper_name:
             response['live-status-protocol'] = [{
                 'name': '',
                 'authgroup': auth_name,

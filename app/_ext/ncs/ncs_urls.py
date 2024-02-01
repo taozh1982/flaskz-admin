@@ -2,7 +2,7 @@ yang_path = {
     'url': '/restconf/data',
     'method': "patch"
 }
-auth_group = {
+device_auth = {
     'add': {
         'url': '/restconf/data/tailf-ncs:devices/authgroups/',
         'method': 'post'

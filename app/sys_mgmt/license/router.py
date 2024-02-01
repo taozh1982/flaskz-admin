@@ -50,20 +50,21 @@ def sys_license_upload():
             else:
                 success, res_data = False, status_codes.file_format_not_allowed
 
-    license_req_data = None
+    license_upload_log_data = None
     if license_txt:
         license_txt_list = license_txt.split("Signature=")
-        license_req_data = license_txt_list[0].strip()
+        license_upload_log_data = license_txt_list[0].strip()
         if len(license_txt_list) > 1:
-            license_req_data = license_req_data + '\nSignature=...'
+            signature = license_txt_list[1].strip()
+            license_upload_log_data = license_upload_log_data + '\nSignature=' + signature[:6] + '***' + signature[-6:]
 
     license_res_data = res_data
     if success is True:
         license_res_data = dict(res_data)
-        pop_dict_keys(license_res_data, ['Signature', 'license', 'license_hash'])
+        pop_dict_keys(license_res_data, ['Signature', 'license_hash'])
 
-    log_operation('licenses', 'add', success, license_req_data, get_log_data(license_res_data))
-    flaskz_logger.info(get_rest_log_msg('Upload license', license_txt, success, res_data))
+    log_operation('licenses', 'add', success, license_upload_log_data, get_log_data(license_res_data))
+    flaskz_logger.info(get_rest_log_msg('Upload license', license_txt, success, license_res_data))
     return create_response(success, license_res_data)
 
 
@@ -80,7 +81,8 @@ def sys_license_query():
         signature = data.get('Signature')
         if current_license and signature == current_license.get('Signature'):
             data['in_use'] = True
-        pop_dict_keys(data, ['Signature', 'license', 'license_hash'])
+
+        pop_dict_keys(data, ['Signature', 'license_hash'])
 
     flaskz_logger.debug(get_rest_log_msg('Query license', None, success, res_data))
     return create_response(success, res_data)

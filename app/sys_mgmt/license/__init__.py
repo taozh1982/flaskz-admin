@@ -34,8 +34,8 @@ class SysLicense(ModelBase, ModelMixin):
         result = super(SysLicense, args[0]).to_dict(**kwargs)
         licenses = result.get("license").split("Signature=")
         if len(licenses) > 1:
-            result['license'] = licenses[0]
-            result['Signature'] = licenses[1]
+            result['license'] = licenses[0].strip()  # 授权信息
+            result['Signature'] = licenses[1].strip()  # 签名信息
         return result
 
 

@@ -27,7 +27,7 @@ def log_operation(module, action, result, req_data=None, res_data=None, descript
     if result is True:
         result = "success"
     elif result is False:
-        result = "fail"
+        result = "fail"  # fail-->failure
 
     if req_data is not None and not is_str(req_data):
         req_data = json.dumps(req_data)

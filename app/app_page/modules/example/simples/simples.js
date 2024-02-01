@@ -23,7 +23,7 @@ var Simples = z.util.mergeObject(pro.template.CRUDTablePage, {
                     }
                 },
                 {
-                    name: "#", width: 130, sortable: false, filter: false,
+                    name: "#", width: 150, sortable: false, filter: false,
                     visible: pro.AccessControl.hasUpdatePermission(),
                     render: function (td, data, column) {
                         pro.template.CRUDTablePage.renderUpdateColumn(td, data, column);

@@ -7,8 +7,6 @@ from flaskz.log import flaskz_logger
 from flaskz.models import parse_pss
 from flaskz.rest import register_model_route, rest_permission_required, get_rest_log_msg, log_operation, rest_login_required
 from flaskz.utils import get_request_json, create_response
-from sqlalchemy import inspect
-from sqlalchemy.orm import class_mapper
 
 from ..api import api_bp
 from ..modules.example import DepartmentModel, EmployeeModel, SimpleModel
