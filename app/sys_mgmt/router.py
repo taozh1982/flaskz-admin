@@ -82,7 +82,7 @@ def sys_auth_token_refresh():
         else:
             res_data = res_status_codes.account_not_found
 
-    log_operation('users', 'login', success, req_log_data, log_data={
+    log_operation('users', 'login', success, {'refresh_token': refresh_token[:6] + '*' * 6 + refresh_token[-6:]}, log_data={
         'username': username
     })
     flaskz_logger.info(get_rest_log_msg('User refresh login token', {'username': username}, success, res_data))

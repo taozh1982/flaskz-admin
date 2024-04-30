@@ -4,6 +4,15 @@ var refreshMenuByPath = function (paths) {
         admin.refreshMenu(paths)
     }
 };
+if (z.bom.browser === "Safari") {
+    z.ready(function () {
+        var fk_safari_style = z.dom.create("<style type='text/css'>.fk-safari {cursor: auto}</style>")
+        document.head.appendChild(fk_safari_style);
+        z.util.callLater(function () {
+            document.head.removeChild(fk_safari_style);
+        }, 10)
+    })
+}
 
 z.setDefault({
     "AJAX_BEFORE_SEND": function (httpRequest) {
@@ -26,7 +35,12 @@ z.setDefault({
                             window.top.location.href = "/login";
                         } else {
                             z.widget.alert(z.i18n.t("LOGIN_REQUIRED"), z.i18n.t("PRO_MESSAGE_TIPS"), function (result) {//callback
-                                window.top.location.href = "/login";
+                                z.widget.notify(false);
+                                if (window.top.Admin && window.top.Admin.showLoginModal) {
+                                    window.top.Admin.showLoginModal();
+                                } else {
+                                    window.top.location.href = "/login";
+                                }
                             });
                         }
                     }

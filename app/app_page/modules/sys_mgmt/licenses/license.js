@@ -19,8 +19,9 @@ var License = z.util.mergeObject(pro.template.CRUDTablePage, {
                         }
                         td.innerHTML = txt;
                     }
-                }, {
-                    name: z.i18n.t("SYS_LICENSES_UPLOAD_AT"), field: "created_at",
+                },
+                {
+                    name: z.i18n.t("SYS_LICENSES_UPLOADED_AT"), field: "created_at",
                     render: function (td, data) {
                         td.innerHTML = pro.TimeUtil.format(data.get("created_at"));
                     }
@@ -42,7 +43,23 @@ var License = z.util.mergeObject(pro.template.CRUDTablePage, {
         return typeMap[type] || type;
     }
 }, {
+    init: function () {
+        var fileBtn = z.dom.query('#fileBtn')
+        pro.FileUtil.addClickToSelectFileListener(fileBtn, function (files) {
+            var names = [];
+            var len = files.length;
+            for (var i = 0; i < len; i++) {
+                names.push(files[i].name);
+            }
+            z.dom.setValue(fileBtn, names.join(", "));
+            this.form.getValidator().reset();
+        }, this, {
+            "id": "fileInput",
+            "accept": ".dat"
+        })
+    },
     initFormModalValue: function () {
+        z.dom.setValue("#fileBtn", "");
         z.dom.setValue("#fileInput", "");
     },
     handleModelOk: function () {

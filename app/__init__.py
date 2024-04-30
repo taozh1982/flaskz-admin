@@ -9,12 +9,6 @@ from .sys_mgmt import auth
 
 def create_app(config_name):
     app = Flask(__name__)
-
-    # 应用配置
-    # app.url_map.strict_slashes = False  # 不需重定向而直接使用斜杠视图路由 ex)'user' and 'user/'
-    # 跨域支持, pip install flask-cors
-    # CORS(app)
-
     # 配置文件
     config_name = config_name.lower()
     app_config = config[config_name]
@@ -32,7 +26,7 @@ def create_app(config_name):
     # 系统管理模块初始化
     _init_login(app)
     _init_model_rest(app)
-    # _init_license(app)
+    _init_license(app)
 
     # 注册API
     main.init_app(app)
@@ -80,7 +74,6 @@ def _init_license(app):
     License菜单path: APP_LICENSE_MENU_PATH = 'licenses' # 参考sys_mgmt/router.sys_auth_account_query()
     *在sys_mgmt.router中导入license路由from .license import router，否则alembic不能发现License模型类*
     """
-    """
     from .sys_mgmt import license
     license_manager = license.LicenseManager()
     license_manager.load_license(license.load_license)  # License加载函数(可自定义)
@@ -90,7 +83,6 @@ def _init_license(app):
     if app_license:
         app_license.pop('Signature', None)
     log.flaskz_logger.info('License = %s' % app_license)
-    """
     pass
 
 
@@ -108,4 +100,14 @@ def _init_optional(app):
     # -swagger
     from ._ext.swagger import init_swagger
     init_swagger(app)
+    """
+
+    """
+    # -应用配置
+    app.url_map.strict_slashes = False  # 不需重定向而直接使用斜杠视图路由 ex)'user' and 'user/'
+    """
+
+    """
+    # 支持跨域, pip install flask-cors
+    CORS(app)
     """

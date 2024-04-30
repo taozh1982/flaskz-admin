@@ -1,7 +1,8 @@
 ./init.js
-./i18n/en.js
-./i18n/zh.js
-./i18n/init.js
+./i18n/_i18ns.js
+./i18n/sys_mgmt.js
+./i18n/menus.js
+./i18n/_init.js
 ./AjaxUrl.js
 ./page.js
 

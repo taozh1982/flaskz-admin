@@ -1,6 +1,6 @@
 var FontIconMapping = {
     10000: "<i class='fa fa-server'></i>",
-    10000: "<i class='fa fa-cubes'></i>",
+    // 10000: "<i class='fa fa-cubes'></i>",
     20000: "<i class='fa fa-ioxhost'></i>",
     90000: "<i class='fa fa-gears'></i>",
     default_root_folder: "<i class='fa fa-file-text-o'></i>",
@@ -16,6 +16,7 @@ var URLMapping = {
 z.util.mergeObject(Admin, {
     initCustom: function () {
         this.initPreferenceController();
+        this.updateLocaleLabel(z.bom.getLocalStorage("locale"));
     },
     initModel: function () {
         pro.AjaxCRUD.query({
@@ -144,6 +145,10 @@ z.util.mergeObject(Admin, {
             }
         })
         z.widget.alert(licenseItems.join("\n"), "License")
+    },
+    updateLocale: function (locale) {
+        z.bom.setLocalStorage("locale", locale)
+        window.location.reload();
     }
 });
 z.util.mergeObject(Admin, {
@@ -179,9 +184,11 @@ z.util.mergeObject(Admin, {
             }
         });
         menus.forEach(function (item) {
-            var font_icon = _this._getMenuIcon(item);
-            if (font_icon) {
-                item.font_icon = font_icon;
+            if (!(item.name || "").trim().startsWith("<i")) {
+                var font_icon = _this._getMenuIcon(item);
+                if (font_icon) {
+                    item.font_icon = font_icon;
+                }
             }
             var path = item.path;
             if (path) {

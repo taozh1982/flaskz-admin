@@ -43,5 +43,12 @@ var Simples = z.util.mergeObject(pro.template.CRUDTablePage, {
             })
         }
         return value;
+    },
+    init: function () {
+        z.dom.event.onclick("#exportBtn", function () {
+            pro.FileUtil.ajaxDownload({
+                url:AjaxUrl.ex_simples.download
+            })
+        });
     }
 });

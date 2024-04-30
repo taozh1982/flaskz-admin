@@ -86,6 +86,18 @@
                     <span i18n="HOMEPAGE_LOGOUT"></span></a>
             </div>
         </div>
+        <div class="icon-item" data-toggle="zw-popover" data-content="element:#localeDiv" data-direction="down_left">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <label id="localeLabel">English</label>
+            <div id="localeDiv" class="header-popover">
+                <a locale="en"><span>English</span></a>
+                <a locale="zh"><span>简体中文</span></a>
+            </div>
+        </div>
     </div>
 </header>
 <div class="body-main">
@@ -103,17 +115,31 @@
                 <input type="hidden" ze-model="id" ze-model-type="integer">
                 <input type="hidden" ze-model="type">
                 <div class="grid-row">
-                    <label class="grid-col-3-12 required" i18n="SYS_USER_USERNAME"></label>
+                    <label class="grid-col-3-12 required" i18n="SYS_USERS_USERNAME"></label>
                     <div class="grid-col-8-12">
                         <input ze-model="username" disabled>
                     </div>
-                </div>
+                </div><!--
                 <div class="grid-row" ze-visible="[type]==='local'">
                     <label class="grid-col-3-12" for-ze-model="password" i18n="COMMON_PASSWORD"></label>
                     <div class="grid-col-8-12">
                         <input ze-model="password" autofocus>
                     </div>
+                </div>-->
+
+                <div class="grid-row" ze-visible="[type]==='local'">
+                    <label id="pwdLabel" class="grid-col-3-12" for-ze-model="password" i18n="COMMON_PASSWORD"></label>
+                    <div class="grid-col-8-12">
+                        <input id="pwdInput" name="password" ze-model="password" type="password" autofocus>
+                    </div>
                 </div>
+                <div class="grid-row" ze-visible="[type]==='local'">
+                    <label class="grid-col-3-12" for-ze-model="confirm_password" i18n="SYS_USERS_CONFIRM_PASSWORD"></label>
+                    <div class="grid-col-8-12">
+                        <input ze-model="confirm_password" v-rules="match[password]" type="password">
+                    </div>
+                </div>
+
                 <div class="grid-row">
                     <label class="grid-col-3-12 required" for-ze-model="email">Email</label>
                     <div class="grid-col-8-12">
@@ -121,13 +147,13 @@
                     </div>
                 </div>
                 <div class="grid-row">
-                    <label class="grid-col-3-12" for-ze-model="name" i18n="SYS_USER_NAME"></label>
+                    <label class="grid-col-3-12" for-ze-model="name" i18n="SYS_USERS_NAME"></label>
                     <div class="grid-col-8-12">
                         <input ze-model="name">
                     </div>
                 </div>
                 <div class="grid-row">
-                    <label class="grid-col-3-12" for-ze-model="phone" i18n="SYS_USER_PHONE"></label>
+                    <label class="grid-col-3-12" for-ze-model="phone" i18n="SYS_USERS_PHONE"></label>
                     <div class="grid-col-8-12">
                         <input ze-model="phone">
                     </div>
@@ -143,6 +169,15 @@
                 <button type="button" id="modalOkBtn" class="btn btn-primary" i18n="COMMON_ACTION_OK" autofocus></button>
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" i18n="COMMON_ACTION_CANCEL"></button>
             </div>
+        </div>
+    </div>
+    <div id="loginModalDiv" class="zw-modal" style="width: 26em;margin-top: 10em">
+        <div class="content">
+            <div class="header">
+                <span class="title" i18n-innerHTML="LOGIN_ACTION_LOGIN"></span>
+                <span class="close" data-dismiss="modal">×</span>
+            </div>
+            <div class="body" style="height: 16em;overflow: hidden"></div>
         </div>
     </div>
 </div>

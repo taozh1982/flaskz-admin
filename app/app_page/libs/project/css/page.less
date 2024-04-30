@@ -203,15 +203,29 @@ body > .z-modal {
   }
 }
 
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  box-sizing: border-box;
+}
 
 html {
   .z-grid > .body .center tbody:empty:before {
     content: "No data";
   }
 
+  .upload-btn:empty:before {
+    content: "Choose File";
+  }
+
   &[lang="zh"] {
     .z-grid > .body .center tbody:empty:before {
       content: "数据为空";
+    }
+
+    .upload-btn:empty:before {
+      content: "选择文件";
     }
   }
 }

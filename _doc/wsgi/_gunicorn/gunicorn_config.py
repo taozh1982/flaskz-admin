@@ -2,29 +2,29 @@
 import multiprocessing
 import os
 
-_GUNICORN_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '_gunicorn'))  # 创建_gunicorn/var/gunicorn_log文件夹用于存放日志等文件
-_LOG_PATH = os.path.join(_GUNICORN_PATH, 'log')
+# _GUNICORN_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '_gunicorn'))
+_LOG_PATH = os.path.join(os.path.join(os.path.dirname(__file__), 'logs'))
 # _ETC = os.path.join(_ROOT, 'etc')
 if not os.path.exists(_LOG_PATH):
     os.makedirs(_LOG_PATH)
 # ------------------------------------log------------------------------------
 # loglevel = ''     # The granularity of Error log outputs.
 # :debug/info/warning/error/critical
-loglevel = 'info'
+# loglevel = 'info'
 
 # accesslog = '-'   # The Access log file to write to.
 # :--access-logfile FILE    # os.path.join(_VAR, 'log/wsgi-access.log')
 # :None
 # :'-'   # log to stdout
-accesslog = os.path.join(_LOG_PATH, 'wsgi-access.log')
+accesslog = os.path.join(_LOG_PATH, 'gunicorn-access.log')
 
 # errorlog = '-'   # The Error log file to write to.
 # :--error-logfile FILE, --log-file FILE    # os.path.join(_VAR, 'log/wsgi-error.log')
 # :'-'   # log to stderr.
-errorlog = os.path.join(_LOG_PATH, 'wsgi-error.log')
+errorlog = os.path.join(_LOG_PATH, 'gunicorn-error.log')
 
 # pidfile = '' # The filename to use for the PID file. If not set, no PID file will be written.
-# pidfile = os.path.join(_VAR, 'gunicorn_log', 'wsgi-pid.log')
+pidfile = os.path.join(_LOG_PATH, 'gunicorn-pid.log')
 
 # capture_output = False     # Redirect stdout/stderr to specified file in errorlog.
 # :--capture-output
@@ -55,12 +55,17 @@ workers = multiprocessing.cpu_count() * 2 + 1
 # Daemonize the process.
 # :-D, --daemon(command)
 # :False(default)
-daemon = True
+# if supervisor control, set daemon = False
+# daemon = True
 
 # keepalive = 2  # 2s
 # The number of seconds(1-5) to wait for requests on a Keep-Alive connection.
 # :--keep-alive INT
 # :2 (Generally)
+
+# The maximum number of simultaneous clients
+# Default: 1000, affects the `gthread`, `eventlet` and `gevent` worker types.
+# worker_connections = 1000
 
 # backlog = 2048    # The maximum number of pending connections.
 # :--backlog INT
@@ -69,8 +74,3 @@ daemon = True
 # ------------------------------------app------------------------------------
 # A WSGI application path in pattern
 wsgi_app = 'admin_app:app'
-# ------------------------------------command------------------------------------
-# 1> Modify the 'gunicorn_config.py' file (_ROOT/log/bind)
-# 2> copy the 'gunicorn_config.py' file to the root directory of the application(where admin_app.py is located)
-# 3> gunicorn -c gunicorn_config.py admin_app:app
-# 4> ps -ef | grep gunicorn

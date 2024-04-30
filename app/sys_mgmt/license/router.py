@@ -63,7 +63,7 @@ def sys_license_upload():
         license_res_data = dict(res_data)
         pop_dict_keys(license_res_data, ['Signature', 'license_hash'])
 
-    log_operation('licenses', 'add', success, license_upload_log_data, get_log_data(license_res_data))
+    log_operation('licenses', 'upload', success, license_upload_log_data, get_log_data(license_res_data))
     flaskz_logger.info(get_rest_log_msg('Upload license', license_txt, success, license_res_data))
     return create_response(success, license_res_data)
 

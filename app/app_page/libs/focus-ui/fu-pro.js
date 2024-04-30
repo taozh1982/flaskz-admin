@@ -1,4 +1,4 @@
-/*! Focus Pro v2.5.1 | http://www.focus-ui.com | 2024-02-01 */
+/*! Focus Pro v2.5.2 | http://www.focus-ui.com | 2024-05-01 */
 (function(window, undefined ) {
 z.$.setSysDefault({
     //grid button render option
@@ -54,8 +54,8 @@ z.$.setSysDefault({
 
     //DataTime format
     PRO_TIME_FORMAT: "%Y-%m-%d %H:%M:%S",
-    PRO_TIME_WEEKS: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-    PRO_TIME_MONTHS: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    // PRO_TIME_WEEKS: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    // PRO_TIME_MONTHS: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 
     //Operation tips
     PRO_MESSAGE_TIPS: "Tips",
@@ -65,7 +65,7 @@ z.$.setSysDefault({
     PRO_MODAL_UPDATE_TITLE: "Update",
     PRO_MODAL_ADD_TITLE: "Add",
     PRO_MODAL_VIEW_TITLE: "View",
-    PRO_MODAL_CONFIRM_TEXT: "Ok",
+    PRO_MODAL_CONFIRM_TEXT: "OK",
     PRO_MODAL_CANCEL_TEXT: "Cancel",
     PRO_MODAL_CONFIRM_CLASS: "btn btn-primary",
     PRO_MODAL_CANCEL_CLASS: "btn btn-outline-secondary",
@@ -129,6 +129,15 @@ z.i18n.init({
         PRO_AJAX_UPLOAD_TIPS: "Upload",
         PRO_AJAX_DOWNLOAD_TIPS: "Download",
 
+        //DataTime format
+        PRO_TIME_WEEKS: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        PRO_TIME_MONTHS: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        PRO_TIME_AM_UPPERCASE: "AM",
+        PRO_TIME_AM_LOWERCASE: "am",
+        PRO_TIME_PM_UPPERCASE: "PM",
+        PRO_TIME_PM_LOWERCASE: "pm",
+
+
         //Operation tips
         PRO_MESSAGE_TIPS: "Tips",
         PRO_MESSAGE_DELETE_CONFIRM: "Confirm Delete?",
@@ -137,7 +146,7 @@ z.i18n.init({
         PRO_MODAL_UPDATE_TITLE: "Edit",
         PRO_MODAL_ADD_TITLE: "Add",
         PRO_MODAL_VIEW_TITLE: "View",
-        PRO_MODAL_CONFIRM_TEXT: "Ok",
+        PRO_MODAL_CONFIRM_TEXT: "OK",
         PRO_MODAL_CANCEL_TEXT: "Cancel",
 
         //GView toolbar option
@@ -198,6 +207,14 @@ z.i18n.init({
 
         PRO_AJAX_UPLOAD_TIPS: "上传",
         PRO_AJAX_DOWNLOAD_TIPS: "下载",
+
+        //DataTime format
+        PRO_TIME_WEEKS: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+        PRO_TIME_MONTHS: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        PRO_TIME_AM_UPPERCASE: "上午",
+        PRO_TIME_AM_LOWERCASE: "上午",
+        PRO_TIME_PM_UPPERCASE: "下午",
+        PRO_TIME_PM_LOWERCASE: "下午",
 
         PRO_MESSAGE_TIPS: "提示",
         PRO_MESSAGE_DELETE_CONFIRM: "确认删除?",
@@ -868,11 +885,15 @@ var $GridUtil = {
                             if (render.apply(this, args) === false) {
                                 return
                             }
-                            if (filterValue) {
-                                td.innerHTML = $GridUtil._getFilterMatchValue(td.innerHTML, filterValue, highlight_class)
-                            }
+
+                            $GridUtil._highlightFilterText(td, filterValue, highlight_class);
                         }
                     } else {
+                        var view_inner_html = grid.get("inner_html");
+                        var inner_html = column.inner_html === true || (column.inner_html == null && view_inner_html === true);
+                        /*if (!inner_html) {
+                            return;
+                        }*/
                         _column.render = function (td, data) {
                             var field = column.field;
                             if (field) {
@@ -880,11 +901,19 @@ var $GridUtil = {
                                 if (value == null) {
                                     value = "";
                                 }
-                                if (filterValue) {
-                                    td.innerHTML = $GridUtil._getFilterMatchValue(value, filterValue, highlight_class);
+
+                                if (!inner_html) {
+                                    td.innerText = value;
                                 } else {
                                     td.innerHTML = value;
                                 }
+                                $GridUtil._highlightFilterText(td, filterValue, highlight_class);
+
+                                /*if (filterValue) {
+                                    td.innerHTML = $GridUtil._getFilterMatchValue(value, filterValue, highlight_class);
+                                } else {
+                                    td.innerHTML = value;
+                                }*/
                             }
                         }
                     }
@@ -1058,6 +1087,50 @@ z.util.mergeObject($GridUtil, {
 });
 //filter
 z.util.mergeObject($GridUtil, {
+    _highlightFilterText: function (element, filterValue, highlight_class) {
+        if (filterValue) {
+            var textNodes = $GridUtil._getTextNodes(element);
+            textNodes.forEach(function (textNode) {
+                var text = textNode.nodeValue;
+                if (text.trim() === "") {
+                    return
+                }
+                text = $GridUtil._escapeHTML(text);
+                var span = z.dom.create("span");
+                span.innerHTML = $GridUtil._getFilterMatchValue(text, filterValue, highlight_class);
+                textNode.parentNode.replaceChild(span, textNode);
+                // textNode.nodeValue = $GridUtil._getFilterMatchValue(textNode.nodeValue, filterValue, highlight_class)
+            });
+        }
+    },
+    _getTextNodes: function (element) {
+        var textNodes = [];
+        var nodeIterator = document.createNodeIterator(element, NodeFilter.SHOW_TEXT);
+
+        var currentNode;
+        while (currentNode = nodeIterator.nextNode()) {
+            textNodes.push(currentNode);
+        }
+        return textNodes;
+    },
+    _escapeHTML: function (str) {
+        return str.replace(/[&<>"']/g, function (match) {
+            switch (match) {
+                case '&':
+                    return '&amp;';
+                case '<':
+                    return '&lt;';
+                case '>':
+                    return '&gt;';
+                case '"':
+                    return '&quot;';
+                case "'":
+                    return '&#39;';
+                default:
+                    return match;
+            }
+        });
+    },
     _columnContains: function (grid, columns, data, filterText) {
         var has = false;
         var td = z.dom.create("td");
@@ -1091,6 +1164,7 @@ z.util.mergeObject($GridUtil, {
         if (value !== null) {
             var highlightStart = '<span class="' + highlight_class + '">';
             return (value + "").replace(new RegExp(filterValue, 'gi'), function (val) {
+
                 return highlightStart + val + "</span>";
             });
         }
@@ -1466,17 +1540,21 @@ var $FileUtil = {
     download: function (url, urlParameters, attrs) {
         $FileUtil._linkDownload(z.$.StrUtil.replaceVars(url, urlParameters), null, attrs);
     },
-    ajaxDownload: function (url, urlParameters) {
-        pro.AjaxCRUD.query({
+    ajaxDownload: function (options, urlParameters) {
+        if (z.type.isString(options)) {
+            options = {url: z.$.StrUtil.replaceVars(options, urlParameters)};
+        }
+        $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, { //@2024-04-15修改为options模式
             tips: z.i18n.t("PRO_AJAX_DOWNLOAD_TIPS"),
-            url: z.$.StrUtil.replaceVars(url, urlParameters), success: function (result, httpRequest) {
-                var filename = $FileUtil._getContentDispositionFilename(httpRequest);
-                $FileUtil.saveFile(httpRequest.response, filename); // 保存文件
-            },
+            success_notify: false,
             ajax_options: {
                 responseType: "blob"
+            },
+            success: function (result, httpRequest) {
+                var filename = $FileUtil._getContentDispositionFilename(httpRequest);
+                $FileUtil.saveFile(httpRequest.response, filename); // 保存文件
             }
-        })
+        }));
     },
 
     upload: function (options) {
@@ -1503,6 +1581,48 @@ var $FileUtil = {
             }
         }));
     },
+    /**
+     *
+     * @example
+     *
+     * html:
+     * <style>
+     * #fileBtn:empty:before {
+     *        content: "Choose File";
+     *    }
+     * html[lang="zh"] #fileBtn:empty:before {
+     *        content: "选择文件";
+     *    }
+     </style>
+     * <button id="fileBtn" class="btn btn-link" v-rules="required"></button>
+     *
+     * js-init:
+     * var fileBtn = z.dom.query('#fileBtn')
+     * pro.FileUtil.addClickToSelectFileListener(fileBtn, function (files) {
+     *        var names = [];
+     *        var len = files.length;
+     *        for (var i = 0; i < len; i++) {
+     *            names.push(files[i].name);
+     *        }
+     *        z.dom.setValue(fileBtn, names.join(", "));
+     *        this.form.getValidator().reset();
+     *    }, this, {
+     *        "id": "fileInput",
+     *        "accept": ".dat"
+     *    })
+     *
+     *
+     * js-get:
+     * pro.FileUtil.upload({
+     *        files: z.dom.getValue("#fileInput"),
+     *        url: AjaxUrl.sys_license.add,
+     *        success: function () {
+     *            z.widget.alert(z.i18n.t("SYS_LICENSES_UPLOAD_SUCCESS_MSG"), z.i18n.t("PRO_MESSAGE_TIPS"), function () {
+     *                window.top.location.reload();
+     *            });
+     *        }
+     *    })
+     */
     addClickToSelectFileListener: function (ele, selectFileCallback, context, fileInputAttr) {
         var fileInput = $FileUtil._addHiddenFileInput(ele, fileInputAttr);
         z.dom.event.onclick(ele, function () {
@@ -1587,8 +1707,8 @@ var $TimeUtil = {
             outputFormat = z.getDefault("PRO_TIME_FORMAT");
         }
 
-        var aDays = z.getDefault("PRO_TIME_WEEKS"),
-            aMonths = z.getDefault("PRO_TIME_MONTHS");
+        var aDays = z.i18n.t("PRO_TIME_WEEKS"),
+            aMonths = z.i18n.t("PRO_TIME_MONTHS");
 
         var nDay = dateTime.getDay(),
             nDate = dateTime.getDate(),
@@ -1608,11 +1728,14 @@ var $TimeUtil = {
             zeroPad = function (nNum, nPad) {
                 return ('' + (Math.pow(10, nPad) + nNum)).slice(1);
             };
+        var day0 = aDays[0];
+        var month0 = aMonths[0];
+        var isEn = /^[A-Za-z]$/.test(day0) && /^[A-Za-z]$/.test(month0);
         return outputFormat.replace(/%[a-z]/gi, function (sMatch) {
             return {
-                '%a': aDays[nDay].slice(0, 3),
+                '%a': isEn ? aDays[nDay].slice(0, 3) : aDays[nDay],
                 '%A': aDays[nDay],
-                '%b': aMonths[nMonth].slice(0, 3),
+                '%b': isEn ? aMonths[nMonth].slice(0, 3) : aMonths[nMonth],
                 '%B': aMonths[nMonth],
                 '%c': dateTime.toUTCString(),
                 '%C': Math.floor(nYear / 100),
@@ -1628,8 +1751,8 @@ var $TimeUtil = {
                 '%l': (nHour + 11) % 12 + 1,
                 '%m': zeroPad(nMonth + 1, 2),
                 '%M': zeroPad(dateTime.getMinutes(), 2),
-                '%p': (nHour < 12) ? 'AM' : 'PM',
-                '%P': (nHour < 12) ? 'am' : 'pm',
+                '%p': (nHour < 12) ? z.i18n.t("PRO_TIME_AM_UPPERCASE") : z.i18n.t("PRO_TIME_PM_UPPERCASE"),
+                '%P': (nHour < 12) ? z.i18n.t("PRO_TIME_AM_LOWERCASE") : z.i18n.t("PRO_TIME_PM_LOWERCASE"),
                 '%s': Math.round(dateTime.getTime() / 1000),
                 '%S': zeroPad(dateTime.getSeconds(), 2),
                 '%u': nDay || 7,
@@ -3124,13 +3247,13 @@ var $CrudPage = function (prefix) {
                 var modalTitle;
                 switch (editType) {
                     case "add":
-                        modalTitle = z.getDefault("PRO_MODAL_ADD_TITLE");
+                        modalTitle = z.i18n.t("PRO_MODAL_ADD_TITLE");
                         break;
                     case "update":
-                        modalTitle = z.getDefault("PRO_MODAL_UPDATE_TITLE");
+                        modalTitle = z.i18n.t("PRO_MODAL_UPDATE_TITLE");
                         break;
                     case "view":
-                        modalTitle = z.getDefault("PRO_MODAL_VIEW_TITLE");
+                        modalTitle = z.i18n.t("PRO_MODAL_VIEW_TITLE");
                         break;
                     default:
                         modalTitle = " "
@@ -3314,12 +3437,12 @@ var $CrudPage = function (prefix) {
                     });
                     var delete_data = _this[itfKeyMap.get$ModelDeleteData](modelDataArr);
                     $AjaxCRUD.delete({
-                        url: this[itfKeyMap.get$ModelDeleteUrl](delete_data),//_this[itfKeyMap._get$URL]("delete", "remove"),
+                        url: _this[itfKeyMap.get$ModelDeleteUrl](delete_data),//_this[itfKeyMap._get$URL]("delete", "remove"),
                         url_params: {id: ids},
                         data: delete_data,
                         success: function (resResult) {
                             _this[itfKeyMap.on$ModelDelete](modelDataArr, resResult, resResult.data);
-                            this[itfKeyMap.on$ModelChange]("delete", modelDataArr, resResult, resResult.data);
+                            _this[itfKeyMap.on$ModelChange]("delete", modelDataArr, resResult, resResult.data);
                         }
                     })
                 };
@@ -3327,15 +3450,15 @@ var $CrudPage = function (prefix) {
                     modelDelete();
                     return;
                 }
-                z.widget.confirm(z.getDefault("PRO_MESSAGE_DELETE_CONFIRM"), z.getDefault("PRO_MESSAGE_TIPS"), function (result) {//callback
+                z.widget.confirm(z.i18n.t("PRO_MESSAGE_DELETE_CONFIRM"), z.i18n.t("PRO_MESSAGE_TIPS"), function (result) {//callback
                     if (result) {
                         modelDelete();
                     }
                 }, {
                     confirm_class: z.getDefault("PRO_MODAL_CONFIRM_CLASS"),
                     cancel_class: z.getDefault("PRO_MODAL_CANCEL_CLASS"),
-                    confirm_text: z.getDefault("PRO_MODAL_CONFIRM_TEXT"),
-                    cancel_text: z.getDefault("PRO_MODAL_CANCEL_TEXT")
+                    confirm_text: z.i18n.t("PRO_MODAL_CONFIRM_TEXT"),
+                    cancel_text: z.i18n.t("PRO_MODAL_CANCEL_TEXT")
                 });
             },
             /**
@@ -3653,6 +3776,18 @@ z.util.extendClass($PropertySheet, z.widget.TreeGrid, z.util.mergeObject({
                     td.innerHTML = propertyRowData.get(property);
                 }*/
             }
+            if (isEdit === true) {
+                this._appendRemovePropButton(sheet, propertyRowData, editType, td)
+            }
+        },
+        _appendRemovePropButton: function (sheet, propertyRowData, editType, td) {
+            var valueField = z.getDefault("PRO_SHEET_VALUE_FIELD");
+            if (propertyRowData.get("removable") !== true || propertyRowData.get(valueField) == null) {
+                return
+            }
+            $GridUtil.renderOperateButton(sheet, propertyRowData, valueField + "_$_remove", td, function () {
+                propertyRowData.remove(valueField, null);
+            }, {label: "✕", attributes: {"class": "btn btn-link prop-remove"}});
         }
     }));
 var $GVUtil = {};
@@ -4504,16 +4639,18 @@ z.util.extendClass($GVEditController, Object, z.util.mergeObject({
             var gViewGetProperty = gView.getProperty;
             var _this = this;
             gView.getDataProperties = function (data) { //获取所有的属性列表
+                var original_props = getDataProperties.apply(gView, arguments);
                 var editID = _this.getEditID(data);
                 if (editID == null) {
-                    return getDataProperties.apply(gView, arguments);
+                    return original_props;
                 }
                 //属性优先级， gView编辑属性 < data编辑属性 < 设置的属性，编辑器的属性值优先级最低
                 var viewValue = _this.getObjectEditValue(gView, _this._getObjectEditValue(gView), data);
                 var dataValue = _this.getObjectEditValue(data, _this._getObjectEditValue(data), data);
-                var props = z.util.mergeObject({}, viewValue, dataValue || {}, getDataProperties.apply(gView, arguments));
+                var props = z.util.mergeObject({}, viewValue, dataValue || {}, original_props);
                 if (_this.data_property_first === true) { //data属性优先
-                    var dataProps = data.gets(false)
+                    var dataProps = data.gets(false);
+                    // todo link设置了type，全局设置了link_type，不启作用，getDataProperties的优先级最高，viewValue单独判断？
                     props = z.util.filterObject(props, function (key, value) {
                         return !dataProps.hasOwnProperty(key);
                     });
@@ -4748,6 +4885,7 @@ z.util.extendClass($GVEditController, Object, z.util.mergeObject({
         },
         /**
          * 返回编辑类型，类型不同会重新设置sheet中的props
+         * todo 不同type的Node，可能属性值也不一样
          * 可重载
          * @param data
          * @return {string}

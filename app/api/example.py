@@ -1,7 +1,9 @@
 # example
+import csv
+import io
 import json
 
-from flask import request
+from flask import request, send_file
 from flaskz import res_status_codes
 from flaskz.log import flaskz_logger
 from flaskz.models import parse_pss
@@ -19,6 +21,7 @@ register_model_route(api_bp, DepartmentModel, 'ex-departments', 'ex-departments'
 register_model_route(api_bp, EmployeeModel, 'ex-employees', 'ex-employees',
                      to_json_option={  # 返回json选项
                          'cascade': 1,  # 返回Employee + 1层级联数据
+                         # 'relationships': ['department'],  # 返回Employee + department级联数据
                          'department': {  # 对于级联的department对象，输出json中只包含id和name属性
                              'include': ['id', 'name']
                          }
@@ -98,13 +101,13 @@ def employees_bulk_delete():
         items = request_json
         if type(request_json) is dict:
             items = request_json.get('ids') or request_json.get('id', [])
-        EmployeeModel.bulk_delete(items)
+        result = EmployeeModel.bulk_delete(items)
     except Exception as e:
         flaskz_logger.exception(e)
         success, result = False, res_status_codes.db_delete_err
 
     log_operation('ex-employees', 'delete', req_log_data, None, None)
-    flaskz_logger.info(get_rest_log_msg('Bulk Delete EmployeeModel data', req_log_data, success, None))
+    flaskz_logger.info(get_rest_log_msg('Bulk Delete EmployeeModel data', req_log_data, success, result))
 
     return create_response(success, result)
 
@@ -155,6 +158,32 @@ def employees_module_required():
 def employees_module_action_required():
     """module+action permission required"""
     return create_response(True, 'module+action required')
+
+
+# -------------------------------------------file-------------------------------------------
+@api_bp.route('/ex-simples/download/', methods=['GET'])
+@rest_permission_required('ex-simples')
+def simples_download():
+    output = io.StringIO()
+    writer = csv.writer(output)
+    success, result = SimpleModel.query_all()
+    columns = [
+        {'name': 'ID', 'field': 'id'}, {'name': 'String', 'field': 'field_string'}, {'name': 'Integer', 'field': 'field_integer'},
+        {'name': 'Float', 'field': 'field_float'}, {'name': 'Boolean', 'field': 'field_boolean'}, {'name': 'Text', 'field': 'field_text'},
+        {'name': 'DateTime', 'field': 'field_datetime'},
+    ]
+    rows = [[col['name'] for col in columns]]  # header
+    for data in result:
+        value = []
+        for column in columns:
+            value.append(getattr(data, column.get('field'), None))
+        rows.append(value)  # row data
+    writer.writerows(rows)
+    data = output.getvalue()
+    data_bytes = data.encode('utf-8')
+    binary_output = io.BytesIO(data_bytes)
+    binary_output.seek(0)
+    return send_file(binary_output, mimetype='text/csv', as_attachment=True, download_name='simples.csv')
 
 
 # -------------------------------------------test-------------------------------------------

@@ -11,6 +11,7 @@
     <script src="../../../libs/project/proj.js"></script>
 
     <script src="./license.js"></script>
+
 </head>
 <body class="fu-pro">
 <div class="module">
@@ -30,9 +31,7 @@
                     <div class="grid-row">
                         <label class="grid-col-3-12 required" for-ze-model="username" i18n="SYS_LICENSES_FILE"></label>
                         <div class="grid-col-8-12">
-                            <input id="fileInput" ze-model="file"
-                                   v-rules="required" i18n-v-message="SYS_LICENSES_FILE_REQUIRED" type="file"
-                                   autofocus style="padding: 0.375rem 0.7rem" accept=".dat">
+                            <button id="fileBtn" class="btn btn-link upload-btn" v-rules="required"></button>
                         </div>
                     </div>
                 </div>

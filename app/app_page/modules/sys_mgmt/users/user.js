@@ -9,7 +9,7 @@ var User = z.util.mergeObject(pro.template.CRUDTablePage, {
         url: AjaxUrl.sys_user,
         grid_options: {
             columns: [
-                {name: z.i18n.t("SYS_USER_USERNAME"), field: "username"},
+                {name: z.i18n.t("SYS_USERS_USERNAME"), field: "username"},
                 {
                     name: z.i18n.t("COMMON_STATUS"), field: "status", filter: false, width: 100,
                     render: function (td, data) {
@@ -17,17 +17,17 @@ var User = z.util.mergeObject(pro.template.CRUDTablePage, {
                             key: "status",
                             success_value: "enable",
                             fail_value: "disable",
-                            success_label: z.i18n.t("SYS_USER_ENABLE"),
-                            fail_label: z.i18n.t("SYS_USER_DISABLE")
+                            success_label: z.i18n.t("SYS_USERS_ENABLED"),
+                            fail_label: z.i18n.t("SYS_USERS_DISABLED")
                         });
                         if (pro.AccessControl.hasUpdatePermission()) {
                             var status = data.get("status");
                             if (status === "enable") {
-                                pro.GridUtil.createOPButton(td, data, "enable", "<i class='text-danger fa fa-stop-circle-o' title='" + z.i18n.t("SYS_USER_DISABLE") + "'></i>", function () {
+                                pro.GridUtil.createOPButton(td, data, "enable", "<i class='text-danger fa fa-stop-circle-o' title='" + z.i18n.t("SYS_USERS_DISABLE") + "'></i>", function () {
                                     User.handleClickActive(data)
                                 })
                             } else if (status === "disable") {
-                                pro.GridUtil.createOPButton(td, data, "disable", "<i class='text-success fa fa-play-circle-o' title='" + z.i18n.t("SYS_USER_ENABLE") + "'></i>", function () {
+                                pro.GridUtil.createOPButton(td, data, "disable", "<i class='text-success fa fa-play-circle-o' title='" + z.i18n.t("SYS_USERS_ENABLE") + "'></i>", function () {
                                     User.handleClickActive(data)
                                 })
                             }
@@ -41,21 +41,21 @@ var User = z.util.mergeObject(pro.template.CRUDTablePage, {
                     }
                 },
                 {
-                    name: z.i18n.t("SYS_USER_ROLE"), field: "role_id",
+                    name: z.i18n.t("SYS_USERS_ROLE"), field: "role_id",
                     render: function (td, data) {
                         td.innerHTML = User.getRoleName(data.get("role_id")) || "";
                     }
                 },
                 {name: "Email", field: "email"},
-                {name: z.i18n.t("SYS_USER_NAME"), field: "name"},
-                {name: z.i18n.t("SYS_USER_PHONE"), field: "phone"},
+                {name: z.i18n.t("SYS_USERS_NAME"), field: "name"},
+                {name: z.i18n.t("SYS_USERS_PHONE"), field: "phone"},
                 {
-                    name: z.i18n.t("SYS_USER_LAST_LOGIN_AT"), field: "option.last_login_at", minimizable: true,
+                    name: z.i18n.t("SYS_USERS_LAST_LOGIN_AT"), field: "option.last_login_at", minimizable: true,
                     render: function (td, data) {
                         td.innerHTML = pro.TimeUtil.format((data.get("option") || {}).last_login_at);
                     }
                 },
-                {name: z.i18n.t("SYS_USER_LOGIN_TIMES"), field: "option.login_times", minimizable: true, width: 100},
+                {name: z.i18n.t("SYS_USERS_LOGIN_TIMES"), field: "option.login_times", minimizable: true, width: 100},
                 {
                     name: z.i18n.t("COMMON_UPDATED_AT"), field: "updated_at", minimizable: true, minimized: true,
                     render: function (td, data) {
@@ -116,10 +116,10 @@ var User = z.util.mergeObject(pro.template.CRUDTablePage, {
     handleClickActive: function (data) {
         var status = data.get("status");
         status = status === "enable" ? "disable" : "enable";
-        var message = status === "enable" ? z.i18n.t("SYS_USER_ENABLE") : z.i18n.t("SYS_USER_DISABLE");
-        var confirm_msg = status === "enable" ? z.i18n.t("SYS_USER_ENABLE_CONFIRM") : z.i18n.t("SYS_USER_DISABLE_CONFIRM");
+        var message = status === "enable" ? z.i18n.t("SYS_USERS_ENABLE") : z.i18n.t("SYS_USERS_DISABLE");
+        var confirm_msg = status === "enable" ? z.i18n.t("SYS_USERS_ENABLE_CONFIRM") : z.i18n.t("SYS_USERS_DISABLE_CONFIRM");
         var _this = this;
-        z.widget.confirm("<i class='fa fa-warning color-warning'></i> " + confirm_msg + "?", z.i18n.t("PRO_MESSAGE_TIPS"), function (result) {//callback
+        z.widget.confirm(confirm_msg, z.i18n.t("PRO_MESSAGE_TIPS"), function (result) {//callback
             if (result) {
                 _this.handleModelUpdate({
                     id: data.get("id"),
@@ -152,7 +152,11 @@ var User = z.util.mergeObject(pro.template.CRUDTablePage, {
         return map[id];
     },
     initFormModalValue: function (editType, initValue) {
+        if (editType === "add") {
+            initValue.type = "local";
+        }
         initValue.password = "";
+
         return initValue;
     }
 });

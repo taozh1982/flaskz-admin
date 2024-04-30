@@ -10,6 +10,7 @@ from sqlalchemy import Column, Integer, Text, String, DateTime
 
 from app.sys_init import status_codes
 from . import util
+from ...main import is_static_file_request
 from ...main.errors import return_error
 
 
@@ -49,28 +50,41 @@ class LicenseManager:
         self._current_license = None
         self._last_load_time = None
         self._load_interval = 600  # seconds
+        self._os_time_backward_limit = 3600  # seconds
 
     def set_public_key(self, public_key):
         """设置public key"""
         self._public_key = public_key
 
     def init_app(self, app, public_key=None):
+        app_config = app.config
         if public_key is None:
-            public_key_file = get_app_path(app.config.get('APP_LICENSE_PUBLIC_KEY_FILEPATH'))
+            public_key_file = get_app_path(app_config.get('APP_LICENSE_PUBLIC_KEY_FILEPATH'))
             if os.path.isfile(public_key_file):
                 with open(public_key_file, "r") as f:  # public key
                     public_key = f.read()
         self._public_key = public_key
-        app.license_manager = self
+
+        if 'APP_LICENSE_LOAD_INTERVAL' in app_config:
+            self._load_interval = app_config.get('APP_LICENSE_LOAD_INTERVAL')
+        if 'APP_LICENSE_OS_TIME_BACKWARD_LIMIT' in app_config:
+            self._os_time_backward_limit = app_config.get('APP_LICENSE_OS_TIME_BACKWARD_LIMIT')
+            if type(self._os_time_backward_limit) is not int or self._os_time_backward_limit < 0:  # 禁用
+                self._os_time_backward_limit = 0
 
         @app.before_request
         def before_request():
-            if self._request_check:
-                return self._request_check(self.get_license(), request)
+            if self._request_check is None:
+                return
+            path = request.path
+            # 页面静态资源不拦截
+            if path == '/' or is_static_file_request(request):
+                return
+            return self._request_check(self.get_license(), request)
 
-    def load_license(self, load_license):
-        """加载license"""
-        self._load_license = load_license
+    def load_license(self, load_license_fun):
+        """设置license加载函数"""
+        self._load_license = load_license_fun
         return self._load_license
 
     def parse_license(self, parse_license):
@@ -128,13 +142,17 @@ class LicenseManager:
     def get_license(self, field=None, reload=False):
         """
         获取license
-        为了提高效率，默认10分钟重新加载一次license
+        1. 为了提高效率，默认10分钟重新加载一次license
+        2. 如果系统时间向前修改超出1小时，不会有可用的license
         """
         now = datetime.now().timestamp()
         if reload is True or \
                 self._current_license is None or \
-                self._last_load_time is None or now - self._last_load_time > self._load_interval:
-            self._current_license = self._load()
+                self._last_load_time is None or self._last_load_time > now or now - self._last_load_time > self._load_interval:
+            if _check_load_timestamp(self._os_time_backward_limit) is True:
+                self._current_license = self._load()
+            else:
+                self._current_license = None
             self._last_load_time = now
 
         current_license = None
@@ -149,6 +167,24 @@ class LicenseManager:
     def request_check(self, _request_check):
         self._request_check = _request_check
         return self._request_check
+
+
+def _check_load_timestamp(os_max_fallback_time=3600):
+    """检查系统时间是否被修改"""
+    if os_max_fallback_time > 0:
+        lic_dir = os.path.dirname(os.path.abspath(__file__))
+        lic_load_file = os.path.join(lic_dir, '.lic.load')
+        if os.path.exists(lic_load_file):
+            mtime = os.path.getmtime(lic_load_file)
+            interval = int(datetime.now().timestamp() - mtime)
+            if interval < -abs(os_max_fallback_time):  # 1小时
+                flaskz_logger.warning('The OS time is earlier(%ss) than the last time the License was loaded' % abs(interval))
+                return False
+            os.utime(lic_load_file)
+        else:
+            with open(lic_load_file, 'w'):
+                pass
+    return True
 
 
 def load_license():
@@ -166,9 +202,6 @@ def request_check_by_license(current_license, req):
     请求license校验
     """
     path = req.path
-    # 页面静态资源不拦截
-    if path == '/' or path.startswith('/libs') or path.endswith(('.js', '.css', '.html', '.png', '.svg', '.jpg', '.ico')):
-        return
     if 'api' in path:
         # 根据具体项目进行定制
         if current_license is None:

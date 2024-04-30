@@ -95,7 +95,7 @@ class SysRole(ModelBase, ModelMixin, AutoModelMixin):
     created_at = Column(DateTime(), default=datetime.now)
     updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
 
-    modules = relationship('SysRoleModule', cascade='all,delete-orphan')
+    modules = relationship('SysRoleModule', cascade='all,delete-orphan', lazy='joined')
 
     def check_permission(self, module, action):
         """
@@ -234,7 +234,7 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
     created_at = Column(DateTime(), default=datetime.now)
     updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
 
-    role = relationship('SysRole', uselist=False)
+    role = relationship('SysRole', uselist=False, lazy='joined')
     option = relationship('SysUserOption', cascade='all,delete-orphan', uselist=False, lazy='joined')
 
     @hybrid_property

@@ -1310,6 +1310,57 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "download",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-simples/download/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-simples",
+										"download",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -2459,7 +2510,12 @@
 								}
 							},
 							"response": []
-						},
+						}
+					]
+				},
+				{
+					"name": "test",
+					"item": [
 						{
 							"name": "for-test",
 							"request": {

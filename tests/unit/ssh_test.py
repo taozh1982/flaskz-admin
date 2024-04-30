@@ -3,11 +3,14 @@ import unittest
 
 from flaskz.ext.ssh import ssh_run_command, ssh_run_command_list, ssh_session
 from paramiko.ssh_exception import AuthenticationException, SSHException
+
 from tests.unit import print_test
 
 cisco_nxos_connect_kwargs = {'hostname': '10.124.206.26', 'username': 'admin', 'password': 'Admin@123'}
 cisco_ios_xe_connect_kwargs = {'hostname': '10.75.37.165', 'username': 'admin', 'password': 'Cisco123', 'secondary_password': 'Cisco123',
                                'recv_endswith': ['# ', '$ ', ': ', '? ', '#', '>'], 'recv_start_delay': 0.15}
+cisco_ios_xr_connect_kwargs = {'hostname': '10.124.205.77', 'username': 'cisco', 'password': '1qaz@WSX',
+                               'recv_endswith': ['# ', '$ ', ': ', '? ', '#', '--']}
 linux_connect_kwargs = {'hostname': '10.124.5.155', 'username': 'cisco', 'password': 'Cisco@123', 'secondary_password': 'Cisco@123'}
 
 
@@ -61,12 +64,37 @@ class SSHCase(unittest.TestCase):
         self.assertTrue(success)
         self.assertIn("Cisco", result)
 
+        cisco_ios_xe_connect_kwargs_pre = dict(cisco_ios_xe_connect_kwargs)
+        cisco_ios_xe_connect_kwargs_pre['pre_commands'] = 'enable'
+        success, result = ssh_run_command(cisco_ios_xe_connect_kwargs_pre, 'show version')
+        self.assertTrue(success)
+        self.assertIn("Cisco", result)
+
         # password as command
         pwd_as_command_hot = dict(cisco_ios_xe_connect_kwargs)
         secondary_password = pwd_as_command_hot.pop('secondary_password', None)
         with ssh_session(**pwd_as_command_hot) as ssh:
             result = ssh.run_command_list(['enable', secondary_password, 'show version'], last_result=True)
             self.assertIn("Cisco", result)
+
+    def test_cisco_ios_xr_ssh_run_command(self):
+        """
+        测试terminal length 0 @ ios xr
+        """
+        print_test(inspect.currentframe().f_code.co_name, self)
+        success, result = ssh_run_command(cisco_ios_xr_connect_kwargs, 'show running-config')
+        self.assertTrue(success)
+        self.assertTrue('more' in (result.splitlines()[-1]).lower())
+
+        success, result = ssh_run_command_list(cisco_ios_xr_connect_kwargs, ['terminal length 0','show running-config'],{'last_result':True})
+        self.assertTrue(success)
+        self.assertTrue(result.endswith('end'))
+
+        cisco_ios_xr_connect_kwargs_pre = dict(cisco_ios_xr_connect_kwargs)
+        cisco_ios_xr_connect_kwargs_pre['pre_commands'] = 'terminal length 0'
+        success, result = ssh_run_command(cisco_ios_xr_connect_kwargs_pre, 'show running-config')
+        self.assertTrue(success)
+        self.assertTrue(result.endswith('end'))
 
     def test_linux_ssh_run_command(self):
         """

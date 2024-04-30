@@ -8,6 +8,7 @@ import json
 
 from flask import Blueprint
 from flask_login import current_user
+from flaskz.utils import get_remote_addr, get_app_cache, set_app_cache, is_str
 
 sys_mgmt_bp = Blueprint('sys_mgmt', __name__)
 
@@ -92,11 +93,6 @@ def _get_module_name(module):
     return module_name_mapping.get(module) or module
 
 
-from flaskz.utils import get_remote_addr, get_app_cache, set_app_cache, is_str
-
-# from . import errors
 from . import _private
 from . import router
 from . import model
-from ._init_db import init_db_data
-from ._init_db import recover_admin

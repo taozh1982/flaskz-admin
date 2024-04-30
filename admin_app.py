@@ -12,20 +12,17 @@ Email: taozh@cisco.com / taozh1982@gmail.com
 import os
 
 from app import create_app
-from cli import init_cli
 
 # 获取应用配置&创建应用
 app = create_app(os.getenv('APP_CONFIG', 'default'))
 
-# 初始化命令行
-
+# 初始化命令行，按需启用
+from _cli import init_cli
 init_cli(app)
-# shell工具
-# from shell import init_shell
-# init_shell(app)
+
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=666, debug=True, threaded=False)
 
-__version__ = '2.0.1'
+__version__ = '2.1.1'

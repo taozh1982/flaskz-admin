@@ -180,13 +180,13 @@ var Employees = z.util.mergeObject(pro.template.CRUDTablePage, {
         var department_id = value.department_id;
         var department_name = this.getDepartmentName(department_id);
         z.dom.setValue("#selectDepartmentBtn", department_name);
-        z.dom.setAttribute("#selectDepartmentBtn", 'department_id', department_id);
+        z.dom.setAttribute("#selectDepartmentBtn", 'data-dept-id', department_id);
     },
     getFormValue: function () {
         //需要做校验
         var value = this.form.getValue();
         if (value) {
-            value.department_id = z.dom.getAttribute("#selectDepartmentBtn", 'department_id');
+            value.department_id = z.dom.getAttribute("#selectDepartmentBtn", 'data-dept-id');
         }
         return value;
     }

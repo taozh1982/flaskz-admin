@@ -19,9 +19,11 @@ z.util.mergeObject(Role, {
                         _this._is_action_checked_$ = false;
                     }
                 });
-                var label = z.dom.create("label", "ops");
-                label.innerHTML = item.label;
-                z.dom.insertFirst(checkbox, label);
+                var checkLabel = z.dom.create("label", "ops");
+                var label = item.label;
+                label = z.i18n("COMMON_ACTION_" + label.trim().toUpperCase()) || label;
+                checkLabel.innerHTML = label;
+                z.dom.insertFirst(checkbox, checkLabel);
                 data["_" + permission] = checkbox;
             }
             var _actions = data.get("_actions");
@@ -40,9 +42,10 @@ z.util.mergeObject(Role, {
                 appendTo: "#moduleGridDiv",
                 sortable: false,
                 overflow: false,
+                inner_html: true,
                 columns: [
                     {
-                        name: z.i18n.t("SYS_ROLE_MODULE"), field: "name", type: "check",
+                        name: z.i18n.t("SYS_ROLES_MODULE"), field: "name", type: "check",
                         render: function (td, data) {
                             var module = data.get("name");
                             if (!data.hasChildren() && !data.get("path")) {
@@ -52,7 +55,7 @@ z.util.mergeObject(Role, {
                         }
                     },
                     {
-                        name: z.i18n.t("SYS_ROLE_MODULE_ACTIONS"), width: 110,
+                        name: z.i18n.t("SYS_ROLES_MODULE_ACTIONS"), width: 110,
                         render: function (td, data, column) {
                             if (!data.hasChildren()) {
                                 _this._renderOps(td, data);
@@ -109,7 +112,7 @@ z.util.mergeObject(Role, {
         }
     },
     _checkModuleActions: function (dataArr) {
-        if (!z.util.isArray(dataArr)) {
+        if (!z.type.isArray(dataArr)) {
             dataArr = [dataArr];
         }
         dataArr.forEach(function (data) {
@@ -126,7 +129,7 @@ z.util.mergeObject(Role, {
     _resetModuleGridValue: function () {
         this.moduleGrid.clearCheck();
         this.moduleGrid.eachData(function (data) {
-            data.remove("_actions")
+            data.remove("_actions");
         });
     },
     _setModuleGridValue: function (value) {

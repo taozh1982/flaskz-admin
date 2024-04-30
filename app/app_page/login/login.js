@@ -2,7 +2,7 @@ var Login = {
     init: function () {
         this.form = z.form.Form(".content");
         this.initController();
-        console.log('abc');
+        z.dom.focus("#usernameInput");
     },
     initController: function () {
         z.dom.event.onclick("#loginBtn", this._login, this);
@@ -39,6 +39,7 @@ var Login = {
         if (value == null) {
             return
         }
+        var _this = this;
         pro.AjaxCRUD.ajax({
             url: AjaxUrl.sys_auth.login,
             data: value,
@@ -53,18 +54,20 @@ var Login = {
                 if (result.data) {
                     var data = result.data;
                     var token;
-                    if (z.util.isString(data)) {
+                    if (z.type.isString(data)) {
                         token = data;
-                    } else if (z.util.isObject(data)) {
+                    } else if (z.type.isObject(data)) {
                         token = data.token;
                     }
                     if (token) {
                         z.bom.setLocalStorage("auth-token", token);
                     }
                 }
+                z.bom.setLocalStorage("$_auth_login", true);
+                z.bom.removeLocalStorage("$_auth_login");
                 window.location.href = "/index";
             }
-        })
+        }, this)
     }
 };
 z.ready(function () {

@@ -6,7 +6,8 @@ var AjaxUrl = {
         query: "/api/v1.0/ex-simples/",
         add: "/api/v1.0/ex-simples/",
         delete: "/api/v1.0/ex-simples/[id]",
-        update: "/api/v1.0/ex-simples/"
+        update: "/api/v1.0/ex-simples/",
+        download: "/api/v1.0/ex-simples/download/"
     },
     ex_departments: {
         query: "/api/v1.0/ex-departments/",

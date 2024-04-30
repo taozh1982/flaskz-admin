@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title i18n="SYS_USER_TITLE"></title>
+    <title i18n="SYS_USERS_TITLE"></title>
     <link rel="stylesheet" href="../../../libs/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../../libs/project/proj.css">
 
@@ -29,8 +29,9 @@
                 <div class="body">
                     <input type="hidden" ze-model="id" ze-model-type="integer">
                     <input type="hidden" ze-model="editType">
+                    <input type="hidden" ze-model="type">
                     <div class="grid-row">
-                        <label class="grid-col-3-12 required" for-ze-model="role_id" i18n="SYS_USER_ROLE"></label>
+                        <label class="grid-col-3-12 required" for-ze-model="role_id" i18n="SYS_USERS_ROLE"></label>
                         <div class="grid-col-9-12">
                             <select ze-model="role_id" ze-model-type="integer"
                                     v-rules="required"
@@ -38,20 +39,26 @@
                         </div>
                     </div>
                     <div class="grid-row">
-                        <label class="grid-col-3-12 required" for-ze-model="username" i18n="SYS_USER_USERNAME"></label>
+                        <label class="grid-col-3-12 required" for-ze-model="username" i18n="SYS_USERS_USERNAME"></label>
                         <div class="grid-col-9-12">
                             <input ze-model="username" ze-disabled="[editType]!=='add'"
                                    v-rules="required|alphanumeric_dash"
                                    autofocus>
                         </div>
                     </div>
-                    <div class="grid-row">
+                    <div class="grid-row" ze-visible="[type]==='local'">
                         <label id="pwdLabel" class="grid-col-3-12 required" for-ze-model="password" i18n="COMMON_PASSWORD"></label>
                         <div class="grid-col-7-12">
-                            <input id="pwdInput" ze-model="password" v-rules="required" type="password" autofocus>
+                            <input id="pwdInput" name="password" ze-model="password" v-rules="required" type="password" autofocus>
                         </div>
                         <div class="grid-col-2-12">
-                            <label class="check-label"><input id="pwdVisibleCheck" type="checkbox" class="check-input"><small i18n="SYS_USER_SHOW_PASSWORD"></small></label>
+                            <label class="check-label"><input id="pwdVisibleCheck" type="checkbox" class="check-input"><small i18n="SYS_USERS_SHOW_PASSWORD"></small></label>
+                        </div>
+                    </div>
+                    <div class="grid-row" ze-visible="[type]==='local'">
+                        <label class="grid-col-3-12" for-ze-model="confirm_password" i18n="SYS_USERS_CONFIRM_PASSWORD"></label>
+                        <div class="grid-col-9-12">
+                            <input ze-model="confirm_password" v-rules="match[password]" type="password">
                         </div>
                     </div>
                     <div class="grid-row">
@@ -61,13 +68,13 @@
                         </div>
                     </div>
                     <div class="grid-row">
-                        <label class="grid-col-3-12" for-ze-model="name" i18n="SYS_USER_NAME"></label>
+                        <label class="grid-col-3-12" for-ze-model="name" i18n="SYS_USERS_NAME"></label>
                         <div class="grid-col-9-12">
                             <input ze-model="name">
                         </div>
                     </div>
                     <div class="grid-row">
-                        <label class="grid-col-3-12" for-ze-model="phone" i18n="SYS_USER_PHONE"></label>
+                        <label class="grid-col-3-12" for-ze-model="phone" i18n="SYS_USERS_PHONE"></label>
                         <div class="grid-col-9-12">
                             <input ze-model="phone">
                         </div>

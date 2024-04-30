@@ -15,225 +15,161 @@ z.setDefault({
 });
 
 
-var I18n_EN = {
+var I18ns = {
+    "_locales": ["en", "zh"],
     /***************************************pro***************************************/
-    PRO_GRID_OPERATE_UPDATE_LABEL: "<i class='fa fa-edit'></i> Edit",
-    PRO_GRID_OPERATE_DELETE_LABEL: "<i class='fa fa-trash-o'></i> Delete",
-    PRO_MESSAGE_DELETE_CONFIRM: "<i class='fa fa-warning color-warning'></i> Confirm Delete?",
-    PRO_MODAL_UPDATE_TITLE: "<i class='fa fa-edit'></i> Edit",
-    PRO_MODAL_ADD_TITLE: "<i class='fa fa-plus-square'></i> Add",
-    PRO_MODAL_VIEW_TITLE: "<i class='fa fa-file-text-o'></i> View",
+    PRO_GRID_OPERATE_UPDATE_LABEL: ["<i class='fa fa-edit'></i> Edit", "<i class='fa fa-edit'></i> 编辑"],
+    PRO_GRID_OPERATE_DELETE_LABEL: ["<i class='fa fa-trash-o'></i> Delete", "<i class='fa fa-trash-o'></i> 删除"],
+    PRO_MESSAGE_DELETE_CONFIRM: ["<i class='fa fa-warning color-warning'></i> Confirm Delete?", "<i class='fa fa-warning color-warning'></i> 确认删除?"],
+    PRO_MODAL_UPDATE_TITLE: ["<i class='fa fa-edit'></i> Edit", "<i class='fa fa-edit'></i> 编辑"],
+    PRO_MODAL_ADD_TITLE: ["<i class='fa fa-plus-square'></i> Add", "<i class='fa fa-plus-square'></i> 添加"],
+    PRO_MODAL_VIEW_TITLE: ["<i class='fa fa-file-text-o'></i> View", "<i class='fa fa-file-text-o'></i> 查看"],
 
     /***************************************common***************************************/
-    COMMON_ACTION: "Action",
-    COMMON_ACTION_ADD: "Add",
-    COMMON_ACTION_DELETE: "Delete",
-    COMMON_ACTION_UPDATE: "Edit",
-    COMMON_ACTION_SEARCH: "Query",
-    COMMON_ACTION_FILTER: "Filter",
-    COMMON_ACTION_OK: "OK",
-    COMMON_ACTION_CANCEL: "Cancel",
-    COMMON_ACTION_RETURN: "Return",
-    COMMON_ACTION_CLOSE: "Close",
-    COMMON_ACTION_SAVE: "Save",
-    COMMON_ACTION_REFRESH: "Refresh",
-    COMMON_ACTION_UPLOAD: "Upload",
-    COMMON_ACTION_LOGIN: "Login",
+    COMMON_ACTION: ["Action", "操作"],
+    COMMON_ACTION_ADD: ["Add", "添加"],
+    COMMON_ACTION_DELETE: ["Delete", "删除"],
+    COMMON_ACTION_UPDATE: ["Edit", "编辑"],
+    COMMON_ACTION_SEARCH: ["Query", "查询"],
+    COMMON_ACTION_FILTER: ["Filter", "过滤"],
+    COMMON_ACTION_SELECT: ["Select", "选择"],
+    COMMON_ACTION_OK: ["OK", "确认"],
+    COMMON_ACTION_CANCEL: ["Cancel", "取消"],
+    COMMON_ACTION_RETURN: ["Return", "返回"],
+    COMMON_ACTION_CLOSE: ["Close", "关闭"],
+    COMMON_ACTION_SAVE: ["Save", "保存"],
+    COMMON_ACTION_REFRESH: ["Refresh", "刷新"],
+    COMMON_ACTION_UPLOAD: ["Upload", "上传"],
+    COMMON_ACTION_EXPORT: ["Export", "导出"],
+    COMMON_ACTION_LOGIN: ["Login", "登录"],
 
-    COMMON_NAME: "Name",
-    COMMON_PASSWORD: "Password",
-    COMMON_DESCRIPTION: "Description",
-    COMMON_TYPE: "Type",
-    COMMON_STATUS: "Status",
-    COMMON_CREATED_AT: "Created At",
-    COMMON_UPDATED_AT: "Updated At",
-    COMMON_SUCCESS: "Success",
-    COMMON_FAIL: "Fail",
-    COMMON_ALL: "All",
+    COMMON_SUCCESS: ["Success", "成功"],
+    COMMON_FAIL: ["Fail", "失败"],
+
+    COMMON_NAME: ["Name", "名称"],
+    COMMON_PASSWORD: ["Password", "密码"],
+    COMMON_DESCRIPTION: ["Description", "备注"],
+    COMMON_TYPE: ["Type", "类型"],
+    COMMON_STATUS: ["Status", "状态"],
+    COMMON_TIME: ["Time", "时间"],
+    COMMON_CREATED_AT: ["Created Time", "创建时间"],
+    COMMON_UPDATED_AT: ["Updated Time", "编辑时间"],
+
+    COMMON_ALL: ["All", "全部"],
+    COMMON_NO_DATA: ["No data", "数据为空"],
+    COMMON_DEFAULT: ["Default", "默认"],
+
+    COMMON_WEEK_DAYS: [
+        ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        ["周日", "周一", "周二", "周三", "周四", "周五", "周六"]],
+    COMMON_MONTHS: [
+        ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]],
 
     /***************************************framework***************************************/
     //login
-    LOGIN_USERNAME: "Username",
-    LOGIN_PASSWORD: "Password",
-    LOGIN_LOCALE: "Language",
-    LOGIN_ACTION_LOGIN: "Login",
-    LOGIN_REMEMBER_ME: "Remember me",
-    LOGIN_USERNAME_REQUIRED: "Please enter username",
-    LOGIN_PASSWORD_REQUIRED: "Please enter password",
-    LOGIN_REQUIRED: "Please login",
+    LOGIN_USERNAME: ["Username", "账号"],
+    LOGIN_PASSWORD: ["Password", "密码"],
+    LOGIN_LOCALE: ["Language", "语言"],
+    LOGIN_ACTION_LOGIN: ["Login", "登录"],
+    LOGIN_REMEMBER_ME: ["Remember me", "保持登录"],
+    LOGIN_USERNAME_REQUIRED: ["Please enter username", "请输入账号"],
+    LOGIN_PASSWORD_REQUIRED: ["Please enter password", "请输入密码"],
+    LOGIN_REQUIRED: ["Please login", "请先登录!!"],
     //homepage
-    SYSTEM_TITLE: "Flaskz Admin",
-    HOMEPAGE_REFRESH_CURRENT: "Refresh current page",
-    HOMEPAGE_ACCOUNT_EDIT: "Profile",
-    HOMEPAGE_API_DOC: "API Doc",
-    HOMEPAGE_ABOUT: "About",
-    HOMEPAGE_LOGOUT: "Logout",
-    HOMEPAGE_QUERY_ACCOUNT: "Load account",
-    //menu
-    MODULE_SYSTEM: "System",
-    MODULE_USERS: "Users",
-    MODULE_ROLES: "Roles",
-    MODULE_Licenses: "Licenses",
-    MODULE_ACTION_LOGS: "Action Logs",
+    SYSTEM_TITLE: ["Flaskz Admin", "Flaskz 管理系统"],
+    HOMEPAGE_REFRESH_CURRENT: ["Refresh current page", "刷新当前页面"],
+    HOMEPAGE_ACCOUNT_EDIT: ["Profile", "账号编辑"],
+    HOMEPAGE_API_DOC: ["API Doc", "API文档"],
+    HOMEPAGE_ABOUT: ["About", "关于"],
+    HOMEPAGE_LOGOUT: ["Logout", "退出"],
+    HOMEPAGE_QUERY_ACCOUNT: ["Load account", "加载账户信息"]
+}
 
-    /***************************************modules***************************************/
+z.util.mergeObject(I18ns,{
     //Sys Users
-    SYS_USER_TITLE: "Users",
-    SYS_USER_USERNAME: "Username",
-    SYS_USER_ROLE: "Role",
-    SYS_USER_NAME: "Name",
-    SYS_USER_PHONE: "Phone",
-    SYS_USER_LAST_LOGIN_AT: "Last Login At",
-    SYS_USER_LOGIN_TIMES: "Login Times",
-    SYS_USER_ENABLE: "Enable",
-    SYS_USER_DISABLE: "Disabled",
-    SYS_USER_ENABLE_CONFIRM: "Confirm to enable",
-    SYS_USER_DISABLE_CONFIRM: "Confirm to disable",
-    SYS_USER_SHOW_PASSWORD: "Show",
+    SYS_USERS_TITLE: ["Users", "用户列表"],
+    SYS_USERS_USERNAME: ["Username", "用户名"],
+    SYS_USERS_ROLE: ["Role", "角色"],
+    SYS_USERS_NAME: ["Name", "姓名"],
+    SYS_USERS_PHONE: ["Phone", "电话"],
+    SYS_USERS_LAST_LOGIN_AT: ["Last Login Time", "上次登录时间"],
+    SYS_USERS_LOGIN_TIMES: ["Login Times", "登录次数"],
+    SYS_USERS_ENABLE: ["Enable", "启用"],
+    SYS_USERS_DISABLE: ["Disabled", "停用"],
+    SYS_USERS_ENABLED: ["Enabled", "已启用"],
+    SYS_USERS_DISABLED: ["Disabled", "已停用"],
+    SYS_USERS_ENABLE_CONFIRM: ["<i class='fa fa-warning color-warning'></i> Confirm to enable?", "<i class='fa fa-warning color-warning'></i> 确认启用?"],
+    SYS_USERS_DISABLE_CONFIRM: ["<i class='fa fa-warning color-warning'></i> Confirm to disable?", "<i class='fa fa-warning color-warning'></i> 确认停用?"],
+    SYS_USERS_SHOW_PASSWORD: ["Show", "显示"],
+    SYS_USERS_CONFIRM_PASSWORD: ["Confirm Password", "确认密码"],
     //Sys Roles
-    SYS_ROLE_TITLE: "Roles",
-    SYS_ROLE_NAME: "Name",
-    SYS_ROLE_MODULES: "Modules",
-    SYS_ROLE_MODULES_REQUIRED: "Please select modules",
-    SYS_ROLE_MODULE: "Modules<small class='color-secondary'>(* mean no menu)</small>",
-    SYS_ROLE_MODULE_ACTIONS: "Actions",
+    SYS_ROLES_TITLE: ["Roles", "角色列表"],
+    SYS_ROLES_NAME: ["Name", "角色名称"],
+    SYS_ROLES_MODULES: ["Modules", "权限列表"],
+    SYS_ROLES_MODULES_REQUIRED: ["Please select modules", "请选择功能模块"],
+    SYS_ROLES_MODULE: ["Modules<small class='color-secondary'>(* mean no menu)</small>", "模块<small class='color-secondary'>(*表示没有菜单)</small>"],
+    SYS_ROLES_MODULE_ACTIONS: ["Actions", "操作权限"],
     //Sys/Licenses
-    SYS_LICENSES_TITLE: "Licenses",
-    SYS_LICENSES_USER: "User",
-    SYS_LICENSES_TYPE: "Type",
-    SYS_LICENSES_TYPE_EVALUATION: "EVALUATION",
-    SYS_LICENSES_TYPE_RUNTIME: "RUNTIME",
-    SYS_LICENSES_START_END_DATE: "Start Date - End Date",
-    SYS_LICENSES_UPLOAD_AT: "Upload At",
-    SYS_LICENSES_FILE: "License File",
-    SYS_LICENSES_FILE_REQUIRED: "Please select the license file",
-    SYS_LICENSES_UPLOAD_SUCCESS_MSG: "Upload successful",
+    SYS_LICENSES_TITLE: ["Licenses", "系统授权"],
+    SYS_LICENSES_USER: ["User", "用户"],
+    SYS_LICENSES_TYPE: ["Type", "类型"],
+    SYS_LICENSES_TYPE_EVALUATION: ["EVALUATION", "评估版"],
+    SYS_LICENSES_TYPE_RUNTIME: ["RUNTIME", "运行版"],
+    SYS_LICENSES_START_END_DATE: ["Start Date - End Date", "起止时间"],
+    SYS_LICENSES_UPLOADED_AT: ["Uploaded Time", "上传时间"],
+    SYS_LICENSES_FILE: ["License File", "License文件"],
+    SYS_LICENSES_FILE_REQUIRED: ["Please select the license file", "请选择License文件"],
+    SYS_LICENSES_UPLOAD_SUCCESS_MSG: ["Upload successful", "License上传成功"],
 
     //Sys/Action Logs
-    SYS_ACTION_LOGS_TITLE: "Action Logs",
-    SYS_ACTION_LOGS_MODULE: "Module",
-    SYS_ACTION_LOGS_USER: "User",
-    SYS_ACTION_LOGS_IP: "IP Address",
-    SYS_ACTION_LOGS_ACTION_RESULT: "Action Result",
-    SYS_ACTION_LOGS_REQ_RESULT: "Req Data",
-    SYS_ACTION_LOGS_RES_RESULT: "Res Data",
-    SYS_ACTION_LOGS_AT: "Time",
-    SYS_ACTION_LOGS_PREVIOUS_24_HOURS: "Last 24 hours",
-    SYS_ACTION_LOGS_PREVIOUS_7_DAYS: "Last 7 days",
-    SYS_ACTION_LOGS_PREVIOUS_30_DAYS: "Last 30 days"
-}
-
-var I18n_ZH = {
-    /***************************************pro***************************************/
-    PRO_GRID_OPERATE_UPDATE_LABEL: "<i class='fa fa-edit'></i> 编辑",
-    PRO_GRID_OPERATE_DELETE_LABEL: "<i class='fa fa-trash-o'></i> 删除",
-    PRO_MESSAGE_DELETE_CONFIRM: "<i class='fa fa-warning color-warning'></i> 确认删除?",
-    PRO_MODAL_UPDATE_TITLE: "<i class='fa fa-edit'></i> 编辑",
-    PRO_MODAL_ADD_TITLE: "<i class='fa fa-plus-square'></i> 添加",
-    PRO_MODAL_VIEW_TITLE: "<i class='fa fa-file-text-o'></i> 查看",
-
-    /***************************************通用***************************************/
-    COMMON_ACTION: "操作",
-    COMMON_ACTION_ADD: "添加",
-    COMMON_ACTION_DELETE: "删除",
-    COMMON_ACTION_UPDATE: "编辑",
-    COMMON_ACTION_SEARCH: "查询",
-    COMMON_ACTION_FILTER: "过滤",
-    COMMON_ACTION_OK: "确认",
-    COMMON_ACTION_CANCEL: "取消",
-    COMMON_ACTION_RETURN: "返回",
-    COMMON_ACTION_CLOSE: "关闭",
-    COMMON_ACTION_SAVE: "保存",
-    COMMON_ACTION_REFRESH: "刷新",
-    COMMON_ACTION_UPLOAD: "上传",
-    COMMON_ACTION_LOGIN: "登录",
-
-    COMMON_NAME: "名称",
-    COMMON_PASSWORD: "密码",
-    COMMON_DESCRIPTION: "备注",
-    COMMON_TYPE: "类型",
-    COMMON_STATUS: "状态",
-    COMMON_CREATED_AT: "创建时间",
-    COMMON_UPDATED_AT: "编辑时间",
-    COMMON_SUCCESS: "成功",
-    COMMON_FAIL: "失败",
-    COMMON_ALL: "全部",
-
-    /***************************************框架***************************************/
-    //登录
-    LOGIN_USERNAME: "账号",
-    LOGIN_PASSWORD: "密码",
-    LOGIN_LOCALE: "语言",
-    LOGIN_ACTION_LOGIN: "登录",
-    LOGIN_REMEMBER_ME: "保持登录",
-    LOGIN_USERNAME_REQUIRED: "请输入账号",
-    LOGIN_PASSWORD_REQUIRED: "请输入密码",
-    LOGIN_REQUIRED: "请先登录!!",
-    //首页
-    SYSTEM_TITLE: "Flaskz 管理系统",
-    HOMEPAGE_REFRESH_CURRENT: "刷新当前页面",
-    HOMEPAGE_ACCOUNT_EDIT: "账号编辑",
-    HOMEPAGE_API_DOC: "API文档",
-    HOMEPAGE_ABOUT: "关于",
-    HOMEPAGE_LOGOUT: "退出",
-    HOMEPAGE_QUERY_ACCOUNT: "加载账户信息",
-    //菜单/模块
-    MODULE_SYSTEM: "系统管理",
-    MODULE_USERS: "用户列表",
-    MODULE_ROLES: "角色列表",
-    MODULE_Licenses: "Licenses",
-    MODULE_ACTION_LOGS: "操作日志",
-
-    /***************************************模块***************************************/
-    //系统管理/用户列表
-    SYS_USER_TITLE: "用户列表",
-    SYS_USER_USERNAME: "用户名",
-    SYS_USER_ROLE: "角色",
-    SYS_USER_NAME: "姓名",
-    SYS_USER_PHONE: "电话",
-    SYS_USER_LAST_LOGIN_AT: "最后登录时间",
-    SYS_USER_LOGIN_TIMES: "登录次数",
-    SYS_USER_ENABLE: "启用",
-    SYS_USER_DISABLE: "停用",
-    SYS_USER_ENABLE_CONFIRM: "确认启用",
-    SYS_USER_DISABLE_CONFIRM: "确认停用",
-    SYS_USER_SHOW_PASSWORD: "显示",
-    //系统管理/角色列表
-    SYS_ROLE_TITLE: "角色列表",
-    SYS_ROLE_NAME: "角色名称",
-    SYS_ROLE_MODULES: "权限列表",
-    SYS_ROLE_MODULES_REQUIRED: "请选择功能模块",
-    SYS_ROLE_MODULE: "模块<small class='color-secondary'>(*表示没有菜单)</small>",
-    SYS_ROLE_MODULE_ACTIONS: "操作权限",
-    //系统管理/Licenses
-    SYS_LICENSES_TITLE: "系统授权",
-    SYS_LICENSES_USER: "用户",
-    SYS_LICENSES_TYPE: "类型",
-    SYS_LICENSES_TYPE_EVALUATION: "评估版",
-    SYS_LICENSES_TYPE_RUNTIME: "运行版",
-    SYS_LICENSES_START_END_DATE: "起止时间",
-    SYS_LICENSES_UPLOAD_AT: "上传时间",
-    SYS_LICENSES_FILE: "License文件",
-    SYS_LICENSES_FILE_REQUIRED: "请选择License文件",
-    SYS_LICENSES_UPLOAD_SUCCESS_MSG: "License上传成功",
-    //系统管理/操作日志
-    SYS_ACTION_LOGS_TITLE: "操作日志",
-    SYS_ACTION_LOGS_MODULE: "模块",
-    SYS_ACTION_LOGS_USER: "用户",
-    SYS_ACTION_LOGS_IP: "IP地址",
-    SYS_ACTION_LOGS_ACTION_RESULT: "操作结果",
-    SYS_ACTION_LOGS_REQ_RESULT: "请求数据",
-    SYS_ACTION_LOGS_RES_RESULT: "结果数据",
-    SYS_ACTION_LOGS_AT: "时间",
-    SYS_ACTION_LOGS_PREVIOUS_24_HOURS: "最近24小时",
-    SYS_ACTION_LOGS_PREVIOUS_7_DAYS: "最近7天",
-    SYS_ACTION_LOGS_PREVIOUS_30_DAYS: "最近30天"
-}
-
-z.i18n.init({
-    en: I18n_EN,
-    zh: I18n_ZH
+    SYS_ACTION_LOGS_TITLE: ["Action Logs", "操作日志"],
+    SYS_ACTION_LOGS_MODULE: ["Module", "模块"],
+    SYS_ACTION_LOGS_USER: ["User", "用户"],
+    SYS_ACTION_LOGS_IP: ["IP Address", "IP地址"],
+    SYS_ACTION_LOGS_ACTION_RESULT: ["Action Result", "操作结果"],
+    SYS_ACTION_LOGS_REQ_RESULT: ["Req Data", "请求数据"],
+    SYS_ACTION_LOGS_RES_RESULT: ["Res Data", "结果数据"],
+    SYS_ACTION_LOGS_AT: ["Time", "时间"],
+    SYS_ACTION_LOGS_PREVIOUS_24_HOURS: ["Last 24 hours", "最近24小时"],
+    SYS_ACTION_LOGS_PREVIOUS_7_DAYS: ["Last 7 days", "最近7天"],
+    SYS_ACTION_LOGS_PREVIOUS_30_DAYS: ["Last 30 days", "最近30天"]
 });
+
+z.util.mergeObject(I18ns, {
+    //menu
+    MODULE_SYSTEM: ["<i class='fa fa-gears'></i>System", "<i class='fa fa-gears'></i>系统管理"],
+    MODULE_USERS: ["Users", "用户列表"],
+    MODULE_ROLES: ["Roles", "角色列表"],
+    MODULE_Licenses: ["Licenses", "Licenses"],
+    MODULE_ACTION_LOGS: ["Action Logs", "操作日志"]
+});
+
+if (window.I18ns) {//all in one
+    var _locales = I18ns._locales || [];
+    var locales_map = {};
+    _locales.forEach(function (item) {
+        locales_map[item] = [];
+    })
+    z.util.eachObject(I18ns, function (key, values) {
+        if (key !== "_locales") {
+            values.forEach(function (item, index) {
+                if (index < _locales.length) {
+                    locales_map[_locales[index]][key] = item
+                }
+            })
+        }
+    });
+    z.i18n.init(locales_map);
+}
+//multiple files
+if (window.I18n_EN) {
+    z.i18n.init({en: I18n_EN});
+}
+if (window.I18n_ZH) {
+    z.i18n.init({zh: I18n_ZH});
+}
+
 pro.AjaxCRUD.getResponseMessage = function (result) {
     var msg;
     var status_code = result.status_code;
@@ -251,6 +187,7 @@ z.ready(function () {
     }
 });
 
+
 /**
  * ajax请求url
  */
@@ -259,7 +196,8 @@ var AjaxUrl = {
         query: "/api/v1.0/ex-simples/",
         add: "/api/v1.0/ex-simples/",
         delete: "/api/v1.0/ex-simples/[id]",
-        update: "/api/v1.0/ex-simples/"
+        update: "/api/v1.0/ex-simples/",
+        download: "/api/v1.0/ex-simples/download",
     },
     ex_departments: {
         query: "/api/v1.0/ex-departments/",
@@ -296,7 +234,7 @@ var AjaxUrl = {
         modules: "/sys-mgmt/modules/"
     },
     sys_auth: {
-        // login: {url: "/sys-mgmt/auth/login/", method: "POST"},
+        //login: {url: "/sys-mgmt/auth/login/", method: "POST"},
         login: {url: "/sys-mgmt/auth/token/", method: "POST"},
         logout: {url: "/sys-mgmt/auth/logout/", method: "GET"},
 
@@ -312,6 +250,15 @@ var refreshMenuByPath = function (paths) {
         admin.refreshMenu(paths)
     }
 };
+if (z.bom.browser === "Safari") {
+    z.ready(function () {
+        var fk_safari_style = z.dom.create("<style type='text/css'>.fk-safari {cursor: auto}</style>")
+        document.head.appendChild(fk_safari_style);
+        z.util.callLater(function () {
+            document.head.removeChild(fk_safari_style);
+        }, 10)
+    })
+}
 
 z.setDefault({
     "AJAX_BEFORE_SEND": function (httpRequest) {
@@ -334,7 +281,12 @@ z.setDefault({
                             window.top.location.href = "/login";
                         } else {
                             z.widget.alert(z.i18n.t("LOGIN_REQUIRED"), z.i18n.t("PRO_MESSAGE_TIPS"), function (result) {//callback
-                                window.top.location.href = "/login";
+                                z.widget.notify(false);
+                                if (window.top.Admin && window.top.Admin.showLoginModal) {
+                                    window.top.Admin.showLoginModal();
+                                } else {
+                                    window.top.location.href = "/login";
+                                }
                             });
                         }
                     }

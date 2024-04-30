@@ -69,6 +69,6 @@ class EmployeeModel(ModelBase, ModelMixin):
     created_at = Column(DateTime(), default=datetime.now, info={'auto': True})  # 通过info.auto设置为系统自动维护列
     updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)  # update时自动更新updated_at列
 
-    department = relationship('DepartmentModel', backref='employees', lazy='joined')  # 关系
+    department = relationship('DepartmentModel', backref='employees', lazy='subquery')  # 关系
     like_columns = ['name', description]  # field/Column -模糊查询列
     auto_columns = ['id', updated_at]  # field/Column -自动维护列(不受参数影响), 也可以通过info={'auto': True}指定

@@ -57,6 +57,7 @@ var Admin = {
             // cache_page:false,
             update_hash: true,
             update_tile: true,
+            inner_html: true,
             content_container: z.dom.query(".content", ".body-main"),
             getLabel: function (data) {
                 return (data.get("font_icon") || "") + data.get("name");
@@ -67,9 +68,16 @@ var Admin = {
             mode: "vertical",
             selectable: true,
             model_select: true,
+            inner_html: true,
             getLabel: function (data) {
                 var font_icon = data.get("font_icon") || "";
                 if (!data.get("parent")) {
+                    if (!font_icon) {
+                        var match = (data.get("name") || "").match(/<i[^>]*>.*?<\/i>/);
+                        if (match) {
+                            font_icon = match[0];
+                        }
+                    }
                     return font_icon;
                 }
                 return font_icon + data.get("name");
@@ -129,6 +137,12 @@ var Admin = {
                 this.refreshMenu();
             }, this);
         }
+        if (z.dom.query("#localeDiv")) {
+            z.dom.event.onclick("#localeDiv", this.handleSelectLocale, this);
+        }
+        z.bom.onstorage(function () {
+            z.widget.modal("#loginModalDiv", false);
+        }, this, "$_auth_login")
         this._initProfileController();
     },
     _initProfileController: function () {
@@ -208,6 +222,16 @@ z.util.mergeObject(Admin, {
         this.initMenuItems(MenuItems);
         this.initAccountProfile({name: "admin"});
     },
+    showLoginModal: function () {
+        var iframe = z.dom.create("<iframe src='./login/login_modal.html'>");
+        z.dom.query("#loginModalDiv>.content>.body").appendChild(iframe);
+        z.widget.modal("#loginModalDiv", {
+            close_on_click_outside: false,
+            onClose: function () {
+                z.dom.remove(iframe);
+            }
+        });
+    },
     showPreferenceModal: function () {
         z.widget.popover.close();
         alert("Show Preferences modal");
@@ -218,6 +242,26 @@ z.util.mergeObject(Admin, {
     },
     handleSignOut: function () {
         alert("Sign out");
+    },
+    handleSelectLocale: function (evt) {
+        var target = z.dom.event.getTarget(evt, "[locale]")
+        if (!target) {
+            return
+        }
+        z.widget.popover.close();
+        var locale = z.dom.getAttribute(target, "locale");
+        this.updateLocale(locale);
+    },
+    updateLocale: function (locale) {
+        this.updateLocaleLabel(locale);
+    },
+    updateLocaleLabel: function (locale) {
+        var locale_label = locale;
+        var localeA = z.dom.query("[locale=" + locale + "]", "#localeDiv");
+        if (localeA) {
+            locale_label = z.dom.getValue(z.dom.query("span", localeA));
+        }
+        z.dom.setValue("#localeLabel", locale_label);
     },
     initCustom: function () {
     }

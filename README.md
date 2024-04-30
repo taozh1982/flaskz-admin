@@ -15,6 +15,7 @@ Flaskz-admin是基于 [Flaskz](https://pypi.org/project/flaskz/) 的管理系统
 ## 快速入门
 
 1. 修改系统配置参数[config.py](./config.py)
+    - `SECRET_KEY` - 应用安全密钥(用于保持客户端会话的安全，应该足够复杂&难以猜测)
     - `FLASKZ_DATABASE_URI` - 数据库地址(默认为`./_sqlite/flaskz-admin.db`)
 2. 修改alembic配置参数[alembic.ini](./alembic.ini)
     - `sqlalchemy.url` - 数据库地址(默认为`./_sqlite/flaskz-admin.db`)
@@ -77,6 +78,15 @@ Email: taozh@cisco.com / taozh1982@gmail.com
 
 ## 版本
 
+- **2.1.1** `2024/05/01`
+    - [A] `config.py`添加配置项
+        - `APP_PAGE_MAPPING`用于设置页面映射
+        - `APP_LICENSE_LOAD_INTERVAL`用于设置License加载间隔
+        - `APP_LICENSE_OS_TIME_BACKWARD_LIMIT`用于设置操作系统时间允许向后改变的最大值
+    - [A] `LicenseManager`添加对操作系统时间的检测
+    - [C] 添加`_cli`目录，用于存放`cli`相关功能代码(按需使用)
+    - [C] 添加`app.utils._utils`目录，用于存放通用工具类(按需使用)
+    - [C] 前端页面重新登录改成弹框模式
 - **2.1.0** `2024/02/01`
     - [A] 页面国际化(登录/系统导航/系统管理)
 - **2.0.1** `2024/01/01`
@@ -85,7 +95,6 @@ Email: taozh@cisco.com / taozh1982@gmail.com
 - **2.0.0** `2023/12/01`
     - [A] `app._ext.redis_ws`添加对Redis哨兵模式url的支持
     - [A] 添加Token刷新功能，`APP_REFRESH_TOKEN_EXPIRES_IN`配置项用于设置refresh token的有效时间
-
 - **1.6** `2023/06/16`
     - [F] 修复`app._ext.redis_ws.init_websocket`函数中app_config设置问题 -`2023/07/10`
     - [A] `alembic.inc`添加`ignore_tables`配置项，用于配置不需要alembic维护的table列表 -`2023/07/10`

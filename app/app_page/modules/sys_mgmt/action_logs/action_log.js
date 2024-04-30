@@ -4,6 +4,7 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
         {name: z.i18n.t("COMMON_ACTION_ADD"), value: "add"},
         {name: z.i18n.t("COMMON_ACTION_DELETE"), value: "delete"},
         {name: z.i18n.t("COMMON_ACTION_UPDATE"), value: "update"},
+        {name: z.i18n.t("COMMON_ACTION_UPLOAD"), value: "upload"},
         {name: z.i18n.t("COMMON_ACTION_LOGIN"), value: "login"}
     ],
     /*ext_modules: [
@@ -47,7 +48,7 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
                     }
                 },
                 {
-                    name: z.i18n.t("SYS_ACTION_LOGS_ACTION_RESULT"), field: "result", width: 100,
+                    name: z.i18n.t("SYS_ACTION_LOGS_ACTION_RESULT"), field: "result", width: 110,
                     render: function (td, data) {
                         pro.GridUtil.renderResult(td, data);
                     }
@@ -87,8 +88,8 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
             }
             var label = content;
             var _this = this;
-            if (content.length > 100) {
-                label = content.substring(0, 100) + "...";
+            if (content.length > 60) {
+                label = content.substring(0, 60) + "...";
             }
             var btn = pro.GridUtil.renderOperateButton(
                 null, data, attr, td, _this.showDetail, {
@@ -154,7 +155,6 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
             if (!item.hasOwnProperty("module")) {
                 item.module = name;
             }
-            // var i18n_key = "MENU_" + name.replace(/[- ]/g, "_").toUpperCase();
             item.name = this._getModuleI18nName(name);//z.i18n.t(i18n_key) || name
         }
         z.util.eachArray(item.children || [], function (child) {
@@ -162,8 +162,9 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
         }, this)
     },
     _getModuleI18nName: function (module) {
-        return z.i18n.t("MODULE_" + module.trim().replace(/[- ]/g, "_").toUpperCase()) ||
+        var name = z.i18n.t("MODULE_" + module.trim().replace(/[- ]/g, "_").toUpperCase()) ||
             z.i18n.t("MODULE_" + module.trim().toUpperCase()) || module;
+        return z.dom.create("<span>"+name+"</span>").textContent;
     },
     initController: function () {
         this.queryForm = z.form.Form(".module>.toolbar");

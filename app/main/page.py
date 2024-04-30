@@ -1,6 +1,6 @@
 """
 map the path to the static html files.
-it is recommended to use nginx as the static file server.
+it is recommended to use nginx as the static file wsgi.
 """
 from flask import redirect
 from flaskz.log import flaskz_logger
@@ -13,16 +13,6 @@ page_mapping = {
     'login': './login.html',
     'index': './index.html',
     'error_404': './error/404.html',
-
-    # Example
-    'ex-simples': './modules/example/simples/simples.html',
-    'ex-departments': './modules/example/departments/departments.html',
-    'ex-employees': './modules/example/employees/employees.html',
-
-    # Ext
-    'ext-nav': './modules/ext/nav/nav.html',
-    'ext-websocket': './modules/ext/websocket/websocket.html',
-    'ext-page-monitor': './modules/ext/page_monitor/page_monitor.html',
 
     # System
     'roles': './modules/sys_mgmt/roles/role.html',
@@ -49,7 +39,7 @@ def show_page(page):
             return main_bp.send_static_file(_page)
         return redirect(_page)
 
-    if page.endswith(".html"):
+    if page.endswith('.html'):
         return main_bp.send_static_file(page)
 
     return main_bp.send_static_file(page_mapping.get('error_404'))

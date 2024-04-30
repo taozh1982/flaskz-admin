@@ -3,10 +3,10 @@ var Role = z.util.mergeObject(pro.template.CRUDTablePage, {
             url: AjaxUrl.sys_role,
             grid_options: {
                 columns: [
-                    {name: z.i18n.t("SYS_ROLE_NAME"), field: "name"},
+                    {name: z.i18n.t("SYS_ROLES_NAME"), field: "name"},
                     {name: z.i18n.t("COMMON_DESCRIPTION"), field: "description", "minimizable": true},
                     {
-                        name: z.i18n.t("SYS_ROLE_MODULES"), field: "modules", sortable: false, filter: false, "minimizable": true, "minimized": true,
+                        name: z.i18n.t("SYS_ROLES_MODULES"), field: "modules", sortable: false, filter: false, "minimizable": true, "minimized": true,
                         render: function (td, data) {
                             td.innerHTML = "<small>" + Role.getModulesName(data.get("modules")) + "</small>";
                         }
@@ -50,7 +50,7 @@ var Role = z.util.mergeObject(pro.template.CRUDTablePage, {
             if (value) {
                 var modules = this._getModuleGridValue();
                 if (modules.length === 0) {
-                    z.widget.notify(z.i18n.t("SYS_ROLE_MODULES_REQUIRED"), {type: "info", duration: 1200});
+                    z.widget.notify(z.i18n.t("SYS_ROLES_MODULES_REQUIRED"), {type: "info", duration: 1200});
                     return null;
                 }
                 value.modules = modules;

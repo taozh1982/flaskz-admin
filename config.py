@@ -27,7 +27,7 @@ def update_config_from_file():
         for opt in opts:
             setattr(config_cls, opt.upper(), cp.get(section, opt))
 
-    for item in [('DEFAULT', Config), ('DEVELOPMENT', DevelopmentConfig), ('UNITTEST', UnittestConfig), ('TEST', TestConfig), ('PRODUCTION', ProductionConfig)]:
+    for item in [('DEFAULT', Config), ('DEVELOPMENT', DevelopmentConfig), ('TEST', TestConfig), ('PRODUCTION', ProductionConfig), ('UNITTEST', UnittestConfig)]:
         _update_from_file(item[0], item[1])
 
 
@@ -53,6 +53,16 @@ class Config:
     # 静态文件目录(前端页面)
     APP_PAGE_STATIC_FOLDER = './app/app_page/'
     APP_PAGE_STATIC_STATIC_URL_PATH = '/'
+    APP_PAGE_MAPPING = {  # route:页面映射
+        # Ext
+        'ext-nav': './modules/ext/nav/nav.html',
+        'ext-websocket': './modules/ext/websocket/websocket.html',
+        'ext-page-monitor': './modules/ext/page_monitor/page_monitor.html',
+        # Example
+        'ex-simples': './modules/example/simples/simples.html',
+        'ex-departments': './modules/example/departments/departments.html',
+        'ex-employees': './modules/example/employees/employees.html',
+    }
     # 上传文件目录
     # APP_UPLOAD_FOLDER = 'uploads'
     # 允许的上传文件格式列表
@@ -63,6 +73,10 @@ class Config:
     APP_LICENSE_PUBLIC_KEY_FILEPATH = './_license/public.key'
     # License菜单path(如果启用列license功能&没有上传license，只返回license菜单)
     APP_LICENSE_MENU_PATH = 'licenses'
+    # License加载间隔(s)
+    APP_LICENSE_LOAD_INTERVAL = 600
+    # 操作系统时间允许向后改变的最大值(s)，如果不是大于0的整数，则禁用时间检测
+    APP_LICENSE_OS_TIME_BACKWARD_LIMIT = 3600
 
     # ------------------------------数据库配置参数------------------------------
     # 请参考 -http://zhangyiheng.com/blog/articles/py_flaskz_model_init.html
@@ -70,8 +84,10 @@ class Config:
     FLASKZ_DATABASE_ECHO = False  # 如果为True，会打印sql语句，只适用于开发环境
     FLASKZ_DATABASE_POOL_RECYCLE = int(timedelta(hours=2).total_seconds())  # recycle connections seconds
     FLASKZ_DATABASE_POOL_PRE_PING = True  # engine.pool_pre_ping- DB操作之前先测试连接，如果不可用会重连(HA/数据库重启)
-    FLASKZ_DATABASE_ENGINE_KWARGS = None  # engine自定义属性 ex){'pool_timeout': 20, 'pool_size': 20, "poolclass": QueuePool, 'max_overflow': 20}
-    FLASKZ_DATABASE_SESSION_KWARGS = {'expire_on_commit': False}  # session自定义属性
+    # engine自定义属性 ex){'pool_timeout': 20, 'pool_size': 20, "poolclass": QueuePool, 'max_overflow': 20}
+    FLASKZ_DATABASE_ENGINE_KWARGS = None
+    # session自定义属性 'reusable_in_flask_g':False-->禁用session缓存，'expire_on_commit':False-->session提交以后，对象不会被"过期"
+    FLASKZ_DATABASE_SESSION_KWARGS = {'expire_on_commit': False}
 
     FLASKZ_DATABASE_DEBUG = True  # 如果为True，会记录一个请求过程中的DB操作，并打印>slow_time和?times的操作，只适用于开发环境
     FLASKZ_DATABASE_DEBUG_SLOW_TIME = -1
@@ -104,13 +120,6 @@ class DevelopmentConfig(Config):
     FLASKZ_DATABASE_URI = os.environ.get('FLASKZ_DEV_DATABASE_URI') or 'sqlite:///./_sqlite/flaskz-admin.db?check_same_thread=False'
 
 
-class UnittestConfig(Config):
-    """单元测试环境配置"""
-    FLASKZ_LOGGER_FILEPATH = '../../_syslog'  # 日志文件目录
-    FLASKZ_LOGGER_FILENAME = 'unittest_syslog.txt'
-    FLASKZ_DATABASE_URI = os.environ.get('FLASKZ_UNITTEST_DATABASE_URI') or 'sqlite:///../../_sqlite/flaskz-admin-unittest.db?check_same_thread=False'
-
-
 class TestConfig(Config):
     """测试环境配置"""
     SEND_FILE_MAX_AGE_DEFAULT = 0  # no cache
@@ -121,13 +130,20 @@ class TestConfig(Config):
 
 class ProductionConfig(Config):
     """
-    产品环境相关配置
-    如果不想将一些信息暴露在代码中，可以通过环境变量的方式进行设置
+    产品/上线环境配置
+    如果不想将一些信息暴露在代码中，可以通过*环境变量*的方式进行设置
     """
     SECRET_KEY = os.environ.get('APP_SECRET_KEY') or 'hard to guess string'
     FLASKZ_LOGGER_FILENAME = 'syslog.txt'
     FLASKZ_DATABASE_URI = os.environ.get('FLASKZ_PRO_DATABASE_URI') or 'mysql+pymysql://{username}:{password}@{url}:{port}/{db}'
     FLASKZ_DATABASE_ENGINE_KWARGS = {'isolation_level': 'READ COMMITTED'}  # for mysql
+
+
+class UnittestConfig(Config):
+    """单元测试环境配置"""
+    FLASKZ_LOGGER_FILEPATH = '../../_syslog'  # 日志文件目录
+    FLASKZ_LOGGER_FILENAME = 'unittest_syslog.txt'
+    FLASKZ_DATABASE_URI = os.environ.get('FLASKZ_UNITTEST_DATABASE_URI') or 'sqlite:///../../_sqlite/flaskz-admin-unittest.db?check_same_thread=False'
 
 
 update_config_from_file()
