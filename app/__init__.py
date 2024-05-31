@@ -26,7 +26,7 @@ def create_app(config_name):
     # 系统管理模块初始化
     _init_login(app)
     _init_model_rest(app)
-    _init_license(app)
+    # _init_license(app)
 
     # 注册API
     main.init_app(app)

@@ -7,11 +7,11 @@ from flaskz.log import flaskz_logger, get_log_data
 from flaskz.models import model_to_dict, query_all_models
 from flaskz.rest import get_rest_log_msg, rest_login_required, rest_permission_required, register_model_route, register_model_query_pss_route, register_model_query_route, \
     register_model_delete_route
-from flaskz.utils import create_response, get_wrap_str, find_list, get_dict_mapping, get_app_config, pop_dict_keys
+from flaskz.utils import create_response, get_wrap_str, find_list, get_dict_mapping, get_app_config, pop_dict_keys, get_ins_mapping
 
 from . import sys_mgmt_bp, log_operation
 from .auth import verify_refresh_token, generate_token
-from .model import SysUser, SysRole, SysModule, SysRoleModule, SysActionLog, SysUserOption
+from .model import SysUser, SysRole, SysModule, SysRoleModule, SysActionLog, SysUserOption, SysOption
 from ..sys_init.status_codes import refresh_token_err
 from ..utils import get_app_license
 
@@ -128,6 +128,11 @@ def sys_auth_account_query():
         'profile': profile,
         'menus': role_menus
     }
+    # success, sys_options = SysOption.query_all()
+    # if success:
+    #     res_data['sys_options'] = model_to_dict(sys_options, {
+    #         'include': ['key', 'value']
+    #     })
     current_license = get_app_license()
     if current_license:
         res_data['license'] = {
@@ -166,12 +171,20 @@ def sys_auth_account_update():
     """更新账号信息(非管理员)"""
     request_json = request.json
     req_log_data = json.dumps(request_json)
-    # role不可修改
-    if 'role_id' in request_json:
-        del request_json['role_id']
+    # role和username不可修改
+    pop_dict_keys(request_json, ['role_id', 'username'])
+    option = request_json.pop('option', None)
+    if type(option) is dict:
+        option_data = {
+            'user_id': request_json.get('id'),
+        }
+        for op in ['locale', 'preferences']:
+            if op in option:
+                option_data[op] = option.get(op)
+        SysUserOption.update(option_data)
 
     result = SysUser.update(request_json)
-    res_data = model_to_dict(result[1])
+    res_data = model_to_dict(result[1], {'cascade': 1})
     if result[0] is True:
         del res_data['role_id']
 
@@ -265,6 +278,40 @@ def sys_role_query():
         }
     flaskz_logger.debug(get_rest_log_msg('Query role', None, success, res_data))
     return create_response(success, res_data)
+
+
+# -------------------------------------------sys options-------------------------------------------
+register_model_route(sys_mgmt_bp, SysOption, 'sys-options', 'sys-options')
+
+
+@sys_mgmt_bp.route('/sys-options/bulk/', methods=['PATCH'])
+@rest_permission_required('sys-options', 'update')
+def sys_options_bulk_update():
+    """批量更新Options"""
+    request_json = request.json
+    req_log_data = json.dumps(request_json)
+    success, result = True, None
+    try:
+        success, options = SysOption.query_all()
+        if not success:
+            result = options
+        else:
+            opt_ins_map = get_ins_mapping(options, 'key')
+            for item in request_json:
+                if 'key' in item:
+                    opt_ins = opt_ins_map.get(item.get('key'))
+                    if opt_ins:
+                        item['id'] = opt_ins.id
+            SysOption.bulk_update(request_json)
+            result = request_json
+    except Exception as e:
+        flaskz_logger.exception(e)
+        success, result = False, res_status_codes.db_update_err
+
+    log_operation('sys-options', 'update', success, req_log_data, None)
+    flaskz_logger.info(get_rest_log_msg('Bulk Update System Options', req_log_data, success, None))
+
+    return create_response(success, result)
 
 
 # -------------------------------------------action logs-------------------------------------------

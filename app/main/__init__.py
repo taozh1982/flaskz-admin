@@ -63,15 +63,23 @@ def init_app(app):
     except Exception:
         pass
 
+    # init_app_security(app)
+
 
 def init_app_security(app):
+    """
+    安全选项(按需使用)，建议通过nginx设置
+    """
+
     @app.after_request
     def _init_security(response):
         headers = response.headers
         headers["X-Frame-Options"] = 'SAMEORIGIN'
-        # headers['Content-Security-Policy'] = "default-src 'self'"
-        headers['Content-Security-Policy'] = "default-src 'self';" \
-                                             " script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; base-uri 'self';frame-ancestors 'self';"
+        headers['Content-Security-Policy'] = "default-src 'self'; " \
+                                             "script-src 'self' 'unsafe-eval' 'unsafe-inline'; " \
+                                             "style-src 'self' 'unsafe-inline'; " \
+                                             "img-src 'self' data:; base-uri 'self'; " \
+                                             "frame-ancestors 'self'; connect-src 'self' wss: ws:; "
         headers['Permissions-Policy'] = 'geolocation=(), camera=()'
 
         content_type = response.content_type
@@ -86,8 +94,7 @@ def allowed_file(file):
         filename = file
     else:
         filename = file.filename
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in (get_app_config('APP_UPLOAD_FILE_ALLOWED_EXTENSIONS') or set())
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in (get_app_config('APP_UPLOAD_FILE_ALLOWED_EXTENSIONS') or set())
 
 
 def is_static_file_request(req=None):

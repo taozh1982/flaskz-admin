@@ -1,4 +1,4 @@
-z.util.mergeObject(I18ns,{
+z.util.mergeObject(I18ns, {
     //Sys Users
     SYS_USERS_TITLE: ["Users", "用户列表"],
     SYS_USERS_USERNAME: ["Username", "用户名"],
@@ -15,6 +15,8 @@ z.util.mergeObject(I18ns,{
     SYS_USERS_DISABLE_CONFIRM: ["<i class='fa fa-warning color-warning'></i> Confirm to disable?", "<i class='fa fa-warning color-warning'></i> 确认停用?"],
     SYS_USERS_SHOW_PASSWORD: ["Show", "显示"],
     SYS_USERS_CONFIRM_PASSWORD: ["Confirm Password", "确认密码"],
+    AJAX_STATUS_LAST_ADMIN_USER_NOT_ALLOWED: ["The user is the last that can manage roles", "当前是最后一个有角色管理权限的用户"],
+
     //Sys Roles
     SYS_ROLES_TITLE: ["Roles", "角色列表"],
     SYS_ROLES_NAME: ["Name", "角色名称"],
@@ -22,6 +24,8 @@ z.util.mergeObject(I18ns,{
     SYS_ROLES_MODULES_REQUIRED: ["Please select modules", "请选择功能模块"],
     SYS_ROLES_MODULE: ["Modules<small class='color-secondary'>(* mean no menu)</small>", "模块<small class='color-secondary'>(*表示没有菜单)</small>"],
     SYS_ROLES_MODULE_ACTIONS: ["Actions", "操作权限"],
+    AJAX_STATUS_LAST_ADMIN_ROLE_NOT_ALLOWED: ["The role is the last that can manage roles", "当前是最后一个有角色管理权限的角色"],
+
     //Sys/Licenses
     SYS_LICENSES_TITLE: ["Licenses", "系统授权"],
     SYS_LICENSES_USER: ["User", "用户"],
@@ -45,5 +49,12 @@ z.util.mergeObject(I18ns,{
     SYS_ACTION_LOGS_AT: ["Time", "时间"],
     SYS_ACTION_LOGS_PREVIOUS_24_HOURS: ["Last 24 hours", "最近24小时"],
     SYS_ACTION_LOGS_PREVIOUS_7_DAYS: ["Last 7 days", "最近7天"],
-    SYS_ACTION_LOGS_PREVIOUS_30_DAYS: ["Last 30 days", "最近30天"]
+    SYS_ACTION_LOGS_PREVIOUS_30_DAYS: ["Last 30 days", "最近30天"],
+
+    //Sys/Options
+    SYS_OPTIONS_TITLE: ["Options", "系统选项"],
+    SYS_OPTIONS_CATEGORY: ["Category", "分类"],
+    SYS_OPTIONS_LABEL: ["Label", "标签"],
+    SYS_OPTIONS_KEY: ["Option", "选项"],
+    SYS_OPTIONS_VALUE: ["Value", "值"]
 });

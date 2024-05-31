@@ -1,13 +1,12 @@
 # example
 import csv
 import io
-import json
 
-from flask import request, send_file
+from flask import send_file
 from flaskz import res_status_codes
 from flaskz.log import flaskz_logger
 from flaskz.models import parse_pss
-from flaskz.rest import register_model_route, rest_permission_required, get_rest_log_msg, log_operation, rest_login_required
+from flaskz.rest import register_model_route, rest_permission_required, get_rest_log_msg, log_operation, rest_login_required, register_model_bulk_route
 from flaskz.utils import get_request_json, create_response
 
 from ..api import api_bp
@@ -35,6 +34,7 @@ register_model_route(api_bp, EmployeeModel, 'ex-employees', 'ex-employees',
                              }
                          }
                      })
+register_model_bulk_route(api_bp, EmployeeModel, 'ex-employees', 'ex-employees')
 
 
 # -------------------------------------------ext-------------------------------------------
@@ -71,64 +71,64 @@ def employees_clear():
 
 
 # -------------------------------------------bulk-------------------------------------------
-@api_bp.route('/ex-employees/bulk-add/', methods=['POST'])
-@rest_permission_required('ex-employees', 'update')
-def employees_bulk_add():
-    """批量添加数据"""
-    request_json = request.json
-    req_log_data = json.dumps(request_json)
-    success, result = True, None
-    try:
-        EmployeeModel.bulk_add(request_json)
-    except Exception as e:
-        flaskz_logger.exception(e)
-        success, result = False, res_status_codes.db_add_err
-
-    log_operation('ex-employees', 'add', success, req_log_data, None)
-    flaskz_logger.info(get_rest_log_msg('Bulk Add EmployeeModel data', req_log_data, success, None))
-
-    return create_response(success, result)
-
-
-@api_bp.route('/ex-employees/bulk-delete/', methods=['POST'])
-@rest_permission_required('ex-employees', 'update')
-def employees_bulk_delete():
-    """批量删除数据"""
-    request_json = request.json
-    req_log_data = json.dumps(request_json)
-    success, result = True, None
-    try:
-        items = request_json
-        if type(request_json) is dict:
-            items = request_json.get('ids') or request_json.get('id', [])
-        result = EmployeeModel.bulk_delete(items)
-    except Exception as e:
-        flaskz_logger.exception(e)
-        success, result = False, res_status_codes.db_delete_err
-
-    log_operation('ex-employees', 'delete', req_log_data, None, None)
-    flaskz_logger.info(get_rest_log_msg('Bulk Delete EmployeeModel data', req_log_data, success, result))
-
-    return create_response(success, result)
-
-
-@api_bp.route('/ex-employees/bulk-update/', methods=['POST'])
-@rest_permission_required('ex-employees', 'update')
-def employees_bulk_update():
-    """批量更新数据"""
-    request_json = request.json
-    req_log_data = json.dumps(request_json)
-    success, result = True, None
-    try:
-        EmployeeModel.bulk_update(request_json)
-    except Exception as e:
-        flaskz_logger.exception(e)
-        success, result = False, res_status_codes.db_update_err
-
-    log_operation('ex-employees', 'update', success, req_log_data, None)
-    flaskz_logger.info(get_rest_log_msg('Bulk Update EmployeeModel data', req_log_data, success, None))
-
-    return create_response(success, result)
+# @api_bp.route('/ex-employees/bulk-add/', methods=['POST'])
+# @rest_permission_required('ex-employees', 'update')
+# def employees_bulk_add():
+#     """批量添加数据"""
+#     request_json = request.json
+#     req_log_data = json.dumps(request_json)
+#     success, result = True, None
+#     try:
+#         EmployeeModel.bulk_add(request_json)
+#     except Exception as e:
+#         flaskz_logger.exception(e)
+#         success, result = False, res_status_codes.db_add_err
+#
+#     log_operation('ex-employees', 'add', success, req_log_data, None)
+#     flaskz_logger.info(get_rest_log_msg('Bulk Add EmployeeModel data', req_log_data, success, None))
+#
+#     return create_response(success, result)
+#
+#
+# @api_bp.route('/ex-employees/bulk-delete/', methods=['POST'])
+# @rest_permission_required('ex-employees', 'update')
+# def employees_bulk_delete():
+#     """批量删除数据"""
+#     request_json = request.json
+#     req_log_data = json.dumps(request_json)
+#     success, result = True, None
+#     try:
+#         items = request_json
+#         if type(request_json) is dict:
+#             items = request_json.get('ids') or request_json.get('id', [])
+#         result = EmployeeModel.bulk_delete(items)
+#     except Exception as e:
+#         flaskz_logger.exception(e)
+#         success, result = False, res_status_codes.db_delete_err
+#
+#     log_operation('ex-employees', 'delete', req_log_data, None, None)
+#     flaskz_logger.info(get_rest_log_msg('Bulk Delete EmployeeModel data', req_log_data, success, result))
+#
+#     return create_response(success, result)
+#
+#
+# @api_bp.route('/ex-employees/bulk-update/', methods=['POST'])
+# @rest_permission_required('ex-employees', 'update')
+# def employees_bulk_update():
+#     """批量更新数据"""
+#     request_json = request.json
+#     req_log_data = json.dumps(request_json)
+#     success, result = True, None
+#     try:
+#         EmployeeModel.bulk_update(request_json)
+#     except Exception as e:
+#         flaskz_logger.exception(e)
+#         success, result = False, res_status_codes.db_update_err
+#
+#     log_operation('ex-employees', 'update', success, req_log_data, None)
+#     flaskz_logger.info(get_rest_log_msg('Bulk Update EmployeeModel data', req_log_data, success, None))
+#
+#     return create_response(success, result)
 
 
 # -------------------------------------------permission-------------------------------------------

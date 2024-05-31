@@ -70,11 +70,31 @@ z.util.mergeObject(Admin, {
         }
     },
     _initAccountProfile: function (profile) {
-        if (profile.hasOwnProperty("locale")) {
-            z.bom.setLocalStorage("locale", profile.locale);
+        var locale = profile.locale || (profile.option || {}).locale;
+        if (locale) {
+            z.dom.setStyle("[data-content='element:#localeDiv']", "display", "none");
+        } else {
+            z.dom.removeStyle("[data-content='element:#localeDiv']", "display");
         }
+        this.updateLocale(locale, this._account_profile == null)
         this._account_profile = profile;
         this.initAccountProfile(profile);
+    },
+    updateLocale: function (locale, is_init) {
+        if (!locale) {
+            return;
+        }
+        if (z.bom.getLocalStorage("locale") === locale) {
+            return;
+        }
+        z.bom.setLocalStorage("locale", locale);
+        if (is_init === true) {
+            this.updateLocaleLabel(locale);
+            z.i18n.setLocale(locale);
+            pro.DomI18n.initI18n();
+            return;
+        }
+        window.location.reload();
     }
 });
 z.util.mergeObject(Admin, {
@@ -145,10 +165,6 @@ z.util.mergeObject(Admin, {
             }
         })
         z.widget.alert(licenseItems.join("\n"), "License")
-    },
-    updateLocale: function (locale) {
-        z.bom.setLocalStorage("locale", locale)
-        window.location.reload();
     }
 });
 z.util.mergeObject(Admin, {

@@ -85,9 +85,9 @@ def _get_module_name(module):
         menu_list = model.SysModule.query_all()
         if menu_list[0] is True:
             for item in menu_list[1]:
-                path = item.path
-                if path:
-                    module_name_mapping[path] = item.name
+                item_module = item.module  # @2024-05-10 item.path-->item.module
+                if item_module:
+                    module_name_mapping[item_module] = item.name
             set_app_cache('sys_module_name_mapping', module_name_mapping)
 
     return module_name_mapping.get(module) or module

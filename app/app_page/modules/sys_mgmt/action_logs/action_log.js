@@ -16,7 +16,7 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
         }
     ],*/
     page_options: {
-        url: AjaxUrl.sys_action_log,
+        url: AjaxUrl.sys_action_logs,
         grid_options: {
             pageable: true,
             columns: [
@@ -125,7 +125,7 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
         pro.FormUtil.initSelectOptions("#actionSelect", this.action_selects);
     },
     initModel: function () {
-        pro.AjaxCache.query('ajax_cache_action_logs_modules', {url: AjaxUrl.sys_action_log.modules, success_notify: false}, function (data) {
+        pro.AjaxCache.query('ajax_cache_action_logs_modules', {url: AjaxUrl.sys_action_logs.modules, success_notify: false}, function (data) {
             var modules = z.util.mergeArray([{name: z.i18n.t("COMMON_ALL"), module: ""}], data)
             modules.forEach(function (item) {
                 this._updateModuleItem(item);

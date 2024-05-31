@@ -78,6 +78,12 @@ Email: taozh@cisco.com / taozh1982@gmail.com
 
 ## 版本
 
+- **2.1.2** `2024/06/01`
+    - [A] 添加`SysOption`功能模块，用于管理系统选项
+    - [A] `SysUserOption`用户选项添加`locale`设置，用于设置区域/语言
+    - [A] 添加`SysRole`和`SysUser`对象编辑和删除检查，以确保系统中始终有管理权限的用户
+    - [F] 修复编辑`SysRole`时，`updated_at`不更新问题
+    - [C] 资源不存在时(404 page/uri_not_found)的响应状态码，由`200`修改为`404`
 - **2.1.1** `2024/05/01`
     - [A] `config.py`添加配置项
         - `APP_PAGE_MAPPING`用于设置页面映射

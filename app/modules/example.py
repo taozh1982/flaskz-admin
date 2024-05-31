@@ -37,7 +37,7 @@ class SimpleModel(ModelBase, ModelMixin):
 
 
 class DepartmentModel(ModelBase, ModelMixin, AutoModelMixin):
-    __tablename__ = 'ex_departments'  # 数据库表名,
+    __tablename__ = 'ex_departments'  # 数据库表名
 
     id = Column(Integer, primary_key=True, autoincrement=True)  # 每个table必须要有主键
     name = Column(String(32), nullable=False)  # 不能为空
@@ -69,6 +69,28 @@ class EmployeeModel(ModelBase, ModelMixin):
     created_at = Column(DateTime(), default=datetime.now, info={'auto': True})  # 通过info.auto设置为系统自动维护列
     updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)  # update时自动更新updated_at列
 
-    department = relationship('DepartmentModel', backref='employees', lazy='subquery')  # 关系
+    department = relationship('DepartmentModel', backref='employees')  # 关系
+    # department = relationship('DepartmentModel', backref='employees', lazy='joined')  # 关系lazy = joined
+    # department = relationship('DepartmentModel', backref='employees', lazy='subquery')  # 关系关系lazy = select
     like_columns = ['name', description]  # field/Column -模糊查询列
     auto_columns = ['id', updated_at]  # field/Column -自动维护列(不受参数影响), 也可以通过info={'auto': True}指定
+
+# event example
+# """
+# ORM Events:
+#     before_insert: Before an insert operation.
+#     before_update: Before an update operation.
+#     before_delete: Before a delete operation.
+#     after_insert: After an insert operation.
+#     after_update: After an update operation.
+#     after_delete: After a delete operation.
+#     load: When an object loads.
+#     refresh: When an object refreshes.
+#     expire: When an object expires.
+#
+# """
+#
+# from sqlalchemy import event
+# def after_insert_listener(mapper, connection, target):
+#     print(f'Inserted: (target)')
+# event.listen(SimpleModel, 'after_insert', after_insert_listener)

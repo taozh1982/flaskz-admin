@@ -17,8 +17,8 @@ z.util.extendClass(NavTree, z.widget.Tree, z.util.mergeObject({
             }
             var name = lastSelect.get("name")
             if (name && this.get("update_tile") === true) {
-                var rawTitles = document.title.split(" - ");
-                var rawTitle = rawTitles[1] || rawTitles[0]
+                // var rawTitles = document.title.split(" - ");
+                // var rawTitle = rawTitles[1] || rawTitles[0]
                 document.title = name;// + "  - " + rawTitle;
             }
             this.setCurrentDataContent(lastSelect);

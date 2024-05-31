@@ -871,6 +871,174 @@
 					]
 				},
 				{
+					"name": "sys-options",
+					"item": [
+						{
+							"name": "update_option",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"key\": \"test_key\",\r\n    \"value\": \"test_value_1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/sys-options/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys-mgmt",
+										"sys-options",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "bulk_update",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"key\": \"test_key_1\",\n        \"value\": \"test_value_11\"\n    },\n    {\n        \"key\": \"test_key_2\",\n        \"value\": \"test_value_12\"\n    }\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/sys-options/bulk/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys-mgmt",
+										"sys-options",
+										"bulk",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "query_option",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/sys-mgmt/sys-options/",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"sys-mgmt",
+										"sys-options",
+										""
+									]
+								},
+								"description": "query all menus and role list"
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
 					"name": "action-logs",
 					"item": [
 						{
@@ -2062,7 +2230,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/bulk-add/",
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/bulk/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
@@ -2071,7 +2239,7 @@
 										"api",
 										"v1.0",
 										"ex-employees",
-										"bulk-add",
+										"bulk",
 										""
 									]
 								}
@@ -2081,7 +2249,7 @@
 						{
 							"name": "bulk_update",
 							"request": {
-								"method": "POST",
+								"method": "PATCH",
 								"header": [
 									{
 										"key": "Content-Type",
@@ -2102,7 +2270,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "[\n    {\n        \"id\": 10,\n        \"age\": 19\n    },\n    {\n        \"id\": 11,\n        \"age\": 19\n    },\n    {\n        \"id\": 12,\n        \"age\": 19\n    }\n]",
+									"raw": "[\n    {\n        \"id\": 18,\n        \"age\": 20\n    },\n    {\n        \"id\": 19,\n        \"age\": 21\n    },\n    {\n        \"id\": 20,\n        \"age\": 22\n    }\n]",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2110,7 +2278,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/bulk-update/",
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/bulk/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
@@ -2119,7 +2287,7 @@
 										"api",
 										"v1.0",
 										"ex-employees",
-										"bulk-update",
+										"bulk",
 										""
 									]
 								}
@@ -2129,7 +2297,7 @@
 						{
 							"name": "bulk_delete",
 							"request": {
-								"method": "POST",
+								"method": "DELETE",
 								"header": [
 									{
 										"key": "Content-Type",
@@ -2150,7 +2318,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "[\n    10,\n    11,\n    12\n]",
+									"raw": "[\n    11,\n    12,\n    13,\n    14,\n    15\n]",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2158,7 +2326,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/bulk-delete/",
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/bulk/",
 									"protocol": "http",
 									"host": [
 										"{{flaskz_server_url}}"
@@ -2167,8 +2335,56 @@
 										"api",
 										"v1.0",
 										"ex-employees",
-										"bulk-delete",
+										"bulk",
 										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "bulk_delete _by_ids",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{flaskz_auth_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-With",
+										"value": "{{flaskz_requested_with}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{flaskz_server_url}}/api/v1.0/ex-employees/bulk/16,17,18,19,20",
+									"protocol": "http",
+									"host": [
+										"{{flaskz_server_url}}"
+									],
+									"path": [
+										"api",
+										"v1.0",
+										"ex-employees",
+										"bulk",
+										"16,17,18,19,20"
 									]
 								}
 							},

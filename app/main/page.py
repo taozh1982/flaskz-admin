@@ -19,6 +19,7 @@ page_mapping = {
     'users': './modules/sys_mgmt/users/user.html',
     'licenses': './modules/sys_mgmt/licenses/license.html',
     'action-logs': './modules/sys_mgmt/action_logs/action_log.html',
+    'sys-options': './modules/sys_mgmt/options/option.html',
 
     # 'op-log': './modules/sys/op_log/op_log.html?module=lop-op',  # set module
 }
@@ -42,4 +43,4 @@ def show_page(page):
     if page.endswith('.html'):
         return main_bp.send_static_file(page)
 
-    return main_bp.send_static_file(page_mapping.get('error_404'))
+    return main_bp.send_static_file(page_mapping.get('error_404')), 404

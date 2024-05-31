@@ -20,9 +20,7 @@ app = create_app(os.getenv('APP_CONFIG', 'default'))
 from _cli import init_cli
 init_cli(app)
 
-
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=666, debug=True, threaded=False)
 
-__version__ = '2.1.1'
+__version__ = '2.1.2'

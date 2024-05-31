@@ -5,23 +5,17 @@ def round_number(number, precision=3):
     - -1到1之间的小数，如果有足够的小数位，则直接round，否则返回第一个非零数字所在位数的round
     """
     # 转换为字符串以便检查每一位
-    if 1 > number > -1:
-        num_str = f"{number:.30f}"  # 保证有足够的小数位数进行处理
+    if abs(number) >= 1:
+        return round(number, precision)
 
-        # 找到小数点的位置
-        point_index = num_str.find('.')
-
-        # 从小数点后第一个非零数字开始计算精度
-        non_zero_index = point_index + 1  # 初始化为小数点后第一位
-        while non_zero_index < len(num_str) and num_str[non_zero_index] == '0':
-            non_zero_index += 1
-
-        # 计算需要保留的小数位数，确保至少保留三位或更多，直到第一个非零数字
-        precision = max(precision, non_zero_index - point_index)
-
+    num_str = f"{number:.30f}"  # 保证有足够的小数位数进行处理
+    point_index = num_str.find('.')  # 找到小数点的位置
+    non_zero_index = point_index + 1  # 初始化为小数点后第一位
+    while non_zero_index < len(num_str) and num_str[non_zero_index] == '0':  # 从小数点后第一个非零数字开始计算精度
+        non_zero_index += 1
+    precision = max(precision, non_zero_index - point_index)  # 计算需要保留的小数位数，确保至少保留三位或更多，直到第一个非零数字
     # 对数字进行四舍五入
-    rounded_number = round(number, precision)
-    return rounded_number
+    return round(number, precision)
 
 
 def parse_float(value, default=0, split_sep=None):

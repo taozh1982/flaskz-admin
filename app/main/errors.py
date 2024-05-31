@@ -53,4 +53,4 @@ def return_error(app_code, http_code):
     if is_ajax() or (request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html):
         return create_response(False, app_code)
     # return (app_code, http_code)
-    return get_status_msg(app_msg)  # view
+    return get_status_msg(app_msg), http_code  # page

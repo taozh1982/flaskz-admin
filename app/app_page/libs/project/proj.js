@@ -33,18 +33,23 @@ var I18ns = {
     COMMON_ACTION_SEARCH: ["Query", "查询"],
     COMMON_ACTION_FILTER: ["Filter", "过滤"],
     COMMON_ACTION_SELECT: ["Select", "选择"],
-    COMMON_ACTION_OK: ["OK", "确认"],
-    COMMON_ACTION_CANCEL: ["Cancel", "取消"],
-    COMMON_ACTION_RETURN: ["Return", "返回"],
-    COMMON_ACTION_CLOSE: ["Close", "关闭"],
     COMMON_ACTION_SAVE: ["Save", "保存"],
     COMMON_ACTION_REFRESH: ["Refresh", "刷新"],
+    COMMON_ACTION_RESET: ["Reset", "重置"],
     COMMON_ACTION_UPLOAD: ["Upload", "上传"],
     COMMON_ACTION_EXPORT: ["Export", "导出"],
     COMMON_ACTION_LOGIN: ["Login", "登录"],
+    COMMON_ACTION_CLOSE: ["Close", "关闭"],
 
+    COMMON_ACTION_OK: ["OK", "确认"],
+    COMMON_ACTION_CANCEL: ["Cancel", "取消"],
+    COMMON_ACTION_RETURN: ["Return", "返回"],
+
+    COMMON_RESULT: ["Result", "结果"],
     COMMON_SUCCESS: ["Success", "成功"],
     COMMON_FAIL: ["Fail", "失败"],
+    COMMON_EXCEPTION: ["Exception", "异常"],
+    COMMON_ERROR: ["Error", "错误"],
 
     COMMON_NAME: ["Name", "名称"],
     COMMON_PASSWORD: ["Password", "密码"],
@@ -53,7 +58,8 @@ var I18ns = {
     COMMON_STATUS: ["Status", "状态"],
     COMMON_TIME: ["Time", "时间"],
     COMMON_CREATED_AT: ["Created Time", "创建时间"],
-    COMMON_UPDATED_AT: ["Updated Time", "编辑时间"],
+    COMMON_UPDATED_AT: ["Updated Time", "更新时间"],
+    COMMON_EDITED_AT: ["Edited Time", "编辑时间"],
 
     COMMON_ALL: ["All", "全部"],
     COMMON_NO_DATA: ["No data", "数据为空"],
@@ -86,7 +92,7 @@ var I18ns = {
     HOMEPAGE_QUERY_ACCOUNT: ["Load account", "加载账户信息"]
 }
 
-z.util.mergeObject(I18ns,{
+z.util.mergeObject(I18ns, {
     //Sys Users
     SYS_USERS_TITLE: ["Users", "用户列表"],
     SYS_USERS_USERNAME: ["Username", "用户名"],
@@ -103,6 +109,8 @@ z.util.mergeObject(I18ns,{
     SYS_USERS_DISABLE_CONFIRM: ["<i class='fa fa-warning color-warning'></i> Confirm to disable?", "<i class='fa fa-warning color-warning'></i> 确认停用?"],
     SYS_USERS_SHOW_PASSWORD: ["Show", "显示"],
     SYS_USERS_CONFIRM_PASSWORD: ["Confirm Password", "确认密码"],
+    AJAX_STATUS_LAST_ADMIN_USER_NOT_ALLOWED: ["The user is the last that can manage roles", "当前是最后一个有角色管理权限的用户"],
+
     //Sys Roles
     SYS_ROLES_TITLE: ["Roles", "角色列表"],
     SYS_ROLES_NAME: ["Name", "角色名称"],
@@ -110,6 +118,8 @@ z.util.mergeObject(I18ns,{
     SYS_ROLES_MODULES_REQUIRED: ["Please select modules", "请选择功能模块"],
     SYS_ROLES_MODULE: ["Modules<small class='color-secondary'>(* mean no menu)</small>", "模块<small class='color-secondary'>(*表示没有菜单)</small>"],
     SYS_ROLES_MODULE_ACTIONS: ["Actions", "操作权限"],
+    AJAX_STATUS_LAST_ADMIN_ROLE_NOT_ALLOWED: ["The role is the last that can manage roles", "当前是最后一个有角色管理权限的角色"],
+
     //Sys/Licenses
     SYS_LICENSES_TITLE: ["Licenses", "系统授权"],
     SYS_LICENSES_USER: ["User", "用户"],
@@ -133,7 +143,14 @@ z.util.mergeObject(I18ns,{
     SYS_ACTION_LOGS_AT: ["Time", "时间"],
     SYS_ACTION_LOGS_PREVIOUS_24_HOURS: ["Last 24 hours", "最近24小时"],
     SYS_ACTION_LOGS_PREVIOUS_7_DAYS: ["Last 7 days", "最近7天"],
-    SYS_ACTION_LOGS_PREVIOUS_30_DAYS: ["Last 30 days", "最近30天"]
+    SYS_ACTION_LOGS_PREVIOUS_30_DAYS: ["Last 30 days", "最近30天"],
+
+    //Sys/Options
+    SYS_OPTIONS_TITLE: ["Options", "系统选项"],
+    SYS_OPTIONS_CATEGORY: ["Category", "分类"],
+    SYS_OPTIONS_LABEL: ["Label", "标签"],
+    SYS_OPTIONS_KEY: ["Option", "选项"],
+    SYS_OPTIONS_VALUE: ["Value", "值"]
 });
 
 z.util.mergeObject(I18ns, {
@@ -141,8 +158,9 @@ z.util.mergeObject(I18ns, {
     MODULE_SYSTEM: ["<i class='fa fa-gears'></i>System", "<i class='fa fa-gears'></i>系统管理"],
     MODULE_USERS: ["Users", "用户列表"],
     MODULE_ROLES: ["Roles", "角色列表"],
-    MODULE_Licenses: ["Licenses", "Licenses"],
-    MODULE_ACTION_LOGS: ["Action Logs", "操作日志"]
+    MODULE_LICENSES: ["Licenses", "系统授权"],
+    MODULE_ACTION_LOGS: ["Action Logs", "操作日志"],
+    MODULE_OPTIONS: ["Options", "系统选项"]
 });
 
 if (window.I18ns) {//all in one
@@ -192,12 +210,46 @@ z.ready(function () {
  * ajax请求url
  */
 var AjaxUrl = {
+    sys_roles: {
+        query: "/sys-mgmt/roles/",
+        add: "/sys-mgmt/roles/",
+        delete: "/sys-mgmt/roles/[id]",
+        update: "/sys-mgmt/roles/"
+    },
+    sys_users: {
+        query: "/sys-mgmt/users/multi/",
+        add: "/sys-mgmt/users/",
+        delete: "/sys-mgmt/users/[id]",
+        update: "/sys-mgmt/users/"
+    },
+    sys_licenses: {
+        query: "/sys-mgmt/licenses/",
+        add: {url: "/sys-mgmt/licenses/", method: "POST"}
+    },
+    sys_action_logs: {
+        query: {url: "/sys-mgmt/action-logs/pss/", method: "POST"},
+        modules: "/sys-mgmt/modules/"
+    },
+    sys_options: {
+        query: "/sys-mgmt/sys-options/",
+        update: "/sys-mgmt/sys-options/"
+    },
+    sys_auth: {
+        // login: {url: "/sys-mgmt/auth/login/", method: "POST"},
+        login: {url: "/sys-mgmt/auth/token/", method: "POST"},
+        logout: {url: "/sys-mgmt/auth/logout/", method: "GET"},
+
+        query: "/sys-mgmt/auth/account/",
+        update: "/sys-mgmt/auth/account/"
+    }
+};
+z.util.mergeObject(AjaxUrl, {
     ex_simples: {
         query: "/api/v1.0/ex-simples/",
         add: "/api/v1.0/ex-simples/",
         delete: "/api/v1.0/ex-simples/[id]",
         update: "/api/v1.0/ex-simples/",
-        download: "/api/v1.0/ex-simples/download",
+        download: "/api/v1.0/ex-simples/download/"
     },
     ex_departments: {
         query: "/api/v1.0/ex-departments/",
@@ -209,40 +261,10 @@ var AjaxUrl = {
         query: {url: "/api/v1.0/ex-employees/pss/", method: "POST"},
         add: "/api/v1.0/ex-employees/",
         delete: "/api/v1.0/ex-employees/[id]",
-        bulk_delete: {url: "/api/v1.0/ex-employees/bulk-delete/", method: "POST"},
+        bulk_delete: {url: "/api/v1.0/ex-employees/bulk/", method: "DELETE"},
         update: "/api/v1.0/ex-employees/"
-    },
-
-    sys_role: {
-        query: "/sys-mgmt/roles/",
-        add: "/sys-mgmt/roles/",
-        delete: "/sys-mgmt/roles/[id]",
-        update: "/sys-mgmt/roles/"
-    },
-    sys_user: {
-        query: "/sys-mgmt/users/multi/",
-        add: "/sys-mgmt/users/",
-        delete: "/sys-mgmt/users/[id]",
-        update: "/sys-mgmt/users/"
-    },
-    sys_license: {
-        query: "/sys-mgmt/licenses/",
-        add: {url: "/sys-mgmt/licenses/", method: "POST"}
-    },
-    sys_action_log: {
-        query: {url: "/sys-mgmt/action-logs/pss/", method: "POST"},
-        modules: "/sys-mgmt/modules/"
-    },
-    sys_auth: {
-        //login: {url: "/sys-mgmt/auth/login/", method: "POST"},
-        login: {url: "/sys-mgmt/auth/token/", method: "POST"},
-        logout: {url: "/sys-mgmt/auth/logout/", method: "GET"},
-
-        query: "/sys-mgmt/auth/account/",
-        update: "/sys-mgmt/auth/account/"
     }
-};
-
+})
 
 var refreshMenuByPath = function (paths) {
     var admin = window.top.Admin;

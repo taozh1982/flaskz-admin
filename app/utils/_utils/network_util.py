@@ -1,3 +1,6 @@
+"""
+ping需要管理员权限
+"""
 import random
 import select
 import socket
@@ -5,64 +8,57 @@ import struct
 import time
 
 
-def ping(host, timeout=1, times=1):
+def ping(host, timeout=1, retries=1):
     """
     发送ICMP Echo请求并接收回复
+
     - False,error: 失败，socket异常
     - False,'timeout': 失败, host不通
-    - True,delay: 成功,delay
+    - True,(ttl,delay): 成功,(ttl,delay)
     """
-    for i in range(times):
-        last_time = (i == times - 1)
+    for i in range(retries):
+        last_retry = (i == retries - 1)
         try:
             icmp = socket.getprotobyname("icmp")
-            sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, icmp)
-        except socket.error as e:
-            if last_time:
-                print("ping error: %s" % str(e))
+            with socket.socket(socket.AF_INET, socket.SOCK_RAW, icmp) as sock:
+                packet_id = int((id(timeout) * random.random()) % 65535)
+                packet = _icmp_create_packet(packet_id)
+                while packet:
+                    sent = sock.sendto(packet, (host, 1))
+                    packet = packet[sent:]
+
+                result = _icmp_receive_ping(sock, packet_id, time.time(), timeout)
+                if result is None:
+                    if last_retry:
+                        return False, 'timeout'
+                    else:
+                        continue
+                return True, result
+        except Exception as e:
+            if last_retry:
                 return False, str(e)
-            continue
-
-        packet_id = int((id(timeout) * random.random()) % 65535)
-        packet = _icmp_create_packet(packet_id)
-        while packet:
-            sent = sock.sendto(packet, (host, 1))
-            packet = packet[sent:]
-
-        result = _icmp_receive_ping(sock, packet_id, time.time(), timeout)
-        sock.close()
-        if result is None:
-            if last_time:
-                return False, 'timeout'
-            else:
-                continue
-        return True, result
 
 
-def check_port(host, port, timeout=1, times=1):
+def check_port(host, port, timeout=1, retries=1):
     """
     检查主机端口是否开放
     -True: 端口开放
     -False: 端口关闭
     -其他: 失败原因
     """
-    for i in range(times):
-        last_time = (i == times - 1)
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(timeout)
+    for i in range(retries):
+        last_retry = (i == retries - 1)
         try:
-            result = sock.connect_ex((host, port))
-            if result == 0:
-                return True  # 端口开放
-            elif last_time:
-                return False  # 端口关闭
-        except socket.error as e:
-            if last_time:
-                print("check_port error: %s" % str(e))
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                sock.settimeout(timeout)
+                result = sock.connect_ex((host, port))
+                if result == 0:
+                    return True  # 端口开放
+                elif last_retry:
+                    return False  # 端口关闭
+        except Exception as e:
+            if last_retry:
                 return str(e)
-            continue
-        finally:
-            sock.close()
 
 
 def _icmp_checksum(source_string):
@@ -91,10 +87,10 @@ def _icmp_checksum(source_string):
 
 def _icmp_create_packet(packet_id):
     """
-    构造ICMP Echo请求数据包
+    构造ICMP Echo请求数据包 64bytes(8+56)
     """
     header = struct.pack('bbHHh', 8, 0, 0, packet_id, 1)
-    data = 192 * b'Q'
+    data = 56 * b'Q'
     my_checksum = _icmp_checksum(header + data)
     header = struct.pack('bbHHh', 8, 0, socket.htons(my_checksum), packet_id, 1)
     return header + data
@@ -117,11 +113,11 @@ def _icmp_receive_ping(sock, packet_id, time_sent, timeout):
 
         if p_id == packet_id:
             ttl = struct.unpack("B", rec_packet[8:9])[0]
-            delay = (time_received - time_sent) * 1000
+            delay = round((time_received - time_sent) * 1000, 3)
             return ttl, delay
 
 
 if __name__ == "__main__":
     pass
-    # print(ping('cisco.com'))
-    # print(check_port('cisco.com', 443))
+    print(ping('cisco.com', 3))
+    print(check_port('cisco.com', 443))

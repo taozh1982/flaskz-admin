@@ -6,7 +6,7 @@ var User = z.util.mergeObject(pro.template.CRUDTablePage, {
         {name: "LDAP", value: "ldap"}
     ],
     page_options: {
-        url: AjaxUrl.sys_user,
+        url: AjaxUrl.sys_users,
         grid_options: {
             columns: [
                 {name: z.i18n.t("SYS_USERS_USERNAME"), field: "username"},

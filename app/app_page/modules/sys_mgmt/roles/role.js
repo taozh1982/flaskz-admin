@@ -1,6 +1,6 @@
 var Role = z.util.mergeObject(pro.template.CRUDTablePage, {
         page_options: {
-            url: AjaxUrl.sys_role,
+            url: AjaxUrl.sys_roles,
             grid_options: {
                 columns: [
                     {name: z.i18n.t("SYS_ROLES_NAME"), field: "name"},
@@ -60,7 +60,7 @@ var Role = z.util.mergeObject(pro.template.CRUDTablePage, {
 
         initModel: function () {
             pro.AjaxCRUD.query({
-                url: AjaxUrl.sys_role.query,
+                url: AjaxUrl.sys_roles.query,
                 success: function (result) {
                     var data = result.data || {};
                     this._moduleArr = data.modules || [];

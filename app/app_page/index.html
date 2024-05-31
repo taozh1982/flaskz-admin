@@ -86,13 +86,13 @@
                     <span i18n="HOMEPAGE_LOGOUT"></span></a>
             </div>
         </div>
-        <div class="icon-item" data-toggle="zw-popover" data-content="element:#localeDiv" data-direction="down_left">
+        <div class="icon-item" data-toggle="zw-popover" data-content="element:#localeDiv" data-direction="down_left" style="display: none">
             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="2" y1="12" x2="22" y2="12"></line>
                 <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
             </svg>
-            <label id="localeLabel">English</label>
+            <label id="localeLabel"></label>
             <div id="localeDiv" class="header-popover">
                 <a locale="en"><span>English</span></a>
                 <a locale="zh"><span>简体中文</span></a>
@@ -126,6 +126,16 @@
                         <input ze-model="password" autofocus>
                     </div>
                 </div>-->
+                <div class="grid-row">
+                    <label class="grid-col-3-12" for-ze-model="option.locale" i18n="LOGIN_LOCALE"></label>
+                    <div class="grid-col-8-12">
+                        <select id="localeSelect" ze-model="option.locale">
+                            <option value="">-</option>
+                            <option value="zh">简体中文</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                </div>
 
                 <div class="grid-row" ze-visible="[type]==='local'">
                     <label id="pwdLabel" class="grid-col-3-12" for-ze-model="password" i18n="COMMON_PASSWORD"></label>

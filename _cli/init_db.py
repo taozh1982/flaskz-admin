@@ -21,34 +21,54 @@ def init_db_data():
         session.query(SysModule).delete()
         session.query(SysAction).delete()
 
-    for item in sys_actions:
-        SysAction.add(item)
+    SysAction.bulk_add(sys_actions)
 
     for item in sys_modules:
         result = SysModule.add(item)
         if item.get('module') and result[0] is True:
             result[1].actions.append(SysAction.query_by_pk("update"))
 
-    for item in sys_roles:
-        SysRole.add(item)
+    admin_role = None
+    for index, item in enumerate(sys_roles):
+        success, role = SysRole.add(item)
+        if index == 0:
+            admin_role = role
 
     for item in sys_users:
+        item['role_id'] = admin_role.id
         SysUser.add(item)
 
+    print(f'init db data ok')
 
-def recover_admin(user_name='admin', role_name='admin'):
+
+def recover_admin(user_name='admin', role_name='Administrator'):
     """
-    Add a admin role and use
+    reset admin role and user
     :return:
     """
-    admin_role = {'name': role_name, 'modules': []}
-    admin_role_modules = admin_role.get('modules')
+    modules = []
     for item in sys_modules:
         if item.get('module'):
-            admin_role_modules.append({'module_id': item.get('id'), 'action': 'update'})
+            modules.append({'module_id': item.get('id'), 'action': 'update'})
 
-    result = SysRole.add(admin_role)
-    if result[0]:
-        role = result[1]
-        result = SysUser.add({'username': user_name, 'password': 'admin', 'role_id': role.id, 'email': user_name + '@focus-ui.com'})
-    print(result)
+    db_role = SysRole.query_by({'name': role_name}, True)
+    if db_role:
+        success, admin_role = SysRole.update({'id': db_role.id, 'modules': modules})
+    else:
+        success, admin_role = SysRole.add({'name': role_name, 'modules': modules})
+    if success:
+        print(f'recover {role_name} role ok')
+    else:
+        print(f'recover {role_name} role error: {admin_role}')
+
+    if success:
+        db_user = SysUser.query_by({'username': user_name}, True)
+        if db_user:
+            success, admin_user = SysUser.update({'id': db_user.id, 'password': 'admin', 'role_id': admin_role.id})
+        else:
+            success, admin_user = SysUser.add({'username': user_name, 'password': 'admin', 'role_id': admin_role.id})
+
+        if success:
+            print(f'recover {user_name} user ok')
+        else:
+            print(f'recover {user_name} user error: {admin_user}')

@@ -56,10 +56,15 @@ def _sys_url_map():
     """
     rules = list(current_app.url_map.iter_rules())
     rules.sort(key=lambda item: item.rule)
-    routes = ['{:30s} {:50s} {}'.format('#methods#', '#rule#', '#endpoint#')]
+    routes = ['{:20s} {:60s} {}'.format('#methods(' + str(len(rules)) + ')#', '#rule#', '#endpoint#'), '-' * 130]
     for rule in rules:
-        methods = '[' + ','.join(sorted(rule.methods)) + ']'
-        line = '{:30s} {:50s} {}'.format(methods, rule.rule, rule.endpoint)
+        methods = sorted(rule.methods)
+        if 'HEAD' in methods:
+            methods.remove('HEAD')
+        if 'OPTIONS' in methods:
+            methods.remove('OPTIONS')
+        methods = '[' + ','.join(methods) + ']'
+        line = '{:20s} {:60s} {}'.format(methods, rule.rule, rule.endpoint)
         routes.append(line)
     resp = current_app.make_response('\n'.join(routes))
     resp.mimetype = "text/plain"

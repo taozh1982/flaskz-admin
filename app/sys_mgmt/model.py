@@ -3,21 +3,23 @@ from datetime import datetime
 from flask_login import current_user, UserMixin
 from flaskz import res_status_codes
 from flaskz.log import flaskz_logger
-from flaskz.models import ModelBase, ModelMixin, BaseModelMixin
+from flaskz.models import ModelBase, ModelMixin, BaseModelMixin, query_all_models, model_to_dict
 from flaskz.rest import get_rest_log_msg
-from flaskz.utils import find_list, get_app_cache, set_app_cache, get_ins_mapping
+from flaskz.utils import find_list, get_app_cache, set_app_cache, get_ins_mapping, merge_list
 from sqlalchemy import Column, Integer, String, Table, ForeignKey, DateTime, Boolean, Text, desc
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from ..modules import AutoModelMixin
+from ..sys_init import status_codes
 
 # 模块&动作关联
 # #module#      #action#
 # user          add
 # user          update
 # user          config_email
+
 sys_module_actions = Table('sys_module_actions', ModelBase.metadata,
                            Column('module', String(100), ForeignKey('sys_modules.module', ondelete='CASCADE', onupdate='CASCADE')),
                            Column('action', String(100), ForeignKey('sys_actions.action', ondelete='CASCADE', onupdate='CASCADE')))
@@ -78,7 +80,7 @@ class SysRoleModule(ModelBase, ModelMixin):
     action = Column(String(100), ForeignKey('sys_actions.action', ondelete='CASCADE'))
 
 
-class SysRole(ModelBase, ModelMixin, AutoModelMixin):
+class SysRole(ModelBase, ModelMixin):
     """
     角色列表
 
@@ -96,6 +98,8 @@ class SysRole(ModelBase, ModelMixin, AutoModelMixin):
     updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
 
     modules = relationship('SysRoleModule', cascade='all,delete-orphan', lazy='joined')
+
+    auto_columns = ['id', 'created_at']  # @2024-05-27 add
 
     def check_permission(self, module, action):
         """
@@ -204,7 +208,47 @@ class SysRole(ModelBase, ModelMixin, AutoModelMixin):
                     'action': action
                 })
         model_json['modules'] = modules
+        model_json['updated_at'] = datetime.now()  # @2024-05-27 add
         return model_json
+
+    @classmethod
+    def check_delete_data(cls, pk_value):
+        super_check_result = super().check_delete_data(pk_value)
+        if super_check_result is True and SysRole._is_last_admin_role(pk_value):
+            return status_codes.last_admin_role_not_allowed
+        return super_check_result
+
+    @classmethod
+    def check_update_data(cls, data):
+        super_check_result = super().check_update_data(data)
+        if super_check_result is True:
+            modules = data.get('modules', [])
+
+            role_module = SysModule.query_by({'module': 'roles'}, True)  # roles模块
+            role_module_id = role_module.id
+            update_role_has_admin_permission = any(int(module.get('module_id')) == role_module_id and module.get('action') in ['add', 'update'] for module in modules)
+            # 编辑后不包含roles模块的编辑权限 and 当前更新的role包含角色管理权限
+            if update_role_has_admin_permission is False and SysRole._is_last_admin_role(data.get('id')):
+                return status_codes.last_admin_role_not_allowed
+
+        return super_check_result
+
+    @classmethod
+    def _is_last_admin_role(cls, pk_value):
+        """是否是最后一个有角色管理权限的角色"""
+        role_ins = SysRole.query_by_pk(pk_value)
+        if role_ins.check_permission('roles', 'update'):  # 当前角色有roles管理权限
+            role_id = role_ins.id
+            role_module = SysModule.query_by({'module': 'roles'}, True)  # roles模块
+            role_module_id = role_module.id
+
+            mgmt_roles_modules = merge_list(SysRoleModule.query_by({'module_id': role_module_id, 'action': 'add'}),
+                                            SysRoleModule.query_by({'module_id': role_module_id, 'action': 'update'}))
+            # 是否有其他模块有roles模块的更新权限
+            other_role_has_role_module_update_action = any(role_module.role_id != role_id for role_module in mgmt_roles_modules)
+            return other_role_has_role_module_update_action is False  # 没有其他模块有roles模块的更新权限
+
+        return False
 
 
 class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
@@ -283,18 +327,54 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
 
     @classmethod
     def check_delete_data(cls, pk_value):
+        super_check_result = super().check_delete_data(pk_value)
+        if super_check_result is not True:
+            return super_check_result
+
         if current_user and (current_user.id == int(pk_value)):  # 不能删除当前用户
             return res_status_codes.db_data_in_use
-        return super().check_delete_data(pk_value)
+        if SysUser._is_last_admin_user(pk_value):
+            return status_codes.last_admin_user_not_allowed
+        return True
 
     @classmethod
     def check_update_data(cls, data):
-        if data.get('status') == 'disable' and (current_user and current_user.id == int(data.get('id'))):  # 不能禁用当前用户
-            return res_status_codes.db_data_in_use
-        password = data.get('password')
-        if type(password) is not str or password.strip() == '':  # password为空==不修改
-            data.pop('password', None)
-        return super().check_update_data(data)
+        super_check_result = super().check_update_data(data)
+        if super_check_result is True:
+            user_id = int(data.get('id'))
+            if data.get('status') == 'disable' and (current_user and current_user.id == user_id):  # 不能禁用当前用户
+                return res_status_codes.db_data_in_use
+            password = data.get('password')
+            if type(password) is not str or password.strip() == '':  # password为空==不修改
+                data.pop('password', None)
+
+            # 有新的role但没有角色管理权限 and 是最后一个有角色管理权限的用户
+            role_id = data.get('role_id')
+            if role_id:
+                new_role = SysRole.query_by_pk(role_id)
+                if (new_role and not new_role.check_permission('roles', 'update')) and SysUser._is_last_admin_user(user_id):
+                    return status_codes.last_admin_user_not_allowed
+
+        return super_check_result
+
+    @classmethod
+    def _is_last_admin_user(cls, user_pk):
+        """是否是最后一个有角色管理权限的用户"""
+        user_ins = SysUser.query_by_pk(user_pk)
+        if user_ins.can('roles', 'update'):  # 如果有role模块的管理权限
+            result = query_all_models(SysRole, SysUser)
+            if type(result) is tuple:
+                return res_status_codes.db_query_err
+
+            roles, users = result
+            other_user_has_role_mgmt_permission = False
+            for role in roles:
+                if role.check_permission('roles', 'update'):
+                    other_user_has_role_mgmt_permission = any(user.id != user_pk in ['add', 'update'] for user in users)
+                    if other_user_has_role_mgmt_permission:
+                        break
+            return other_user_has_role_mgmt_permission is False
+        return False
 
     # @classmethod
     # def filter_attrs_by_columns(cls, data):
@@ -313,6 +393,7 @@ class SysUserOption(ModelBase, BaseModelMixin):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('sys_users.id', ondelete='CASCADE'), nullable=False)
+    locale = Column(String(32))  # 区域/语言选项
     previous_login_at = Column(DateTime())  # 上次登录时间
     last_login_at = Column(DateTime())  # 最后登录时间
     login_times = Column(Integer, default=0)  # 登录次数
@@ -397,6 +478,55 @@ class SysActionLog(ModelBase, ModelMixin):
         """
 
         return desc(cls.created_at)
+
+
+class SysOption(ModelBase, ModelMixin):
+    """
+    系统选项，一般提前录入，不做增删，只做修改
+    """
+    __tablename__ = 'sys_options'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    key = Column(String(100), unique=True, nullable=False)  # 选项，ex)system_cache_refresh_interval
+    value = Column(Text())  # 值，ex)30s
+    category = Column(String(100))  # 所属分类，ex)system
+    label = Column(String(100))  # 选项标签，ex)Refresh Cache
+
+    description = Column(Text())
+    created_at = Column(DateTime(), default=datetime.now)
+    updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
+
+    @classmethod
+    def check_update_data(cls, data):
+        if 'key' in data:
+            ins = SysOption.query_by({'key': data.get('key')}, True)
+            if ins:
+                data['id'] = ins.id
+
+        return super().check_update_data(data)
+
+    @classmethod
+    def query_option(cls, key, default=None):
+        """
+        返回指定的选项值
+        :param key:
+        :param default:
+        :return:
+        """
+        option = SysOption.query_by({'key': key}, True)
+        if option:
+            return option.value
+        return default
+
+    @classmethod
+    def query_category_options(cls, category):
+        """
+        返回指定分类的选项列表
+        :param category:
+        :return:
+        """
+        options = SysOption.query_by({'category': category})
+        return model_to_dict(options)
 
 
 def get_app_cached_modules():

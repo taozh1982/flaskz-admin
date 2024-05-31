@@ -1,6 +1,6 @@
 var License = z.util.mergeObject(pro.template.CRUDTablePage, {
     page_options: {
-        url: AjaxUrl.sys_license,
+        url: AjaxUrl.sys_licenses,
         grid_options: {
             columns: [
                 {name: z.i18n.t("SYS_LICENSES_USER"), field: "user"},
@@ -66,7 +66,7 @@ var License = z.util.mergeObject(pro.template.CRUDTablePage, {
         var _this = this;
         pro.FileUtil.upload({
             files: z.dom.getValue("#fileInput"),
-            url: AjaxUrl.sys_license.add,
+            url: AjaxUrl.sys_licenses.add,
             success: function () {
                 z.widget.alert(z.i18n.t("SYS_LICENSES_UPLOAD_SUCCESS_MSG"), z.i18n.t("PRO_MESSAGE_TIPS"), function () {
                     window.top.location.reload();

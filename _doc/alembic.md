@@ -19,9 +19,14 @@
 - 生成数据库版本文件
 
   ```shell
-   # "add template"是指定的版本名称
+   # 指定版本名称(add template)
   alembic revision --autogenerate -m "add template"
+  
+   # 指定版本ID(1.0)
+  alembic revision --autogenerate --rev-id 1.0 -m "add template"
   ```
+  `--autogenerate`参数用于自动生成数据库迁移脚本，通过比较当前数据库架构与 SQLAlchemy 模型来生成相应的迁移代码。不使用`--autogenerate` ，只会创建一个空模板，脚本需手动填写
+
 
 - 更新数据库表结构
 

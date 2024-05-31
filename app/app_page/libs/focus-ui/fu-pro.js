@@ -1615,7 +1615,7 @@ var $FileUtil = {
      * js-get:
      * pro.FileUtil.upload({
      *        files: z.dom.getValue("#fileInput"),
-     *        url: AjaxUrl.sys_license.add,
+     *        url: AjaxUrl.sys_licenses.add,
      *        success: function () {
      *            z.widget.alert(z.i18n.t("SYS_LICENSES_UPLOAD_SUCCESS_MSG"), z.i18n.t("PRO_MESSAGE_TIPS"), function () {
      *                window.top.location.reload();

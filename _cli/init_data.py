@@ -24,7 +24,8 @@ sys_modules = [
     {'id': 90100, 'parent_id': 90000, 'name': 'Users', 'module': 'users', 'path': 'users'},
     {'id': 90200, 'parent_id': 90000, 'name': 'Roles', 'module': 'roles', 'path': 'roles'},
     {'id': 90300, 'parent_id': 90000, 'name': 'Licenses', 'module': 'licenses', 'path': 'licenses'},
-    {'id': 90400, 'parent_id': 90000, 'name': 'Action Logs', 'module': 'action-logs', 'path': 'action-logs'}
+    {'id': 90400, 'parent_id': 90000, 'name': 'Options', 'module': 'sys-options', 'path': 'sys-options'},
+    {'id': 90500, 'parent_id': 90000, 'name': 'Action Logs', 'module': 'action-logs', 'path': 'action-logs'}
 ]
 
 # Admin Role
@@ -33,4 +34,4 @@ sys_roles = [
 
 # Admin User
 sys_users = [
-    {'id': 1, 'username': 'admin', 'password': 'admin', 'role_id': 1, 'name': 'administrator', 'email': 'admin@focus-ui.com'}]
+    {'id': 1, 'username': 'admin', 'password': 'admin', 'role_name': 'Administrator', 'name': 'administrator', 'email': 'admin@focus-ui.com'}]

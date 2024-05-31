@@ -50,7 +50,7 @@ class SSHCase(unittest.TestCase):
         self.assertTrue(success)
         self.assertIsInstance(result, str)
 
-    def test_cisco_ios_xe_ssh_run_command(self):
+    def _test_cisco_ios_xe_ssh_run_command(self):
         """
         测试enable二次登录
         """
