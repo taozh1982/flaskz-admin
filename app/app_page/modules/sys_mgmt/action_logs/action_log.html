@@ -38,30 +38,34 @@
 <body class="fu-pro">
 <div class="module">
     <div class="toolbar controls">
-        <label class="col-form-label"><span i18n="SYS_ACTION_LOGS_MODULE"></span>:</label>
-        <select id="moduleSelect" ze-model="module"></select>
+        <label><span i18n="SYS_ACTION_LOGS_MODULE"></span>:
+            <select id="moduleSelect" ze-model="module"></select>
+        </label>
 
-        <label class="col-form-label"><span i18n="COMMON_ACTION"></span>:</label>
-        <select id="actionSelect" ze-model="action"> </select>
+        <label><span i18n="COMMON_ACTION"></span>:
+            <select id="actionSelect" ze-model="action"> </select>
+        </label>
 
-        <label class="col-form-label"><span i18n="SYS_ACTION_LOGS_ACTION_RESULT"></span>:</label>
-        <select id="resultSelect" ze-model="result">
-            <option value="" i18n="COMMON_ALL"></option>
-            <option value="success" i18n="COMMON_SUCCESS"></option>
-            <option value="fail" i18n="COMMON_FAIL"></option>
-        </select>
+        <label><span i18n="SYS_ACTION_LOGS_ACTION_RESULT"></span>:
+            <select id="resultSelect" ze-model="result">
+                <option value="" i18n="COMMON_ALL"></option>
+                <option value="success" i18n="COMMON_SUCCESS"></option>
+                <option value="fail" i18n="COMMON_FAIL"></option>
+            </select>
+        </label>
 
-        <label class="col-form-label"><span i18n="SYS_ACTION_LOGS_AT"></span>:</label>
-        <select id="dateRangeSelect" ze-model="created_at">
-            <option value="" i18n="COMMON_ALL"></option>
-            <option value="previous_24_hours" i18n="SYS_ACTION_LOGS_PREVIOUS_24_HOURS"></option>
-            <option value="previous_7_days" i18n="SYS_ACTION_LOGS_PREVIOUS_7_DAYS"></option>
-            <option value="previous_30_days" i18n="SYS_ACTION_LOGS_PREVIOUS_30_DAYS"></option>
-            <!--<option disabled="true">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</option>
-            <option value="previous_month">上个月</option>
-            <option value="previous_2_months">上2个月</option>
-            <option value="previous_3_months">上3个月</option>-->
-        </select>
+        <label><span i18n="SYS_ACTION_LOGS_AT"></span>:
+            <select id="dateRangeSelect" ze-model="created_at">
+                <option value="" i18n="COMMON_ALL"></option>
+                <option value="previous_24_hours" i18n="SYS_ACTION_LOGS_PREVIOUS_24_HOURS"></option>
+                <option value="previous_7_days" i18n="SYS_ACTION_LOGS_PREVIOUS_7_DAYS"></option>
+                <option value="previous_30_days" i18n="SYS_ACTION_LOGS_PREVIOUS_30_DAYS"></option>
+                <!--<option disabled="true">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</option>
+                <option value="previous_month">上个月</option>
+                <option value="previous_2_months">上2个月</option>
+                <option value="previous_3_months">上3个月</option>-->
+            </select>
+        </label>
     </div>
     <div id="gridDiv" class="content"></div>
 

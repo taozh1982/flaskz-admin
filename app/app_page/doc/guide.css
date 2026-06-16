@@ -1,0 +1,235 @@
+pre {
+    font-family: monospace, monospace;
+    font-size: 1em
+}
+
+code {
+    background-color: rgba(0, 0, 0, 0.05);
+    margin: 2px;
+    padding: 4px;
+    font-size: 13px;
+}
+
+pre > code {
+    display: block;
+    padding: 1em;
+    -webkit-text-size-adjust: none;
+    overflow-x: auto;
+    white-space: pre;
+}
+
+/* 注释 */
+.c1 {
+    color: #999;
+    font-style: italic;
+}
+
+/* from ... import */
+.kn {
+    color: #00f;
+    font-weight: bold;
+}
+
+/* 模块或包的名称 */
+.nn {
+    color: #005;
+    font-weight: bold;
+}
+
+/* Name (变量名、函数名、类名等) */
+.n {
+    color: #000;
+}
+
+/* 计算符 */
+.o {
+    color: #000;
+}
+
+/* 标点符号 */
+.p {
+    color: #000;
+}
+
+/* 例如 @sys_mgmt_bp*/
+.nd {
+    color: #9a892e;
+}
+
+/* 类或对象的属性名 */
+.na {
+    color: #2649cc;
+}
+
+/* 空格 */
+.w {
+    color: #bbb;
+}
+
+/* String */
+.s {
+    color: #377b2a;
+}
+
+/* Keyword (def, pass)*/
+.k {
+    color: #1232ac;
+}
+
+/* 函数名 */
+.nf {
+    color: #286077;
+}
+
+/* 例如 'GET' */
+.s1 {
+    color: #008000;
+}
+
+/* cd test */
+.nb {
+    color: #0c93e4;
+}
+
+blockquote {
+    margin: 0
+}
+
+blockquote p {
+    font-size: 1rem;
+    margin-bottom: .33999rem;
+    font-style: italic;
+    padding: .66001rem 1rem 1rem;
+    border-left: 3px solid #a0aabf
+}
+
+table {
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 15px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+td {
+    background-color: #ffffff;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+body {
+    font-family: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, 'Segoe UI Emoji', sans-serif;
+    color: rgb(51, 51, 51);
+    line-height: 1.6;
+    margin: 25px;
+}
+
+.markdown-content {
+    max-width: 1000px;
+    margin: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    position: relative;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    line-height: 1.4;
+    cursor: text;
+}
+
+h1 {
+    font-size: 2.25em;
+    line-height: 2;
+}
+
+h2 {
+    font-size: 1.75em;
+    line-height: 1.5;
+}
+
+h3 {
+    font-size: 1.5em;
+    line-height: 1.3;
+}
+
+h4 {
+    font-size: 1.25em;
+}
+
+h5 {
+    font-size: 1em;
+}
+
+h6 {
+    font-size: 1em;
+    color: #777;
+}
+
+h1 + blockquote, h2 + blockquote {
+    float: right;
+    padding: 15px;
+    border: 1px solid #eee;
+    position: relative;
+    z-index: 100;
+}
+
+h1 + blockquote p, h2 + blockquote p {
+    border-bottom: 1px solid #eee;
+    border-left: 0;
+    margin: 1px;
+    padding: 0;
+    font-style: normal;
+    font-size: 18px;
+}
+
+h1 + blockquote a, h2 + blockquote a {
+    color: #2479cc;
+    text-decoration: none;
+}
+
+h1 + blockquote ul, h2 + blockquote ul {
+    padding-left: 17px;
+}
+
+.nav-links {
+    position: fixed;
+    left: 0;
+    top: 6em;
+    padding-right: 2.2em;
+    transition: 0.3s;
+    font-size: 92%;
+}
+
+.nav-links > ul {
+    padding: 0.6em;
+}
+
+.nav-links ul {
+    list-style: none;
+}
+
+.nav-links ul a {
+    color: #2479CC;
+}
+
+.nav-links ul ul {
+    padding-left: 1.2em;
+}
+
+p > img {
+    display: block;
+    margin: 0 auto;
+}

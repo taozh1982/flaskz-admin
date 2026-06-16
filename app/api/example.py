@@ -16,6 +16,7 @@ from ..modules.example import DepartmentModel, EmployeeModel, SimpleModel
 # API接口规范: http://zhangyiheng.com/blog/articles/dev_spec.html#toc-api
 
 register_model_route(api_bp, SimpleModel, 'ex-simples', 'ex-simples')
+register_model_bulk_route(api_bp, SimpleModel, 'ex-simples', 'ex-simples')
 register_model_route(api_bp, DepartmentModel, 'ex-departments', 'ex-departments')
 register_model_route(api_bp, EmployeeModel, 'ex-employees', 'ex-employees',
                      to_json_option={  # 返回json选项

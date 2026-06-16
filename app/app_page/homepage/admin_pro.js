@@ -1,8 +1,8 @@
 var FontIconMapping = {
-    10000: "<i class='fa fa-server'></i>",
-    // 10000: "<i class='fa fa-cubes'></i>",
-    20000: "<i class='fa fa-ioxhost'></i>",
-    90000: "<i class='fa fa-gears'></i>",
+    // 10000: "<i class='fa fa-server'></i>",
+    // // 10000: "<i class='fa fa-cubes'></i>",
+    // 20000: "<i class='fa fa-ioxhost'></i>",
+    // 90000: "<i class='fa fa-gears'></i>",
     default_root_folder: "<i class='fa fa-file-text-o'></i>",
     default_folder: "",
     default_leaf: ""
@@ -21,7 +21,7 @@ z.util.mergeObject(Admin, {
     initModel: function () {
         pro.AjaxCRUD.query({
             url: AjaxUrl.sys_auth.query,
-            tips: z.i18n.t("HOMEPAGE_QUERY_ACCOUNT"),
+            tips: z.i18n("HOMEPAGE_QUERY_ACCOUNT"),
             success_notify: false,
             success: function (result) {
                 this._initAccountProfile(result.data.profile);
@@ -146,11 +146,8 @@ z.util.mergeObject(Admin, {
     },
     showAboutModal: function () {
         z.widget.popover.close();
-        z.widget.alert("<ul style='white-space: break-spaces'>" +
-            "<li>Used for quick initialization of the project</li>" +
-            "<li>Provides system and permission management modules(RBAC)</li>" +
-            "<li>Provides the front-end page</li>" +
-            "</ul>", "Flaskz Admin Template");
+        z.widget.alert(z.i18n("SYSTEM_ABOUT"), z.i18n("HOMEPAGE_ABOUT"));
+
     },
     showLicenseModal: function () {
         z.widget.popover.close();
@@ -181,8 +178,8 @@ z.util.mergeObject(Admin, {
         menus.forEach(function (item) {
             var name = item.name;
             if (name) {
-                item.name = z.i18n.t("MODULE_" + name.trim().replace(/[- ]/g, "_").toUpperCase()) ||
-                    z.i18n.t("MODULE_" + name.trim().toUpperCase()) || name;
+                item.name = z.i18n("MODULE_" + name.trim().replace(/[- ]/g, "_").toUpperCase()) ||
+                    z.i18n("MODULE_" + name.trim().toUpperCase()) || name;
             }
             map[item.id] = item;
             item.children = [];

@@ -144,6 +144,45 @@ class ModelMixinCRUDCase(unittest.TestCase):
         check_not_found = SimpleModel.check_delete_data(instance.id + 100)
         self.assertTupleEqual(check_not_found, res_status_codes.db_data_not_found)
 
+    def test_delete_by(self):
+        """
+        根据条件删除数据测试
+        """
+        print_test(inspect.currentframe().f_code.co_name, self)
+        self._bulk_add_test_ins(10, field_text='test@test.com')
+
+        # 1. 删除成功 --> count
+        del_count = SimpleModel.delete_by({'field_text': 'test@test.com'})
+        self.assertEqual(10, del_count)
+        # 2. 没有符合条件的数据 -->  0
+        del_count = SimpleModel.delete_by({'field_text': 'test@test.com'})
+        self.assertEqual(0, del_count)
+
+    def test_delete_by_query(self):
+        """
+        根据查询删除数据测试
+        """
+        print_test(inspect.currentframe().f_code.co_name, self)
+        self._bulk_add_test_ins(10, field_integer=10)
+        self._bulk_add_test_ins(10, field_integer=20)
+        self._bulk_add_test_ins(10, field_text='test@test2.com')
+
+        # 1. 删除成功 --> count
+        del_count = SimpleModel.delete_by_query({'field_integer': {'<': 20}})
+        self.assertEqual(10, del_count)
+        # 2. 删除成功 --> count
+        del_count = SimpleModel.delete_by_query({'field_text': {'in': ['test@test.com']}})
+        self.assertEqual(10, del_count)
+        # 3. 删除成功 --> count
+        del_count = SimpleModel.delete_by_query({'field_text': 'test@test2.com'})
+        self.assertEqual(10, del_count)
+        # 4. 没有符合条件的数据 --> 0
+        del_count = SimpleModel.delete_by_query({'field_text': 'test@test2.com'})
+        self.assertEqual(0, del_count)
+        # 5. 条件为空
+        del_count = SimpleModel.delete_by_query({'field_text1': 'test@test2.com'})
+        self.assertEqual(0, del_count)
+
     # ----------------------------------update----------------------------------
     def test_update(self):
         """

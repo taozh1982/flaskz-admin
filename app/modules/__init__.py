@@ -9,6 +9,7 @@ from flaskz import res_status_codes
 from flaskz.models import ModelBase
 from flaskz.utils import filter_list
 
+from ._database import update_model_by_db
 from ..utils import get_current_user_id, is_admin_user
 
 # 避免IDE自动删除未引用导入

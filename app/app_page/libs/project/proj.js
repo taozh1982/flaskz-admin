@@ -1,3 +1,4 @@
+// 2026/06/16 13:06:23
 //项目定制化
 z.setDefault({
     FORM_VALIDATE_ERROR_CLASS: "is-invalid",
@@ -8,12 +9,36 @@ z.setDefault({
 
     // PRO_AJAX_NOTIFY_OPTIONS: {position: "bottom_right"},
 
-    PRO_CRUDTABLEPAGE_MODAL_OPTIONS: {open_animation: "z-animation-fadeInLeft", close_animation: "z-animation-fadeOutRight"},
-    PRO_CRUDTABLEPAGE_NESTED_MODAL_OPTIONS: {open_animation: "z-animation-fadeInUp", close_animation: "z-animation-fadeOutDown"},
+    PRO_CRUDTABLEPAGE_MODAL_OPTIONS: {
+        open_animation: "z-animation-fadeInLeft", close_animation: "z-animation-fadeOutRight"
+    },
+    PRO_CRUDTABLEPAGE_NESTED_MODAL_OPTIONS: {
+        open_animation: "z-animation-fadeInUp", close_animation: "z-animation-fadeOutDown"
+    },
 
     DATE_LOCAL_TIMEZONE_OFFSET: null
 });
 
+z.form.Validator.registerRule("account", function (element, param) {
+    return /^[a-zA-Z0-9_\-.]{3,}$/.test(z.dom.getValue(element));
+}, {
+    zh: "至少包含3个字符，且只能包含字母、数字、下划线、中划线和点",
+    en: "At least 3 characters and only letters, numbers, underscores, and periods are allowed"
+});
+
+var _getSysLocale = function () {
+    var locale = (z.bom.getLocalStorage("locale") || pro.DomI18n.getBomLocale() || pro.DomI18n.getBomLang() || "").toLowerCase();
+    var langMap = {
+        "zh-hk": "zh-Hant",
+        "zh-tw": "zh-Hant",
+        "zh-cn": "zh",
+
+        // 已经设置了locale的情况
+        "zh-hant": "zh-Hant",
+        "zh": "zh"
+    }
+    return langMap[locale] || "en";
+}
 
 var I18ns = {
     "_locales": ["en", "zh"],
@@ -93,6 +118,17 @@ var I18ns = {
 }
 
 z.util.mergeObject(I18ns, {
+    SYSTEM_TITLE: ["Flaskz Admin", "Flaskz 管理系统"],
+    SYSTEM_ABOUT: [
+        "Flaskz Admin v3.0.0.0616<br>For assistance, please contact:<ol><li>Zhang Tao ｜ <a href='mailto:taozh1982@outlook.com?subject=Flaskz Admin'>taozh1982@outlook.com</a> ｜ 15021399876</li></ol>",
+        "Flaskz 管理系统 v3.0.0.0616<br>如需帮助, 请联系:<ol><li>张涛 | <a href='mailto:taozh1982@outlook.com?subject=Flaskz Admin'>taozh1982@outlook.com</a> | 15021399876</li></ol>",
+    ],
+
+    SYSTEM_VERSION: ["v3.0.0.0616", "v3.0.0.0616", "v3.0.0.0616"],
+    HOMEPAGE_GUIDE_DOC: ["Guide", "使用手册", "使用手冊"]
+});
+
+z.util.mergeObject(I18ns, {
     //Sys Users
     SYS_USERS_TITLE: ["Users", "用户列表"],
     SYS_USERS_USERNAME: ["Username", "用户名"],
@@ -155,7 +191,9 @@ z.util.mergeObject(I18ns, {
 
 z.util.mergeObject(I18ns, {
     //menu
-    MODULE_SYSTEM: ["<i class='fa fa-gears'></i>System", "<i class='fa fa-gears'></i>系统管理"],
+    MODULE_EXAMPLES: ["<i class='fa fa-file-text-o'></i> Examples", "<i class='fa fa-file-text-o'></i> 示例"],
+    MODULE_EXT: ["<i class='fa fa-puzzle-piece'></i> Ext", "<i class='fa fa-puzzle-piece'></i> 扩展功能"],
+    MODULE_SYSTEM: ["<i class='fa fa-gears'></i> System", "<i class='fa fa-gears'></i> 系统管理"],
     MODULE_USERS: ["Users", "用户列表"],
     MODULE_ROLES: ["Roles", "角色列表"],
     MODULE_LICENSES: ["Licenses", "系统授权"],
@@ -163,47 +201,6 @@ z.util.mergeObject(I18ns, {
     MODULE_OPTIONS: ["Options", "系统选项"]
 });
 
-if (window.I18ns) {//all in one
-    var _locales = I18ns._locales || [];
-    var locales_map = {};
-    _locales.forEach(function (item) {
-        locales_map[item] = [];
-    })
-    z.util.eachObject(I18ns, function (key, values) {
-        if (key !== "_locales") {
-            values.forEach(function (item, index) {
-                if (index < _locales.length) {
-                    locales_map[_locales[index]][key] = item
-                }
-            })
-        }
-    });
-    z.i18n.init(locales_map);
-}
-//multiple files
-if (window.I18n_EN) {
-    z.i18n.init({en: I18n_EN});
-}
-if (window.I18n_ZH) {
-    z.i18n.init({zh: I18n_ZH});
-}
-
-pro.AjaxCRUD.getResponseMessage = function (result) {
-    var msg;
-    var status_code = result.status_code;
-    if (status_code) {
-        var i18n_key = "AJAX_STATUS_" + status_code.replace(/-/g, '_').toUpperCase();
-        msg = z.i18n.t(i18n_key);
-    }
-    return msg || result.message;
-};
-z.i18n.setLocale(pro.DomI18n.getBomLocale() || pro.DomI18n.getBomLang() || "zh");
-z.ready(function () {
-    pro.DomI18n.initI18n();
-    if (pro.template.CRUDTablePage && pro.template.CRUDTablePage.form) {
-        pro.template.CRUDTablePage.form.update();
-    }
-});
 
 
 /**
@@ -302,7 +299,7 @@ z.setDefault({
                         if (pathname === "/" || pathname === "/index" || pathname === "index") {
                             window.top.location.href = "/login";
                         } else {
-                            z.widget.alert(z.i18n.t("LOGIN_REQUIRED"), z.i18n.t("PRO_MESSAGE_TIPS"), function (result) {//callback
+                            z.widget.alert(z.i18n("LOGIN_REQUIRED"), z.i18n("PRO_MESSAGE_TIPS"), function (result) {//callback
                                 z.widget.notify(false);
                                 if (window.top.Admin && window.top.Admin.showLoginModal) {
                                     window.top.Admin.showLoginModal();
@@ -374,6 +371,48 @@ z.ajax.setup({
     }
 });*/
 
+if (window.I18ns) {//all in one
+    var _locales = I18ns._locales || [];
+    var locales_map = {};
+    _locales.forEach(function (item) {
+        locales_map[item] = [];
+    })
+    z.util.eachObject(I18ns, function (key, values) {
+        if (key !== "_locales") {
+            values.forEach(function (item, index) {
+                if (index < _locales.length) {
+                    locales_map[_locales[index]][key] = item
+                }
+            })
+        }
+    });
+    z.i18n.init(locales_map);
+}
+//multiple files
+if (window.I18n_EN) {
+    z.i18n.init({en: I18n_EN});
+}
+if (window.I18n_ZH) {
+    z.i18n.init({zh: I18n_ZH});
+}
+
+pro.AjaxCRUD.getResponseMessage = function (result) {
+    var msg;
+    var status_code = result.status_code;
+    if (status_code) {
+        var i18n_key = "AJAX_STATUS_" + status_code.replace(/-/g, '_').toUpperCase();
+        msg = z.i18n(i18n_key);
+    }
+    return msg || result.message;
+};
+// z.i18n.setLocale(pro.DomI18n.getBomLocale() || pro.DomI18n.getBomLang() || "zh");
+z.i18n.setLocale(_getSysLocale());
+z.ready(function () {
+    pro.DomI18n.initI18n();
+    if (pro.template.CRUDTablePage && pro.template.CRUDTablePage.form) {
+        pro.template.CRUDTablePage.form.update();
+    }
+});
 
 
 

@@ -5,14 +5,14 @@ from flask_login import login_user, logout_user, current_user
 from flaskz import res_status_codes
 from flaskz.log import flaskz_logger, get_log_data
 from flaskz.models import model_to_dict, query_all_models
-from flaskz.rest import get_rest_log_msg, rest_login_required, rest_permission_required, register_model_route, register_model_query_pss_route, register_model_query_route, \
+from flaskz.rest import get_rest_log_msg, rest_login_required, rest_permission_required, register_model_route, register_model_query_pss_route, \
+    register_model_query_route, \
     register_model_delete_route
 from flaskz.utils import create_response, get_wrap_str, find_list, get_dict_mapping, get_app_config, pop_dict_keys, get_ins_mapping
 
 from . import sys_mgmt_bp, log_operation
 from .auth import verify_refresh_token, generate_token
 from .model import SysUser, SysRole, SysModule, SysRoleModule, SysActionLog, SysUserOption, SysOption
-from ..sys_init.status_codes import refresh_token_err
 from ..utils import get_app_license
 
 
@@ -64,13 +64,13 @@ def sys_auth_get_token():
 def sys_auth_token_refresh():
     """刷新Token"""
     request_json = request.json
-    req_log_data = json.dumps(request_json)
-    refresh_token = request_json.get('refresh_token')
+    # req_log_data = json.dumps(request_json)
+    refresh_token = request_json.get('refresh_token', '')
     refresh_token_payload = verify_refresh_token(refresh_token)
     username = None
     success = False
     if refresh_token_payload is False:
-        res_data = refresh_token_err
+        res_data = res_status_codes.refresh_token_err
     else:
         user_id = refresh_token_payload.get('id')
         user = SysUser.query_by_pk(user_id)
@@ -115,10 +115,10 @@ def sys_auth_account_query():
     menu_map = {}
     for item in role_menus:
         item['actions'] = []
-        menu_map[item.get('id')] = item
+        menu_map[item.get('module')] = item
 
     for item in role.modules:
-        menu_item = menu_map.get(item.module_id)
+        menu_item = menu_map.get(item.module)
         if item.action and menu_item:
             menu_item.get('actions').append(item.action)
 
@@ -262,18 +262,19 @@ def sys_role_query():
     查询角色列表
     返回: 角色列表+系统模块列表
     """
-    result = query_all_models(SysModule, SysRole, SysRoleModule)
+    result = query_all_models(SysModule, SysRole)
     if result[0] is False:
         success = False
         res_data = model_to_dict(result[1])
     else:
         success = True
+        sys_modules = result[0]
         roles = model_to_dict(result[1], {'cascade': 1})
         for role in roles:
             SysRole.to_client_json(role)
-
+        modules = SysModule.filter_by_license_limit(result[0])  # 根据license过滤菜单
         res_data = {
-            'modules': model_to_dict(result[0], {'cascade': 1}),
+            'modules': model_to_dict(modules, {'cascade': 1}),
             'roles': roles,
         }
     flaskz_logger.debug(get_rest_log_msg('Query role', None, success, res_data))
@@ -290,7 +291,6 @@ def sys_options_bulk_update():
     """批量更新Options"""
     request_json = request.json
     req_log_data = json.dumps(request_json)
-    success, result = True, None
     try:
         success, options = SysOption.query_all()
         if not success:
@@ -315,7 +315,10 @@ def sys_options_bulk_update():
 
 
 # -------------------------------------------action logs-------------------------------------------
-register_model_query_route(sys_mgmt_bp, SysModule, 'modules', to_json_option={'include': ['id', 'parent_id', 'name']})
+register_model_query_route(sys_mgmt_bp, SysModule, 'modules',
+                           to_json_option={
+                               'include': ['id', 'parent_id', 'name'],
+                               'filter': SysModule.check_license_limit})
 register_model_query_pss_route(sys_mgmt_bp, SysActionLog, 'action-logs', 'action-logs')
 
 

@@ -19,7 +19,7 @@ body {
 }
 .fill-container .content {
   padding: 1.2em 2em;
-  width: 22em;
+  width: 25em;
   background-color: #fff;
   border-radius: 4px;
 }
@@ -70,4 +70,9 @@ body {
 }
 .fill-container .content.inline .grid-row .z-validator-message {
   margin-left: 25%;
+}
+.fill-container .version {
+  position: absolute;
+  right: 0.3em;
+  bottom: 0.3em;
 }

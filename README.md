@@ -74,10 +74,14 @@ Flaskz-admin是基于 [Flaskz](https://pypi.org/project/flaskz/) 的管理系统
 
 ## 联系
 
-Email: taozh@cisco.com / taozh1982@gmail.com
+Email: taozh1982@outlook.com
 
 ## 版本
 
+- **3.0** `2026/06/16`
+    - [C] `SysRoleModule`和`SysModule`的关联由`id`改为`module`
+    - [A] 添加使用手册
+    - [A] `License`添加模块访问权限控制
 - **2.1.2** `2024/06/01`
     - [A] 添加`SysOption`功能模块，用于管理系统选项
     - [A] `SysUserOption`用户选项添加`locale`设置，用于设置区域/语言

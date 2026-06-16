@@ -1,8 +1,18 @@
 from flask import current_app
 
-__all__ = ['get_app_license', 'get_current_user_id', 'is_admin_user']
+__all__ = ['get_app_license_manager', 'get_app_license', 'get_app_license_item', 'get_current_user_id', 'is_admin_user']
 
 from flask_login import current_user
+
+
+def get_app_license_manager():
+    """
+    Return the current license manger
+    """
+
+    if current_app and hasattr(current_app, 'license_manager'):
+        return current_app.license_manager
+    return None
 
 
 def get_app_license():
@@ -11,10 +21,17 @@ def get_app_license():
     -Return False, if the license feature is not enabled
     -Return None, if there is no eligible license(enabled but not eligible)
     """
-
-    if current_app and hasattr(current_app, 'license_manager'):
-        return current_app.license_manager.get_license()
+    license_manager = get_app_license_manager()
+    if license_manager:
+        return license_manager.get_license()
     return False  # license not enabled
+
+
+def get_app_license_item(key):
+    app_license = get_app_license()
+    if app_license:
+        return app_license.get(key)
+    return None
 
 
 def get_current_user_id():

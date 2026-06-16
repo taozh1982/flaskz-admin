@@ -1,5 +1,6 @@
 ./init.js
 ./i18n/_i18ns.js
+./i18n/common.js
 ./i18n/sys_mgmt.js
 ./i18n/menus.js
 ./i18n/_init.js

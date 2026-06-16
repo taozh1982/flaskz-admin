@@ -1,5 +1,5 @@
 """
-Email: taozh@cisco.com / taozh1982@gmail.com
+Email: taozh1982@outlook.com
 
 使用
 -[数据库初始化&常用函数] http://zhangyiheng.com/blog/articles/py_flaskz_model_init.html
@@ -23,4 +23,4 @@ init_cli(app)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=666, debug=True, threaded=False)
 
-__version__ = '2.1.2'
+__version__ = '3.0.0'

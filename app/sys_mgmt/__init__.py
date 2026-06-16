@@ -8,7 +8,7 @@ import json
 
 from flask import Blueprint
 from flask_login import current_user
-from flaskz.utils import get_remote_addr, get_app_cache, set_app_cache, is_str
+from flaskz.utils import get_remote_addr, get_app_cache, set_app_cache, is_str, pop_dict_keys
 
 sys_mgmt_bp = Blueprint('sys_mgmt', __name__)
 
@@ -37,13 +37,8 @@ def log_operation(module, action, result, req_data=None, res_data=None, descript
         res_data = json.dumps(res_data)
 
     if module == 'users' and (action == 'add' or action == 'update'):  # @2023-09-15 add, user mgmt
-        try:
-            if is_str(req_data):
-                req_data = json.loads(req_data)
-                req_data.pop('password', None)  # delete password
-                req_data = json.dumps(req_data)
-        except Exception:
-            pass
+        req_data = _del_log_data_props(req_data, ['password', 'confirm_password'])
+        res_data = _del_log_data_props(res_data, ['password', 'confirm_password'])
 
     props = _get_user_info()
     props.update({
@@ -62,6 +57,19 @@ def log_operation(module, action, result, req_data=None, res_data=None, descript
         props.update(log_data)
 
     model.SysActionLog.add(props)
+
+
+def _del_log_data_props(data, props):
+    try:
+        if is_str(data):
+            data = json.loads(data)
+        if type(data) is dict:
+            pop_dict_keys(data, props)
+            data = json.dumps(data)
+            return data
+    except Exception:
+        pass
+    return data
 
 
 def _get_user_info():

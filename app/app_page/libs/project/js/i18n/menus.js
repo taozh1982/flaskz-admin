@@ -1,6 +1,8 @@
 z.util.mergeObject(I18ns, {
     //menu
-    MODULE_SYSTEM: ["<i class='fa fa-gears'></i>System", "<i class='fa fa-gears'></i>系统管理"],
+    MODULE_EXAMPLES: ["<i class='fa fa-file-text-o'></i> Examples", "<i class='fa fa-file-text-o'></i> 示例"],
+    MODULE_EXT: ["<i class='fa fa-puzzle-piece'></i> Ext", "<i class='fa fa-puzzle-piece'></i> 扩展功能"],
+    MODULE_SYSTEM: ["<i class='fa fa-gears'></i> System", "<i class='fa fa-gears'></i> 系统管理"],
     MODULE_USERS: ["Users", "用户列表"],
     MODULE_ROLES: ["Roles", "角色列表"],
     MODULE_LICENSES: ["Licenses", "系统授权"],

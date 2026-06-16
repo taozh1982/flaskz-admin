@@ -1,0 +1,51 @@
+# Version
+
+### Version History
+
+- **3.0** `2026/06/16`
+    - [C] Changed the relationship between `SysRoleModule` and `SysModule` from `id` to `module`
+    - [A] Added User Guide
+    - [A] Added module-level access control support to `License`
+- **2.1.2** `2024/06/01`
+    - [A] Added the `SysOption` module for managing system options
+    - [A] Added the `locale` setting to `SysUserOption` for configuring region/language preferences
+    - [A] Added edit and delete validation for `SysRole` and `SysUser` to ensure that at least one user with administrative privileges always exists in the system
+    - [F] Fixed the issue where `updated_at` was not updated when editing `SysRole`
+    - [C] Changed the HTTP response status code for non-existent resources (404 page / uri_not_found) from `200` to `404`
+- **2.1.1** `2024/05/01`
+    - [A] Added configuration options to `config.py`
+        - `APP_PAGE_MAPPING` for configuring page mappings
+        - `APP_LICENSE_LOAD_INTERVAL` for configuring the License reload interval
+        - `APP_LICENSE_OS_TIME_BACKWARD_LIMIT` for configuring the maximum allowed backward adjustment of the system clock
+    - [A] Added operating system time validation to `LicenseManager`
+    - [C] Added the `_cli` directory for CLI-related functionality (optional use)
+    - [C] Added the `app.utils._utils` directory for common utility classes (optional use)
+    - [C] Changed the frontend re-login process to use a modal dialog
+- **2.1.0** `2024/02/01`
+    - [A] Added internationalization (i18n) support for Login, System Navigation, and System Management pages
+- **2.0.1** `2024/01/01`
+    - [C] Removed License-related operation logs and sensitive fields such as `Signature` and `license` from query results
+    - [F] Changed `LicenseManager.get_license()` to return a copy of the license object to prevent unintended modifications
+- **2.0.0** `2023/12/01`
+    - [A] Added support for Redis Sentinel URLs in `app._ext.redis_ws`
+    - [A] Added Token Refresh functionality; `APP_REFRESH_TOKEN_EXPIRES_IN` is used to configure the refresh token expiration time
+- **1.6** `2023/06/16`
+    - [F] Fixed app configuration handling in `app._ext.redis_ws.init_websocket` - `2023/07/10`
+    - [A] Added the `ignore_tables` configuration option to `alembic.inc` for specifying tables not managed by Alembic - `2023/07/10`
+    - [A] Added `example` examples - `2023/07/11`
+    - [A] Added the `SysUserOption` table for storing user preferences (login time, login count, etc.) - `2023/07/20`
+    - [F] Fixed frontend filtering issues in the `Action Logs` module - `2023/08/23`
+    - [A] Added configuration `FLASKZ_DATABASE_SESSION_KWARGS = {'expire_on_commit': False}` - `2023/09/01`
+    - [A] Added Redis Sentinel support to `app._ext.redis_ws` - `2023/09/01`
+    - [A] Removed `password` from `log_operation` records for user create/update operations - `2023/09/15`
+    - [C] Removed the `nullable=False` constraint from `SysUser.email` (for AAA integration) - `2023/09/18`
+    - [F] Added a `None` check for `password` in `SysUser.verify_password` - `2023/09/18`
+    - [A] Added the `auth` extension to `app._ext` for third-party authentication and implemented `TACACS` authentication support - `2023/09/20`
+    - [A] Added the `echo` configuration option to `alembic.inc` for enabling/disabling Alembic SQL output - `2023/09/21`
+    - [A] Added the `UnittestConfig` configuration profile to `config.py` and `config.ini` for unit testing - `2023/09/27`
+    - [A] Added `perf` and `unit` test suites under `tests` for performance and unit testing - `2023/09/27`
+    - [A] Added the `swagger` extension to `app._ext` for generating Swagger documentation - `2023/10/26`
+- **1.5** `2023/05/01`
+    - [C] Refactored the RBAC (Role-Based Access Control) [Authorization Management](http://zhangyiheng.com/blog/articles/py_flaskz_admin.html#toc-rbac) module (`sys_mgmt`)
+    - [C] Refactored the System Management APIs based on the [Development Specification](http://zhangyiheng.com/blog/articles/dev_spec.html)
+    - [A] Added Basic Auth [User Authentication](http://zhangyiheng.com/blog/articles/py_flaskz_admin.html#toc-login) - `2023/05/09`

@@ -1,11 +1,11 @@
 var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
     action_selects: [
-        {name: z.i18n.t("COMMON_ALL"), value: ""},
-        {name: z.i18n.t("COMMON_ACTION_ADD"), value: "add"},
-        {name: z.i18n.t("COMMON_ACTION_DELETE"), value: "delete"},
-        {name: z.i18n.t("COMMON_ACTION_UPDATE"), value: "update"},
-        {name: z.i18n.t("COMMON_ACTION_UPLOAD"), value: "upload"},
-        {name: z.i18n.t("COMMON_ACTION_LOGIN"), value: "login"}
+        {name: z.i18n("COMMON_ALL"), value: ""},
+        {name: z.i18n("COMMON_ACTION_ADD"), value: "add"},
+        {name: z.i18n("COMMON_ACTION_DELETE"), value: "delete"},
+        {name: z.i18n("COMMON_ACTION_UPDATE"), value: "update"},
+        {name: z.i18n("COMMON_ACTION_UPLOAD"), value: "upload"},
+        {name: z.i18n("COMMON_ACTION_LOGIN"), value: "login"}
     ],
     /*ext_modules: [
         {
@@ -21,14 +21,14 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
             pageable: true,
             columns: [
                 {
-                    name: z.i18n.t("SYS_ACTION_LOGS_MODULE"), field: "module", width: 160,
+                    name: z.i18n("SYS_ACTION_LOGS_MODULE"), field: "module", width: 160,
                     render: function (td, data) {
                         var module = data.get("module");
                         td.innerHTML = ActionLog._getModuleI18nName(module);
                     }
                 },
                 {
-                    name: z.i18n.t("SYS_ACTION_LOGS_USER"), field: "username", width: 180,
+                    name: z.i18n("SYS_ACTION_LOGS_USER"), field: "username", width: 180,
                     render: function (td, data) {
                         var user_name = data.get("user_name") || "";
                         var username = data.get("username") || "";
@@ -39,39 +39,39 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
                         }
                     }
                 },
-                {name: z.i18n.t("SYS_ACTION_LOGS_IP"), field: "user_ip", width: 150},
+                {name: z.i18n("SYS_ACTION_LOGS_IP"), field: "user_ip", width: 150},
                 {
-                    name: z.i18n.t("COMMON_ACTION"), field: "action", width: 120,
+                    name: z.i18n("COMMON_ACTION"), field: "action", width: 120,
                     render: function (td, data) {
                         var action = data.get("action");
                         td.innerHTML = ActionLog.getActionName(action) || action || "";
                     }
                 },
                 {
-                    name: z.i18n.t("SYS_ACTION_LOGS_ACTION_RESULT"), field: "result", width: 110,
+                    name: z.i18n("SYS_ACTION_LOGS_ACTION_RESULT"), field: "result", width: 110,
                     render: function (td, data) {
                         pro.GridUtil.renderResult(td, data);
                     }
                 },
                 {
-                    name: z.i18n.t("SYS_ACTION_LOGS_REQ_RESULT"), field: "req_data",
+                    name: z.i18n("SYS_ACTION_LOGS_REQ_RESULT"), field: "req_data",
                     render: function (td, data) {
                         ActionLog.renderDetail(td, data, "req_data")
                     }
                 },
                 {
-                    name: z.i18n.t("SYS_ACTION_LOGS_RES_RESULT"), field: "res_data",
+                    name: z.i18n("SYS_ACTION_LOGS_RES_RESULT"), field: "res_data",
                     render: function (td, data) {
                         ActionLog.renderDetail(td, data, "res_data")
                     }
                 },
                 {
-                    name: z.i18n.t("SYS_ACTION_LOGS_AT"), field: "created_at", width: 160,
+                    name: z.i18n("SYS_ACTION_LOGS_AT"), field: "created_at", width: 160,
                     render: function (td, data) {
                         td.innerHTML = pro.TimeUtil.format(data.get("created_at"))
                     }
                 },
-                {name: z.i18n.t("COMMON_DESCRIPTION"), field: "description", minimized: true, minimizable: true}
+                {name: z.i18n("COMMON_DESCRIPTION"), field: "description", minimized: true, minimizable: true}
             ]
         }
     },
@@ -107,7 +107,7 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
         }
         var field = target.getAttribute("field");
         this.showFormModal("view", {
-            modal_title: field === "req_data" ? z.i18n.t("SYS_ACTION_LOGS_REQ_RESULT") : z.i18n.t("SYS_ACTION_LOGS_RES_RESULT"),
+            modal_title: field === "req_data" ? z.i18n("SYS_ACTION_LOGS_REQ_RESULT") : z.i18n("SYS_ACTION_LOGS_RES_RESULT"),
             detail: target.getAttribute("title")
         })
     },
@@ -126,7 +126,7 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
     },
     initModel: function () {
         pro.AjaxCache.query('ajax_cache_action_logs_modules', {url: AjaxUrl.sys_action_logs.modules, success_notify: false}, function (data) {
-            var modules = z.util.mergeArray([{name: z.i18n.t("COMMON_ALL"), module: ""}], data)
+            var modules = z.util.mergeArray([{name: z.i18n("COMMON_ALL"), module: ""}], data)
             modules.forEach(function (item) {
                 this._updateModuleItem(item);
             }, this);
@@ -155,15 +155,15 @@ var ActionLog = z.util.mergeObject(pro.template.CRUDTablePage, {
             if (!item.hasOwnProperty("module")) {
                 item.module = name;
             }
-            item.name = this._getModuleI18nName(name);//z.i18n.t(i18n_key) || name
+            item.name = this._getModuleI18nName(name);//z.i18n(i18n_key) || name
         }
         z.util.eachArray(item.children || [], function (child) {
             this._updateModuleItem(child);
         }, this)
     },
     _getModuleI18nName: function (module) {
-        var name = z.i18n.t("MODULE_" + module.trim().replace(/[- ]/g, "_").toUpperCase()) ||
-            z.i18n.t("MODULE_" + module.trim().toUpperCase()) || module;
+        var name = z.i18n("MODULE_" + module.trim().replace(/[- ]/g, "_").toUpperCase()) ||
+            z.i18n("MODULE_" + module.trim().toUpperCase()) || module;
         return z.dom.create("<span>"+name+"</span>").textContent;
     },
     initController: function () {

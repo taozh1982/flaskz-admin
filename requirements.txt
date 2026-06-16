@@ -1,12 +1,18 @@
-#flaskz[ext]            # deps: flask + sqlalchemy + requests + pycryptodome + paramiko
-flaskz                  # deps: flask + sqlalchemy + requests
+# flaskz                # deps: flask + sqlalchemy + requests
+flaskz[ext]             # deps: flask + sqlalchemy + requests + pycryptodome + paramiko
 Flask-Login             # for user login management
 alembic                 # for database migration
+
+markdown              # markdown doc
+Pygments              # markdown doc
+
+gunicorn              # for deploy
+gevent                # for deploy
 
 ## Install following packages as required
 # pymysql               # mysql driver
 # redisz                # redisz
-# pycryptodome          # RSA&AES encryption，for license management
 # websockets            # websocket
 # flasgger              # swagger
 # flask-cors            # for cross domain
+# openpyxl              # excel

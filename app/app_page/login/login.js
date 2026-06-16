@@ -43,7 +43,7 @@ var Login = {
         pro.AjaxCRUD.ajax({
             url: AjaxUrl.sys_auth.login,
             data: value,
-            tips: z.i18n.t('LOGIN_ACTION_LOGIN'),
+            tips: z.i18n('LOGIN_ACTION_LOGIN'),
             success_notify: false,
             fail_notify: false,
             error: function (result) {

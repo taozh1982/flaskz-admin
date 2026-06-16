@@ -47,6 +47,7 @@ def upgrade():
                     sa.Column('module', sa.String(length=100), nullable=True),
                     sa.Column('path', sa.String(length=100), nullable=True),
                     sa.Column('category', sa.String(length=100), nullable=True),
+                    sa.Column('ac_module', sa.String(length=255), nullable=True),
                     sa.Column('description', sa.String(length=255), nullable=True),
                     sa.PrimaryKeyConstraint('id'),
                     sa.UniqueConstraint('module'),
@@ -65,17 +66,17 @@ def upgrade():
     op.create_table('sys_module_actions',
                     sa.Column('module', sa.String(length=100), nullable=True),
                     sa.Column('action', sa.String(length=100), nullable=True),
-                    sa.ForeignKeyConstraint(['action'], ['sys_actions.action'], onupdate='CASCADE', ondelete='CASCADE'),
-                    sa.ForeignKeyConstraint(['module'], ['sys_modules.module'], onupdate='CASCADE', ondelete='CASCADE')
+                    sa.ForeignKeyConstraint(['action'], ['sys_actions.action'], name='sys_module_actions_ibfk_action', onupdate='CASCADE', ondelete='CASCADE'),
+                    sa.ForeignKeyConstraint(['module'], ['sys_modules.module'], name='sys_module_actions_ibfk_module', onupdate='CASCADE', ondelete='CASCADE')
                     )
     op.create_table('sys_role_modules',
                     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
                     sa.Column('role_id', sa.Integer(), nullable=False),
-                    sa.Column('module_id', sa.Integer(), nullable=False),
+                    sa.Column('module', sa.String(100), nullable=False),
                     sa.Column('action', sa.String(length=100), nullable=True),
-                    sa.ForeignKeyConstraint(['action'], ['sys_actions.action'], ondelete='CASCADE'),
-                    sa.ForeignKeyConstraint(['module_id'], ['sys_modules.id'], ondelete='CASCADE'),
-                    sa.ForeignKeyConstraint(['role_id'], ['sys_roles.id'], ondelete='CASCADE'),
+                    sa.ForeignKeyConstraint(['action'], ['sys_actions.action'], name='sys_role_modules_ibfk_action', onupdate='CASCADE', ondelete='CASCADE'),
+                    sa.ForeignKeyConstraint(['module'], ['sys_modules.module'], name='sys_role_modules_ibfk_module', onupdate='CASCADE', ondelete='CASCADE'),
+                    sa.ForeignKeyConstraint(['role_id'], ['sys_roles.id'], name='sys_role_modules_ibfk_role_id', ondelete='CASCADE'),
                     sa.PrimaryKeyConstraint('id')
                     )
     op.create_table('sys_users',
@@ -92,7 +93,7 @@ def upgrade():
                     sa.Column('description', sa.String(length=255), nullable=True),
                     sa.Column('created_at', sa.DateTime(), nullable=True),
                     sa.Column('updated_at', sa.DateTime(), nullable=True),
-                    sa.ForeignKeyConstraint(['role_id'], ['sys_roles.id'], ),
+                    sa.ForeignKeyConstraint(['role_id'], ['sys_roles.id'], name='sys_users_ibfk_role_id', ),
                     sa.PrimaryKeyConstraint('id'),
                     sa.UniqueConstraint('username')
                     )
@@ -104,7 +105,7 @@ def upgrade():
                     sa.Column('previous_login_at', sa.DateTime(), nullable=True),
                     sa.Column('login_times', sa.Integer(), nullable=True),
                     sa.Column('preferences', sa.Text(), nullable=True),
-                    sa.ForeignKeyConstraint(['user_id'], ['sys_users.id'], ondelete='CASCADE'),
+                    sa.ForeignKeyConstraint(['user_id'], ['sys_users.id'], name='sys_user_options_ibfk_user_id', ondelete='CASCADE'),
                     sa.PrimaryKeyConstraint('id')
                     )
     op.create_table('sys_options',

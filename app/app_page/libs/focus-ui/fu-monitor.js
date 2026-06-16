@@ -1,4 +1,4 @@
-/*! http://focus-ui.com/ | taozh@cisco.com */
+/*! http://focus-ui.com/ | taozh1982@outlook.com */
 /**
  用于页面性能监控和异常信息收集
  全局设置

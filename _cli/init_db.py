@@ -13,7 +13,7 @@ def init_db_data():
     admin_role_modules = sys_roles[0].get('modules')
     for item in sys_modules:
         if item.get('module'):
-            admin_role_modules.append({'module_id': item.get('id'), 'action': 'update'})
+            admin_role_modules.append({'module': item.get('module'), 'action': 'update'})
 
     with db_session() as session:
         session.query(SysUser).delete()
@@ -49,7 +49,7 @@ def recover_admin(user_name='admin', role_name='Administrator'):
     modules = []
     for item in sys_modules:
         if item.get('module'):
-            modules.append({'module_id': item.get('id'), 'action': 'update'})
+            modules.append({'module': item.get('module'), 'action': 'update'})
 
     db_role = SysRole.query_by({'name': role_name}, True)
     if db_role:

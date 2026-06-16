@@ -1,0 +1,51 @@
+# 版本
+
+### 版本历史
+
+- **3.0** `2026/06/16`
+    - [C] `SysRoleModule`和`SysModule`的关联由`id`改为`module`
+    - [A] 添加使用手册
+    - [A] `License`添加模块访问权限控制
+- **2.1.2** `2024/06/01`
+    - [A] 添加`SysOption`功能模块，用于管理系统选项
+    - [A] `SysUserOption`用户选项添加`locale`设置，用于设置区域/语言
+    - [A] 添加`SysRole`和`SysUser`对象编辑和删除检查，以确保系统中始终有管理权限的用户
+    - [F] 修复编辑`SysRole`时，`updated_at`不更新问题
+    - [C] 资源不存在时(404 page/uri_not_found)的响应状态码，由`200`修改为`404`
+- **2.1.1** `2024/05/01`
+    - [A] `config.py`添加配置项
+        - `APP_PAGE_MAPPING`用于设置页面映射
+        - `APP_LICENSE_LOAD_INTERVAL`用于设置License加载间隔
+        - `APP_LICENSE_OS_TIME_BACKWARD_LIMIT`用于设置操作系统时间允许向后改变的最大值
+    - [A] `LicenseManager`添加对操作系统时间的检测
+    - [C] 添加`_cli`目录，用于存放`cli`相关功能代码(按需使用)
+    - [C] 添加`app.utils._utils`目录，用于存放通用工具类(按需使用)
+    - [C] 前端页面重新登录改成弹框模式
+- **2.1.0** `2024/02/01`
+    - [A] 页面国际化(登录/系统导航/系统管理)
+- **2.0.1** `2024/01/01`
+    - [C] 移除License相关的操作日志和查询结果中的`Signature/license`等信息
+    - [F] `LicenseManager.get_license()`方法返回的license信息改为拷贝模式(避免被修改)
+- **2.0.0** `2023/12/01`
+    - [A] `app._ext.redis_ws`添加对Redis哨兵模式url的支持
+    - [A] 添加Token刷新功能，`APP_REFRESH_TOKEN_EXPIRES_IN`配置项用于设置refresh token的有效时间
+- **1.6** `2023/06/16`
+    - [F] 修复`app._ext.redis_ws.init_websocket`函数中app_config设置问题 -`2023/07/10`
+    - [A] `alembic.inc`添加`ignore_tables`配置项，用于配置不需要alembic维护的table列表 -`2023/07/10`
+    - [A] 添加`example`示例 -`2023/07/11`
+    - [A] 添加`SysUserOption`表，用于存放用户选项(登录时间/登录次数/...) -`2023/07/20`
+    - [F] 修复`Action Logs`模块前端页面过滤问题 -`2023/08/23`
+    - [A] 添加`FLASKZ_DATABASE_SESSION_KWARGS = {'expire_on_commit': False}`配置 -`2023/09/01`
+    - [A] `app._ext.redis_ws`添加对redis哨兵模式的支持 -`2023/09/01`
+    - [A] `log_operation`对于用户添加/更新操作移除`password` -`2023/09/15`
+    - [C] `SysUser.email`移除`nullable=False`属性(for AAA) -`2023/09/18`
+    - [F] `SysUser.verify_password`方法添加`password`为None的逻辑判断 -`2023/09/18`
+    - [A] `app._ext`添加`auth`扩展，用于第三方授权认证，并添加`TACACS`授权认证实现 -`2023/09/20`
+    - [A] `alembic.inc`添加`echo`配置项，用于配置是否启用Alembic的echo功能 -`2023/09/21`
+    - [A] `config.py`和`config.ini` 添加`UnittestConfig`配置项，用于单元测试 -`2023/09/27`
+    - [A] `tests`添加`perf`和`unit`测试项，用于性能和单元测试 -`2023/09/27`
+    - [A] `app._ext`添加`swagger`扩展，用于生成Swagger文档 -`2023/10/26`
+- **1.5** `2023/05/01`
+    - [C] 重构系统RBAC [权限管理](http://zhangyiheng.com/blog/articles/py_flaskz_admin.html#toc-rbac) 模块(sys_mgmt)
+    - [C] 重构系统管理API(参考[开发规范](http://zhangyiheng.com/blog/articles/dev_spec.html))
+    - [A] 添加Basic Auth[用户认证](http://zhangyiheng.com/blog/articles/py_flaskz_admin.html#toc-login)  -`2023/05/09`

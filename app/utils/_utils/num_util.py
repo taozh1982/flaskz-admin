@@ -1,3 +1,16 @@
+import re
+
+
+def get_leading_digits(s):
+    """使用正则表达式从给定字符串的开头提取数字序列"""
+    if type(s) is not str:
+        s = str(s)
+    # match = re.match(r'\d+', s)
+    match = re.match(r'[\d.]+', s)
+    result = match.group(0) if match else None
+    return result
+
+
 def round_number(number, precision=3):
     """
     四舍五入
@@ -40,8 +53,35 @@ def parse_float(value, default=0, split_sep=None):
     return default
 
 
+def parse_int(value, default=0, split_sep=None):
+    success, result = _parse_int(value)
+    if success is False and (type(split_sep) is str and type(value) is str):
+        value = value.strip()
+        split_values = value.split(split_sep)
+        split_values_len = len(split_values)
+        if split_values_len > 0:
+            success, result = _parse_int(split_values[0])
+            if success is False and split_values_len > 1:
+                success, result = _parse_int(split_values[-1])
+    if success is True:
+        return result
+    return default
+
+
 def _parse_float(value):
     try:
         return True, float(value)
     except (ValueError, TypeError) as e:
         return False, e
+
+
+def _parse_int(value):
+    try:
+        return True, int(value)
+    except (ValueError, TypeError) as e:
+        return False, e
+
+
+if __name__ == "__main__":
+    print(parse_float('1.1 unit',None,' '))
+    print(parse_int('1 unit',None,' '))

@@ -3,6 +3,7 @@
 可以通过设置APP_CONFIG环境变量，切换到不同的环境
 """
 import configparser
+import json
 import os
 from datetime import timedelta
 
@@ -25,9 +26,21 @@ def update_config_from_file():
         if not opts:
             return
         for opt in opts:
-            setattr(config_cls, opt.upper(), cp.get(section, opt))
+            key = opt.upper()
+            value = cp.get(section, opt)
+            try:
+                value = json.loads(value)
+            except Exception:
+                pass
 
-    for item in [('DEFAULT', Config), ('DEVELOPMENT', DevelopmentConfig), ('TEST', TestConfig), ('PRODUCTION', ProductionConfig), ('UNITTEST', UnittestConfig)]:
+            if type(value) is str:  # True/False特殊处理
+                if value.upper() == 'TRUE':
+                    value = True
+                elif value.upper() == 'FALSE':
+                    value = False
+            setattr(config_cls, key, value)  # 替换方式更新，否则可能影响其他Config的值
+
+    for item in [('DEFAULT', Config), ('DEVELOPMENT', DevelopmentConfig), ('TEST', TestConfig), ('PRODUCTION', ProductionConfig)]:
         _update_from_file(item[0], item[1])
 
 
@@ -53,7 +66,9 @@ class Config:
     # 静态文件目录(前端页面)
     APP_PAGE_STATIC_FOLDER = './app/app_page/'
     APP_PAGE_STATIC_STATIC_URL_PATH = '/'
-    APP_PAGE_MAPPING = {  # route:页面映射
+    APP_PAGE_CACHE_ENABLED = False  # 是否缓存页面，不是True则进行缓存
+    # route:页面映射
+    APP_PAGE_MAPPING = {
         # Ext
         'ext-nav': './modules/ext/nav/nav.html',
         'ext-websocket': './modules/ext/websocket/websocket.html',
@@ -104,6 +119,12 @@ class Config:
     FLASKZ_LOGGER_DISABLED = False
     FLASKZ_WZ_LOGGER_DISABLED = True
 
+    # ------------------------------WebSocket------------------------------
+    WEBSOCKET_HOST = None  # 如果为None, host=0.0.0.0
+    WEBSOCKET_PORT = 3667  # websocket服务端口号
+    REDIS_WEBSOCKET_DEFAULT_CHANNEL = "cx_nms_ws:channel"  # redis websocket订阅的默认channel
+    REDIS_WEBSOCKET_MESSAGE_TIMEOUT = 1  # redis websocket消息等待时间
+
     # ------------------------------HTTP请求响应参数------------------------------
     # 请参考 -http://zhangyiheng.com/blog/articles/py_flaskz_utils.html#toc-res
     FLASKZ_RES_SUCCESS_STATUS = "success"
@@ -136,7 +157,7 @@ class ProductionConfig(Config):
     SECRET_KEY = os.environ.get('APP_SECRET_KEY') or 'hard to guess string'
     FLASKZ_LOGGER_FILENAME = 'syslog.txt'
     FLASKZ_DATABASE_URI = os.environ.get('FLASKZ_PRO_DATABASE_URI') or 'mysql+pymysql://{username}:{password}@{url}:{port}/{db}'
-    FLASKZ_DATABASE_ENGINE_KWARGS = {'isolation_level': 'READ COMMITTED'}  # for mysql
+    FLASKZ_DATABASE_ENGINE_KWARGS = {'isolation_level': 'READ COMMITTED', 'pool_timeout': 30, 'pool_size': 20, 'max_overflow': 40}  # for mysql
 
 
 class UnittestConfig(Config):
@@ -147,7 +168,6 @@ class UnittestConfig(Config):
 
 
 update_config_from_file()
-
 config = {
     'development': DevelopmentConfig,
     'unittest': UnittestConfig,

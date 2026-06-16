@@ -5,14 +5,14 @@ from flaskz import res_status_codes
 from flaskz.log import flaskz_logger
 from flaskz.models import ModelBase, ModelMixin, BaseModelMixin, query_all_models, model_to_dict
 from flaskz.rest import get_rest_log_msg
-from flaskz.utils import find_list, get_app_cache, set_app_cache, get_ins_mapping, merge_list
+from flaskz.utils import find_list, get_app_cache, set_app_cache, get_ins_mapping, merge_list, filter_list, pop_dict_keys, get_dict_mapping
 from sqlalchemy import Column, Integer, String, Table, ForeignKey, DateTime, Boolean, Text, desc
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from ..modules import AutoModelMixin
-from ..sys_init import status_codes
+from ..utils import get_app_license_item
 
 # 模块&动作关联
 # #module#      #action#
@@ -21,8 +21,10 @@ from ..sys_init import status_codes
 # user          config_email
 
 sys_module_actions = Table('sys_module_actions', ModelBase.metadata,
-                           Column('module', String(100), ForeignKey('sys_modules.module', ondelete='CASCADE', onupdate='CASCADE')),
-                           Column('action', String(100), ForeignKey('sys_actions.action', ondelete='CASCADE', onupdate='CASCADE')))
+                           Column('module', String(100),
+                                  ForeignKey('sys_modules.module', name='sys_module_actions_ibfk_module', ondelete='CASCADE', onupdate='CASCADE')),
+                           Column('action', String(100),
+                                  ForeignKey('sys_actions.action', name='sys_module_actions_ibfk_action', ondelete='CASCADE', onupdate='CASCADE')))
 
 
 class SysAction(ModelBase, ModelMixin):
@@ -58,9 +60,43 @@ class SysModule(ModelBase, ModelMixin):
     module = Column(String(100), unique=True)  # 用于api和权限控制, path可能为空, 但是module不能为空(例如:只通过api调用的模块)
     path = Column(String(100), unique=True)  # 用于页面导航(前端hash & main/page.py)
     category = Column(String(100))  # 用于模块分类, 多系统整合
+    ac_module = Column(String(255))  # 用于模块控制,可能多个模块有相同的值 ex)license控制模块，如果为空则不做控制
     description = Column(String(255))
 
     actions = relationship('SysAction', secondary=sys_module_actions, lazy='joined')  # 模块操作列表, 不同的模块有不同的操作列表
+
+    @classmethod
+    def filter_by_license_limit(cls, modules):
+        """根据license中的Modules字段过滤模块列表"""
+        return filter_list(modules, lambda ins: SysModule.check_license_limit(ins))
+
+    @classmethod
+    def check_license_limit(cls, module):
+        """根据license中的Modules字段过滤模块"""
+        ac_module = None
+        if type(module) is str:
+            ac_module = module.lower().strip()
+        elif isinstance(module, SysModule):
+            ac_module = (module.ac_module or '').lower().strip()
+
+        if not ac_module:
+            return True
+
+        license_modules = get_app_license_item('Modules') or ''
+        if license_modules:
+            if license_modules.startswith('*'):  # 带星号表示黑名单 ex)*,dm-discovery
+                for item in license_modules.split(','):
+                    item = item.lower().strip()  # 可能是module，也可能是name
+                    if ac_module and item == ac_module:
+                        return False
+                return True
+            else:  # 白名单
+                for item in license_modules.split(','):
+                    item = item.lower().strip()
+                    if ac_module and item == ac_module:
+                        return True
+                return False
+        return True
 
 
 class SysRoleModule(ModelBase, ModelMixin):
@@ -75,9 +111,9 @@ class SysRoleModule(ModelBase, ModelMixin):
     __tablename__ = 'sys_role_modules'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    role_id = Column(Integer, ForeignKey('sys_roles.id', ondelete='CASCADE'), nullable=False)
-    module_id = Column(Integer, ForeignKey('sys_modules.id', ondelete='CASCADE'), nullable=False)
-    action = Column(String(100), ForeignKey('sys_actions.action', ondelete='CASCADE'))
+    role_id = Column(Integer, ForeignKey('sys_roles.id', name='sys_role_modules_ibfk_role_id', ondelete='CASCADE'), nullable=False)
+    module = Column(String(100), ForeignKey('sys_modules.module', name='sys_role_modules_ibfk_module', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
+    action = Column(String(100), ForeignKey('sys_actions.action', name='sys_role_modules_ibfk_action', onupdate='CASCADE', ondelete='CASCADE'))
 
 
 class SysRole(ModelBase, ModelMixin):
@@ -108,20 +144,20 @@ class SysRole(ModelBase, ModelMixin):
         :param action: 要检查的操作
         :return:
         """
-        checked_module_id = SysRole._find_module_id(module)
-        if checked_module_id:
+        checked_sys_module = SysRole._find_sys_module(module)
+        if checked_sys_module:
             for role_module_ins in self.modules:
-                if SysRole._check_module_action_permission(role_module_ins, checked_module_id, action) is True:
+                if SysRole._check_module_action_permission(role_module_ins, checked_sys_module, action) is True:
                     return True
         return False
 
     @staticmethod
-    def _find_module_id(module_name):
+    def _find_sys_module(module_name):
         """返回module名对应的module对象"""
-        module_json_list = get_app_cached_modules()
+        module_json_list = get_app_cached_sys_modules()
         for item in module_json_list:
             if item.get('module') == module_name:
-                return item.get('id')
+                return item
         return None
 
     @staticmethod
@@ -130,9 +166,9 @@ class SysRole(ModelBase, ModelMixin):
         return menu_json_item.get('module') == module
 
     @staticmethod
-    def _check_module_action_permission(role_module_ins, module_id, action):
+    def _check_module_action_permission(role_module_ins, checked_sys_module, action):
         """检查是否包含指定的操作权限"""
-        if role_module_ins.module_id != module_id:
+        if role_module_ins.module != checked_sys_module.get('module'):
             return False
 
         if action is not None:
@@ -146,48 +182,55 @@ class SysRole(ModelBase, ModelMixin):
         返回角色的菜单列表(包括父菜单)
         :return:
         """
-        all_modules = SysModule.query_all()
-        if all_modules[0] is False:
-            return all_modules
-        all_modules = all_modules[1]
-        module_ins_map = get_ins_mapping(all_modules, 'id')
-
+        all_sys_modules = SysModule.query_all()
+        if all_sys_modules[0] is False:
+            return all_sys_modules
+        all_sys_modules = all_sys_modules[1]
+        all_sys_modules = SysModule.filter_by_license_limit(all_sys_modules)  # 根据license过滤菜单
+        module_ins_id_map = get_ins_mapping(all_sys_modules, 'id')
+        module_ins_module_map = get_ins_mapping(all_sys_modules, 'module')
+        module_ins_id_map.pop(None, None)
+        module_ins_module_map.pop(None, None)
         menus = []
         added_map = {}
         for item in self.modules:
-            SysRole._add_menu_item(item.module_id, module_ins_map, menus, added_map)
+            SysRole._add_menu_item(module_ins_module_map.get(item.module), module_ins_id_map, menus, added_map)
         menus.sort(key=lambda i: i.id)
 
         return menus
 
     @staticmethod
-    def _add_menu_item(module_id, module_map, menus, added, is_parent=False):
-        if module_id is None:
+    def _add_menu_item(module_ins, module_ins_id_map, menus, added, is_parent=False):
+        if module_ins is None:
             return
-        module_ins = module_map.get(module_id)
-        if module_ins:
-            if is_parent is not True and module_ins.path is None:  # @2023-03-10 add to filter menus without path
-                return
-            if module_id not in added:
-                menus.append(module_ins)
-                added[module_id] = module_ins
-            SysRole._add_menu_item(module_ins.parent_id, module_map, menus, added, True)
+        # module_ins = module_ins_id_map.get(module_ins)
+        # if module_ins:
+        if is_parent is not True and module_ins.path is None:  # @2023-03-10 add to filter menus without path
+            return
+        if module_ins not in added:
+            menus.append(module_ins)
+            added[module_ins] = module_ins
+        SysRole._add_menu_item(module_ins_id_map.get(module_ins.parent_id), module_ins_id_map, menus, added, True)
 
     @staticmethod
     def to_client_json(role_model_json):
         modules = []
+        sys_modules = get_app_cached_sys_modules()
+        sys_module_map = get_dict_mapping(sys_modules, 'module')
         for item in role_model_json.get('modules', []):
-            module_id = item.get('module_id')
-            action = item.get('action')
-            _item = find_list(modules, lambda _i: _i.get('module_id') == module_id)
+            _module = item.get('module')
+            _action = item.get('action')
+            _item = find_list(modules, lambda _i: _i.get('module') == _module)
             if _item is None:
+                sys_module = sys_module_map.get(_module) or {}
                 _item = {
-                    'module_id': module_id,
+                    'module': _module,
+                    'module_id': sys_module.get('id'),
                     'actions': []
                 }
                 modules.append(_item)
-            if action is not None:
-                _item.get('actions').append(action)
+            if _action is not None:
+                _item.get('actions').append(_action)
 
         role_model_json['modules'] = modules
         return role_model_json
@@ -204,7 +247,7 @@ class SysRole(ModelBase, ModelMixin):
 
             for action in actions:
                 modules.append({
-                    'module_id': item.get('module_id'),
+                    'module': item.get('module'),
                     'action': action
                 })
         model_json['modules'] = modules
@@ -215,7 +258,7 @@ class SysRole(ModelBase, ModelMixin):
     def check_delete_data(cls, pk_value):
         super_check_result = super().check_delete_data(pk_value)
         if super_check_result is True and SysRole._is_last_admin_role(pk_value):
-            return status_codes.last_admin_role_not_allowed
+            return res_status_codes.last_admin_role_not_allowed
         return super_check_result
 
     @classmethod
@@ -224,12 +267,12 @@ class SysRole(ModelBase, ModelMixin):
         if super_check_result is True:
             modules = data.get('modules', [])
 
-            role_module = SysModule.query_by({'module': 'roles'}, True)  # roles模块
-            role_module_id = role_module.id
-            update_role_has_admin_permission = any(int(module.get('module_id')) == role_module_id and module.get('action') in ['add', 'update'] for module in modules)
+            # sys_role_module = SysModule.query_by({'module': 'roles'}, True)  # roles模块
+            update_role_has_admin_permission = any(
+                module.get('module') == 'roles' and module.get('action') in ['add', 'update'] for module in modules)
             # 编辑后不包含roles模块的编辑权限 and 当前更新的role包含角色管理权限
             if update_role_has_admin_permission is False and SysRole._is_last_admin_role(data.get('id')):
-                return status_codes.last_admin_role_not_allowed
+                return res_status_codes.last_admin_role_not_allowed
 
         return super_check_result
 
@@ -239,11 +282,8 @@ class SysRole(ModelBase, ModelMixin):
         role_ins = SysRole.query_by_pk(pk_value)
         if role_ins.check_permission('roles', 'update'):  # 当前角色有roles管理权限
             role_id = role_ins.id
-            role_module = SysModule.query_by({'module': 'roles'}, True)  # roles模块
-            role_module_id = role_module.id
-
-            mgmt_roles_modules = merge_list(SysRoleModule.query_by({'module_id': role_module_id, 'action': 'add'}),
-                                            SysRoleModule.query_by({'module_id': role_module_id, 'action': 'update'}))
+            mgmt_roles_modules = merge_list(SysRoleModule.query_by({'module': 'roles', 'action': 'add'}),
+                                            SysRoleModule.query_by({'module': 'roles', 'action': 'update'}))
             # 是否有其他模块有roles模块的更新权限
             other_role_has_role_module_update_action = any(role_module.role_id != role_id for role_module in mgmt_roles_modules)
             return other_role_has_role_module_update_action is False  # 没有其他模块有roles模块的更新权限
@@ -272,7 +312,7 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
     email = Column(String(100))  # @2023-09-18修改，nullable=False-->nullable=True, aaa用户email为空
     name = Column(String(100))  # full name
     phone = Column(String(100))
-    role_id = Column(Integer, ForeignKey('sys_roles.id'), nullable=False)
+    role_id = Column(Integer, ForeignKey('sys_roles.id', name='sys_users_ibfk_role_id'), nullable=False)
     last_login_at = Column(DateTime())
     description = Column(String(255))
     created_at = Column(DateTime(), default=datetime.now)
@@ -334,7 +374,7 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
         if current_user and (current_user.id == int(pk_value)):  # 不能删除当前用户
             return res_status_codes.db_data_in_use
         if SysUser._is_last_admin_user(pk_value):
-            return status_codes.last_admin_user_not_allowed
+            return res_status_codes.last_admin_user_not_allowed
         return True
 
     @classmethod
@@ -353,7 +393,7 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
             if role_id:
                 new_role = SysRole.query_by_pk(role_id)
                 if (new_role and not new_role.check_permission('roles', 'update')) and SysUser._is_last_admin_user(user_id):
-                    return status_codes.last_admin_user_not_allowed
+                    return res_status_codes.last_admin_user_not_allowed
 
         return super_check_result
 
@@ -370,7 +410,8 @@ class SysUser(ModelBase, ModelMixin, UserMixin, AutoModelMixin):
             other_user_has_role_mgmt_permission = False
             for role in roles:
                 if role.check_permission('roles', 'update'):
-                    other_user_has_role_mgmt_permission = any(user.id != user_pk in ['add', 'update'] for user in users)
+                    # other_user_has_role_mgmt_permission = any(user.id != user_pk in ['add', 'update'] for user in users)
+                    other_user_has_role_mgmt_permission = any((user.role_id == role.id and user.id != user_pk) for user in users)  # @2024-08-26修复
                     if other_user_has_role_mgmt_permission:
                         break
             return other_user_has_role_mgmt_permission is False
@@ -392,7 +433,7 @@ class SysUserOption(ModelBase, BaseModelMixin):
     __tablename__ = 'sys_user_options'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('sys_users.id', ondelete='CASCADE'), nullable=False)
+    user_id = Column(Integer, ForeignKey('sys_users.id', name='sys_user_options_ibfk_user_id', ondelete='CASCADE'), nullable=False)
     locale = Column(String(32))  # 区域/语言选项
     previous_login_at = Column(DateTime())  # 上次登录时间
     last_login_at = Column(DateTime())  # 最后登录时间
@@ -529,7 +570,7 @@ class SysOption(ModelBase, ModelMixin):
         return model_to_dict(options)
 
 
-def get_app_cached_modules():
+def get_app_cached_sys_modules():
     """
     返回系统模块列表，为了提高效率，对系统模块进行了缓存
     :return:
@@ -542,5 +583,5 @@ def get_app_cached_modules():
             all_modules = all_modules[1]
             for item in all_modules:
                 modules.append(item.to_dict())
-        set_app_cache('sys_modules', modules, expire_minutes=60)
+            set_app_cache('sys_modules', modules, expire_minutes=60)
     return modules

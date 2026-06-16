@@ -1,4 +1,38 @@
 z.util.mergeObject(Role, {
+    initModuleGrid: function (value) {
+        if (!this.moduleGrid) {
+            var _this = this;
+            this.moduleGrid = z.widget.TreeGrid(z.util.mergeObject({}, z.getDefault("PRO_CRUDTABLEPAGE_GRID_OPTIONS"), {
+                appendTo: "#moduleGridDiv",
+                sortable: false,
+                overflow: false,
+                inner_html: true,
+                columns: [
+                    {
+                        name: z.i18n("SYS_ROLES_MODULE"), field: "name", type: "check",
+                        render: function (td, data) {
+                            var module = data.get("name");
+                            if (!data.hasChildren() && !data.get("path")) {
+                                module += " ⋆"
+                            }
+                            td.innerHTML = module;
+                        }
+                    },
+                    {
+                        name: z.i18n("SYS_ROLES_MODULE_ACTIONS"), width: 110,
+                        render: function (td, data, column) {
+                            if (!data.hasChildren()) {
+                                _this._renderOps(td, data);
+                            }
+                        }
+                    }
+                ]
+            }));
+            this.moduleGrid.onCheckChange(this._handleCheckChange, this);
+            this._initAllModuleData();
+        }
+        this._setModuleGridValue(value);
+    },
     _renderOps: function (td, data) {
         var _this = this;
         var actions = data.get("actions") || [];
@@ -34,40 +68,6 @@ z.util.mergeObject(Role, {
             }
             td.appendChild(checkbox.parentNode);
         });
-    },
-    initModuleGrid: function (value) {
-        if (!this.moduleGrid) {
-            var _this = this;
-            this.moduleGrid = z.widget.TreeGrid(z.util.mergeObject({}, z.getDefault("PRO_CRUDTABLEPAGE_GRID_OPTIONS"), {
-                appendTo: "#moduleGridDiv",
-                sortable: false,
-                overflow: false,
-                inner_html: true,
-                columns: [
-                    {
-                        name: z.i18n.t("SYS_ROLES_MODULE"), field: "name", type: "check",
-                        render: function (td, data) {
-                            var module = data.get("name");
-                            if (!data.hasChildren() && !data.get("path")) {
-                                module += " ⋆"
-                            }
-                            td.innerHTML = module;
-                        }
-                    },
-                    {
-                        name: z.i18n.t("SYS_ROLES_MODULE_ACTIONS"), width: 110,
-                        render: function (td, data, column) {
-                            if (!data.hasChildren()) {
-                                _this._renderOps(td, data);
-                            }
-                        }
-                    }
-                ]
-            }));
-            this.moduleGrid.onCheckChange(this._handleCheckChange, this);
-            this._initAllModuleData();
-        }
-        this._setModuleGridValue(value);
     },
     _initAllModuleData: function () {
         if (this._moduleArr) {
@@ -160,6 +160,7 @@ z.util.mergeObject(Role, {
                 });
                 modules.push({
                     module_id: data.get("id"),
+                    module: data.get("module"),
                     actions: actions
                 })
             }

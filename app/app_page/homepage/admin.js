@@ -262,6 +262,7 @@ z.util.mergeObject(Admin, {
             locale_label = z.dom.getValue(z.dom.query("span", localeA));
         }
         z.dom.setValue("#localeLabel", locale_label);
+        z.dom.setAttribute("#guideA", "href", "./" + locale + "/guide/")
     },
     initCustom: function () {
     }

@@ -9,15 +9,15 @@ var Option = z.util.mergeObject(pro.template.CRUDTablePage, {
                     {
                         name: z.i18n("SYS_OPTIONS_LABEL"), field: "label"
                     },
-                    {name: z.i18n.t("COMMON_DESCRIPTION"), field: "description"},
+                    {name: z.i18n("COMMON_DESCRIPTION"), field: "description"},
                     {
-                        name: z.i18n.t("COMMON_UPDATED_AT"), field: "updated_at",
+                        name: z.i18n("COMMON_UPDATED_AT"), field: "updated_at",
                         render: function (td, data) {
                             td.innerHTML = pro.TimeUtil.format(data.get("updated_at"));
                         }
                     },
                     {
-                        name: z.i18n.t("COMMON_ACTION"), width: 120, sortable: false, filter: false,
+                        name: z.i18n("COMMON_ACTION"), width: 120, sortable: false, filter: false,
                         visible: pro.AccessControl.hasUpdatePermission(),
                         render: function (td, data, column) {
                             if (data.hasChildren()) {

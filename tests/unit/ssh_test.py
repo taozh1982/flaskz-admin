@@ -86,7 +86,7 @@ class SSHCase(unittest.TestCase):
         self.assertTrue(success)
         self.assertTrue('more' in (result.splitlines()[-1]).lower())
 
-        success, result = ssh_run_command_list(cisco_ios_xr_connect_kwargs, ['terminal length 0','show running-config'],{'last_result':True})
+        success, result = ssh_run_command_list(cisco_ios_xr_connect_kwargs, ['terminal length 0', 'show running-config'], {'last_result': True})
         self.assertTrue(success)
         self.assertTrue(result.endswith('end'))
 

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Email</title>
+</head>
+<body>
+    <h2>Alert Notification</h2>
+    <p>{{ summary }}</p>
+    <table border='1' style='border-collapse:collapse'>
+        <thead>
+        <tr>
+            {% for key in headers %}
+            <th>{{ key }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+            {% for alarm in alarms %}
+            <tr>
+                <td>{{ alarm.name }}</td>
+                <td>{{ alarm.value }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p>请尽快检查！</p>
+</body>
+</html>

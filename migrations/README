@@ -1,1 +1,8 @@
 Generic single-database configuration.
+
+alembic revision --autogenerate --rev-id 1.0 -m ""
+alembic revision --autogenerate --rev-id 10.0 -m "aaa"
+
+alembic upgrade head
+
+alembic downgrade 5656baaceae2

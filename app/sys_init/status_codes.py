@@ -1,5 +1,8 @@
 from flaskz import res_status_codes
 
+if res_status_codes:
+    pass
+
 
 def init_app(app):
     # response status for client use
@@ -31,11 +34,14 @@ def init_app(app):
     res_status_codes.account_disabled = 'account_disabled', "账号被禁用"
     res_status_codes.account_verify_err = 'account_verify_err', '密码错误'
 
+    # license
+    res_status_codes.license_limit_device_count = 'license_limit_device_count', '设备数量超出License限制'
 
-file_format_not_allowed = 'file_format_not_allowed', '非法文件格式'
-license_parse_error = 'license_parse_error', 'License解析错误'
-license_not_found = 'license_not_found', '系统未授权'
-license_public_key_not_found = 'license_public_key_not_found', '未发现授权公钥'
-refresh_token_err = 'refresh_token_err', '刷新Token失败'
-last_admin_role_not_allowed = 'last_admin_role_not_allowed', '当前是最后一个有管理权限的角色'
-last_admin_user_not_allowed = 'last_admin_user_not_allowed', '当前是最后一个有管理权限的用户'
+    # for project
+    res_status_codes.file_format_not_allowed = 'file_format_not_allowed', '非法文件格式'
+    res_status_codes.license_parse_error = 'license_parse_error', 'License解析错误'
+    res_status_codes.license_not_found = 'license_not_found', '系统未授权'
+    res_status_codes.license_public_key_not_found = 'license_public_key_not_found', '未发现授权公钥'
+    res_status_codes.refresh_token_err = 'refresh_token_err', '刷新Token失败'
+    res_status_codes.last_admin_role_not_allowed = 'last_admin_role_not_allowed', '当前是最后一个有管理权限的角色'
+    res_status_codes.last_admin_user_not_allowed = 'last_admin_user_not_allowed', '当前是最后一个有管理权限的用户'

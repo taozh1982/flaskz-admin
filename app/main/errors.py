@@ -47,10 +47,10 @@ def return_error(app_code, http_code):
     """
     app_msg = str(get_status_msg(app_code))
     url = request.url
-    if not url.endswith('.map'):  # .js.map / .css.map
+    if not url.endswith(('.map','.devtools.json', 'auth/account/')):  # .js.map / .css.map
         flaskz_logger.error(get_rest_log_msg(url + ' request ' + app_msg, None, False, app_code))
 
     if is_ajax() or (request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html):
         return create_response(False, app_code)
     # return (app_code, http_code)
-    return get_status_msg(app_msg), http_code  # page
+    return get_status_msg(app_msg)  # view

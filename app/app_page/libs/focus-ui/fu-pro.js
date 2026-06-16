@@ -1,4 +1,4 @@
-/*! Focus Pro v2.5.2 | http://www.focus-ui.com | 2024-05-01 */
+/*! Focus Pro v2.5.3rc5 | http://www.focus-ui.com | 2026-01-22 */
 (function(window, undefined ) {
 z.$.setSysDefault({
     //grid button render option
@@ -257,6 +257,81 @@ z.i18n.init({
         AJAX_STATUS_LICENSE_NOT_FOUND: "系统未授权",
         AJAX_STATUS_LICENSE_PUBLIC_KEY_NOT_FOUND: "未发现授权公钥",
         AJAX_STATUS_REFRESH_TOKEN_ERR: "刷新TOKEN失败"
+    },
+    "zh-Hant": {
+        PRO_GRID_OPERATE_UPDATE_LABEL: "編輯",
+        PRO_GRID_OPERATE_DELETE_LABEL: "刪除",
+
+        PRO_GRID_RESULT_SUCCESS_LABEL: "成功",
+        PRO_GRID_RESULT_FAIL_LABEL: "失敗",
+
+        PRO_AJAX_QUERY_TIPS: "查詢",
+        PRO_AJAX_ADD_TIPS: "添加",
+        PRO_AJAX_CREATE_TIPS: "創建",
+        PRO_AJAX_READ_TIPS: "讀取",
+        PRO_AJAX_UPDATE_TIPS: "編輯",
+        PRO_AJAX_DELETE_TIPS: "刪除",
+
+        PRO_AJAX_TIMEOUT_TIPS: "請求超時",
+        PRO_AJAX_FORBIDDEN_TIPS: "禁止訪問",
+        PRO_AJAX_EXCEPTION_TIPS: "請求異常",
+        PRO_AJAX_CLIENT_ERROR_TIPS: "請求錯誤",
+        PRO_AJAX_SERVER_ERROR_TIPS: "伺服器錯誤",
+        PRO_AJAX_SUCCESS_TIPS: "請求成功",
+        PRO_AJAX_FAIL_TIPS: "請求失敗",
+
+        PRO_AJAX_UPLOAD_TIPS: "上傳",
+        PRO_AJAX_DOWNLOAD_TIPS: "下載",
+
+        //DataTime format
+        PRO_TIME_WEEKS: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+        PRO_TIME_MONTHS: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        PRO_TIME_AM_UPPERCASE: "上午",
+        PRO_TIME_AM_LOWERCASE: "上午",
+        PRO_TIME_PM_UPPERCASE: "下午",
+        PRO_TIME_PM_LOWERCASE: "下午",
+
+        PRO_MESSAGE_TIPS: "提示",
+        PRO_MESSAGE_DELETE_CONFIRM: "確認刪除?",
+
+        PRO_MODAL_UPDATE_TITLE: "編輯",
+        PRO_MODAL_ADD_TITLE: "添加",
+        PRO_MODAL_VIEW_TITLE: "查看",
+        PRO_MODAL_CONFIRM_TEXT: "確認",
+        PRO_MODAL_CANCEL_TEXT: "取消",
+
+        //GView toolbar option
+        PRO_GVIEW_TOOLBAR_ZOOM_IN_TITLE: "放大",
+        PRO_GVIEW_TOOLBAR_ZOOM_OUT_TITLE: "縮小",
+        PRO_GVIEW_TOOLBAR_ZOOM_FIT_TITLE: "顯示全部",
+        PRO_GVIEW_TOOLBAR_RESET_TITLE: "重置",
+        PRO_GVIEW_TOOLBAR_SAVE_IMAGE_TITLE: "保存圖片",
+
+        PRO_SHEET_PROPERTY_COLUMN_NAME: "屬性",//column render
+        PRO_SHEET_VALUE_COLUMN_NAME: "值",//column render
+        //Ajax
+        AJAX_STATUS_DB_ADD_ERR: "數據添加異常",
+        AJAX_STATUS_DB_DELETE_ERR: "數據刪除異常",
+        AJAX_STATUS_DB_UPDATE_ERR: "數據更新異常",
+        AJAX_STATUS_DB_QUERY_ERR: "數據查詢異常",
+        AJAX_STATUS_DB_DATA_NOT_FOUND: "數據不存在",
+        AJAX_STATUS_DB_DATA_ALREADY_EXIST: "數據已存在",
+        AJAX_STATUS_DB_DATA_IN_USE: "數據使用中",
+        AJAX_STATUS_API_REQUEST_ERR: "遠端API請求異常",
+        AJAX_STATUS_URI_UNAUTHORIZED: "未登錄",
+        AJAX_STATUS_URI_FORBIDDEN: "無訪問權限",
+        AJAX_STATUS_URI_NOT_FOUND: "找不到請求資源",
+        AJAX_STATUS_METHOD_NOT_ALLOWED: "資源不支持請求方法",
+        AJAX_STATUS_INTERNAL_SERVER_ERROR: "伺服器異常",
+        AJAX_STATUS_BAD_REQUEST: "客戶端請求錯誤",
+        AJAX_STATUS_ACCOUNT_NOT_FOUND: "帳號不存在",
+        AJAX_STATUS_ACCOUNT_DISABLED: "帳號被禁用",
+        AJAX_STATUS_ACCOUNT_VERIFY_ERR: "密碼錯誤",
+        AJAX_STATUS_FILE_FORMAT_NOT_ALLOWED: "非法文件格式",
+        AJAX_STATUS_LICENSE_PARSE_ERROR: "License解析錯誤",
+        AJAX_STATUS_LICENSE_NOT_FOUND: "系統未授權",
+        AJAX_STATUS_LICENSE_PUBLIC_KEY_NOT_FOUND: "未發現授權公鑰",
+        AJAX_STATUS_REFRESH_TOKEN_ERR: "刷新TOKEN失敗"
     }
 })
 //中文，如果需要取消注释
@@ -413,7 +488,13 @@ var $DomUtil = {
         endInput = z.dom.query(endInput);
         maxInterval *= 1000 //秒
         minInterval *= 1000 //秒
-        z.dom.event.onchange(startInput, function () {
+        if (startInput._limit_datetime_interval_listener) {
+            z.dom.event.off(startInput, "change", startInput._limit_datetime_interval_listener);
+        }
+        if (endInput._limit_datetime_interval_listener) {
+            z.dom.event.off(endInput, "change", endInput._limit_datetime_interval_listener);
+        }
+        var startInputChangeListener = startInput._limit_datetime_interval_listener = function () {
             var startTime = new Date(startInput.value).getTime();
             var endTime = new Date(endInput.value).getTime();
             if (isNaN(startTime) || isNaN(endTime)) {
@@ -421,21 +502,22 @@ var $DomUtil = {
             }
             var newEndTime;
             if (maxInterval > 0) {
-                if (endTime - startTime > maxInterval || endTime < startTime) {
+                if (endTime - startTime > maxInterval || endTime <= startTime) {
                     newEndTime = new Date(startTime + maxInterval);
                 }
             }
-            if (minInterval > 0) {
-                if (endTime - startTime < minInterval || endTime < startTime) {
+            if (minInterval >= 0) {
+                if (endTime - startTime < minInterval || endTime <= startTime) {
                     newEndTime = new Date(startTime + minInterval);
                 }
             }
             if (newEndTime) {
                 z.dom.setValue(endInput, newEndTime)
             }
-        });
+        }
+        z.dom.event.onchange(startInput, startInputChangeListener);
 
-        z.dom.event.onchange(endInput, function () {
+        var endInputChangeListener = endInput._limit_datetime_interval_listener = function () {
             var startTime = new Date(startInput.value).getTime();
             var endTime = new Date(endInput.value).getTime();
             if (isNaN(startTime) || isNaN(endTime)) {
@@ -443,19 +525,26 @@ var $DomUtil = {
             }
             var newStartTime;
             if (maxInterval > 0) {
-                if (endTime - startTime > maxInterval || endTime < startTime) {
+                if (endTime - startTime > maxInterval || endTime <= startTime) {
                     newStartTime = new Date(endTime - maxInterval);
                 }
             }
-            if (minInterval > 0) {
-                if (endTime - startTime < minInterval || endTime < startTime) {
+            if (minInterval >= 0) {
+                if (endTime - startTime < minInterval || endTime <= startTime) {
                     newStartTime = new Date(endTime - minInterval);
                 }
             }
             if (newStartTime) {
+                var type = z.dom.getAttribute(startInput, "type");
+                if (type === "date") {
+                    newStartTime = newStartTime.toISOString().slice(0, 10);
+                }
+
                 z.dom.setValue(startInput, newStartTime)
             }
-        });
+        }
+        z.dom.event.onchange(endInput, endInputChangeListener);
+        endInputChangeListener();
     }
 }
 var $DomI18n = {
@@ -502,9 +591,10 @@ var $DomI18n = {
      */
     getBomLang: function () {
         var lang = window.navigator.language || window.navigator.userLanguage;
-        if (lang) {
-            return lang.toLowerCase().split("-")[0]
-        }
+        return lang || ""
+        /*if (lang) {
+            return lang;//lang.toLowerCase().split("-")[0]
+        }*/
     },
     /**
      * 返回key对应的i18n值
@@ -513,7 +603,7 @@ var $DomI18n = {
      * @return {string}
      */
     getI18nLabel: function (key) {
-        return z.i18n.t(key)
+        return z.i18n(key)
     },
 
     _initDomI18n: function (option) {
@@ -623,10 +713,10 @@ var $GridUtil = {
             key: z.getDefault("PRO_GRID_RESULT_KEY"),
             success_value: z.getDefault("PRO_GRID_RESULT_SUCCESS_VALUE"),
             success_class: z.getDefault("PRO_GRID_RESULT_SUCCESS_CLASS"),
-            success_label: z.i18n.t("PRO_GRID_RESULT_SUCCESS_LABEL"),
+            success_label: z.i18n("PRO_GRID_RESULT_SUCCESS_LABEL"),
             fail_value: z.getDefault("PRO_GRID_RESULT_FAIL_VALUE"),
             fail_class: z.getDefault("PRO_GRID_RESULT_FAIL_CLASS"),
-            fail_label: z.i18n.t("PRO_GRID_RESULT_FAIL_LABEL")
+            fail_label: z.i18n("PRO_GRID_RESULT_FAIL_LABEL")
         }, opts);
         var result;
         if (opts.hasOwnProperty("value")) {
@@ -743,13 +833,13 @@ var $GridUtil = {
     renderUpdateOperateButton: function (grid, data, columnOrField, td, onclick, option) {
         return $GridUtil.renderOperateButton(grid, data, columnOrField, td, onclick, z.util.mergeObject({
             className: z.getDefault("PRO_GRID_OPERATE_UPDATE_CLASS"),
-            label: z.i18n.t("PRO_GRID_OPERATE_UPDATE_LABEL")
+            label: z.i18n("PRO_GRID_OPERATE_UPDATE_LABEL")
         }, option))
     },
     renderDeleteOperateButton: function (grid, data, columnOrField, td, onclick, option) {
         return $GridUtil.renderOperateButton(grid, data, columnOrField, td, onclick, z.util.mergeObject({
             className: z.getDefault("PRO_GRID_OPERATE_DELETE_CLASS"),
-            label: z.i18n.t("PRO_GRID_OPERATE_DELETE_LABEL")
+            label: z.i18n("PRO_GRID_OPERATE_DELETE_LABEL")
         }, option))
     },
     renderUpdateDeleteOperateButton: function (grid, data, columnOrField, td, onUpdate, onDelete, option) {
@@ -822,6 +912,90 @@ var $GridUtil = {
         }, option);
     },
 
+    renderList: function (grid, td, data, option) {
+        option = z.util.mergeObject({
+            ordered: true,
+            sort: false,
+            separator: /[;,]\s*/,
+            prop: null,
+            values: null,
+            less_count: 10,
+            show_all: false,
+            show_all_label: "Show All",
+            show_less_label: "Show Less"
+        }, option);
+        var prop = option.prop
+        if (!prop) {
+            return;
+        }
+
+        var listItems = []
+        var values = option.values;
+        if (!z.type.isArray(values)) {
+            if (z.type.isData(data)) {
+                values = data.get(prop);
+            } else if (z.type.isObject(data)) {
+                values = data[prop];
+            }
+        }
+        if (z.type.isString(values)) {
+            values = (values || "").split(option.separator);
+        }
+        if (!z.type.isArray(values)) {
+            return;
+        }
+
+        if (option.sort === true) {
+            values.sort();
+        }
+        z.util.eachArray(values, function (item) {
+            if (item) {
+                listItems.push("<li>" + item + "</li>")
+            }
+        });
+        if (listItems.length === 0) {
+            return;
+        }
+        var less_count = option.less_count;
+        if (less_count <= 0 || listItems.length <= less_count) {//显示全部
+            if (option.ordered === false) {
+                td.innerHTML = "<ul>" + listItems.join("") + "</ul>"
+            } else {
+                td.innerHTML = "<ol>" + listItems.join("") + "</ol>"
+            }
+            return;
+        }
+        var showAllProp = "_show_all_" + prop;
+        var showAll = false;
+        if (data.has(showAllProp)) {
+            showAll = data.get(showAllProp) === true
+        } else {
+            showAll = option.show_all === true;
+        }
+        if (!showAll) {
+            listItems = listItems.splice(0, less_count);
+        }
+        if (option.ordered === false) {
+            td.innerHTML = "<ul>" + listItems.join("") + "</ul>"
+        } else {
+            td.innerHTML = "<ol>" + listItems.join("") + "</ol>"
+        }
+        var expandBtnProp = "_list_expand_" + prop + "_btn"
+        var expandBtn = data[expandBtnProp]
+        if (!expandBtn) {
+            expandBtn = data[expandBtnProp] = z.dom.create("<button class='btn btn-link' style='margin-left: 0.8em;font-size: 86%'></button>");
+            z.dom.event.onclick(expandBtn, function () {
+                data.set(showAllProp, !data.get(showAllProp));
+            })
+        }
+        td.appendChild(expandBtn);
+        if (!showAll) {
+            expandBtn.innerHTML = option.show_all_label;
+        } else {
+            expandBtn.innerHTML = option.show_less_label;
+        }
+    },
+
     createNestedGrid: function (td, items, cls) {
         if (items && items.length > 0) {
             var table = z.dom.create("table");
@@ -864,7 +1038,10 @@ var $GridUtil = {
         };
         grid.updateInputFilter = updateFilter;//外部调用
         z.dom.event.on(filterInput, "input", function () {
-            updateFilter();
+            z.util.callRAFLater(function () {
+                updateFilter();
+            });
+            // updateFilter();
         });
         z.dom.event.on(filterInput, "keydown.Escape", function (evt) {
             updateFilter("");
@@ -991,11 +1168,11 @@ z.util.mergeObject($GridUtil, {
     },
     createUpdateOPButton: function (td, data, column, onClick, opts) {
         opts = z.util.mergeObject({className: z.getDefault("PRO_GRID_OPERATE_UPDATE_CLASS")}, opts);
-        return $GridUtil.createOPButton(td, data, "update", z.i18n.t("PRO_GRID_OPERATE_UPDATE_LABEL"), onClick, opts);
+        return $GridUtil.createOPButton(td, data, "update", z.i18n("PRO_GRID_OPERATE_UPDATE_LABEL"), onClick, opts);
     },
     createDeleteOPButton: function (td, data, column, onClick, opts) {
         opts = z.util.mergeObject({className: z.getDefault("PRO_GRID_OPERATE_DELETE_CLASS")}, opts);
-        return $GridUtil.createOPButton(td, data, "delete", z.i18n.t("PRO_GRID_OPERATE_DELETE_LABEL"), onClick, opts);
+        return $GridUtil.createOPButton(td, data, "delete", z.i18n("PRO_GRID_OPERATE_DELETE_LABEL"), onClick, opts);
     },
     createUpdateDeleteOPButton: function (td, data, column, onEditClick, onRemoveClick, opts) {
         $GridUtil.createUpdateOPButton(td, data, column, onEditClick, opts);
@@ -1140,7 +1317,7 @@ z.util.mergeObject($GridUtil, {
                 if (z.type.isFunction(render)) {
                     td.innerHTML = "";
                     render(td, data);
-                    var inner = td.innerHTML;
+                    var inner = td.innerText;
                     if (inner && inner.toLowerCase().indexOf(filterText) >= 0) {
                         has = true;
                     }
@@ -1209,10 +1386,10 @@ var $ModalUtil = {
     createModal: function (options) {
         options = z.util.mergeObject({
             confirm_class: z.getDefault("PRO_MODAL_CONFIRM_CLASS"),
-            confirm_text: z.i18n.t("PRO_MODAL_CONFIRM_TEXT"),
+            confirm_text: z.i18n("PRO_MODAL_CONFIRM_TEXT"),
 
             cancel_class: z.getDefault("PRO_MODAL_CANCEL_CLASS"),
-            cancel_text: z.i18n.t("PRO_MODAL_CANCEL_TEXT")
+            cancel_text: z.i18n("PRO_MODAL_CANCEL_TEXT")
         }, options);
         var modal_class = "zw-modal";
         if (options.modal_class) {
@@ -1234,19 +1411,25 @@ var $ModalUtil = {
             body.setAttribute("id", options.body_id);
         }
         var footer = z.dom.create("div", "footer");
-        if (options.confirm_button !== false) {
-            var confirmBtn = z.dom.create("button", options.confirm_class || "");
-            confirmBtn.innerHTML = options.confirm_text;
-            if (options.confirm_click) {
-                z.dom.event.onclick(confirmBtn, options.confirm_click);
+        var footer_buttons = options.buttons || []
+        footer_buttons.forEach(function (button) {
+            footer.appendChild(button);
+        });
+        if (footer_buttons.length === 0) {
+            if (options.confirm_button !== false) {
+                var confirmBtn = z.dom.create("button", options.confirm_class || "");
+                confirmBtn.innerHTML = options.confirm_text;
+                if (options.confirm_click) {
+                    z.dom.event.onclick(confirmBtn, options.confirm_click);
+                }
+                footer.appendChild(confirmBtn);
             }
-            footer.appendChild(confirmBtn);
-        }
-        if (options.cancel_button !== false) {
-            var cancelBtn = z.dom.create("button", options.cancel_class || "");
-            cancelBtn.setAttribute("data-dismiss", "modal");
-            cancelBtn.innerHTML = options.cancel_text;
-            footer.appendChild(cancelBtn);
+            if (options.cancel_button !== false) {
+                var cancelBtn = z.dom.create("button", options.cancel_class || "");
+                cancelBtn.setAttribute("data-dismiss", "modal");
+                cancelBtn.innerHTML = options.cancel_text;
+                footer.appendChild(cancelBtn);
+            }
         }
         content.appendChild(header);
         content.appendChild(body);
@@ -1263,10 +1446,10 @@ var $ModalUtil = {
     /*showModal: function (content_options, modal_options) {
         content_options = z.util.mergeObject({
             ok_button_class: z.getDefault("PRO_MODAL_CONFIRM_CLASS"),
-            ok_button_text: z.i18n.t("PRO_MODAL_CONFIRM_TEXT"),
+            ok_button_text: z.i18n("PRO_MODAL_CONFIRM_TEXT"),
 
             cancel_button_class: z.getDefault("PRO_MODAL_CANCEL_CLASS"),
-            cancel_button_text: z.i18n.t("PRO_MODAL_CANCEL_TEXT")
+            cancel_button_text: z.i18n("PRO_MODAL_CANCEL_TEXT")
         }, content_options);
         var modal_class = "zw-modal";
         if (content_options.modal_class) {
@@ -1321,32 +1504,32 @@ var $ModalUtil = {
 var $AjaxCRUD = {
     query: function (options) {
         $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, {
-            method: z.getDefault("PRO_AJAX_QUERY_METHOD"), tips: z.i18n.t("PRO_AJAX_QUERY_TIPS")
+            method: z.getDefault("PRO_AJAX_QUERY_METHOD"), tips: z.i18n("PRO_AJAX_QUERY_TIPS")
         }));
     },
     add: function (options) {
         $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, {
-            method: z.getDefault("PRO_AJAX_ADD_METHOD"), tips: z.i18n.t("PRO_AJAX_ADD_TIPS")
+            method: z.getDefault("PRO_AJAX_ADD_METHOD"), tips: z.i18n("PRO_AJAX_ADD_TIPS")
         }));
     },
     create: function (options) {
         $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, {
-            method: z.getDefault("PRO_AJAX_CREATE_METHOD"), tips: z.i18n.t("PRO_AJAX_CREATE_TIPS")
+            method: z.getDefault("PRO_AJAX_CREATE_METHOD"), tips: z.i18n("PRO_AJAX_CREATE_TIPS")
         }));
     },
     read: function (options) {
         $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, {
-            method: z.getDefault("PRO_AJAX_READ_METHOD"), tips: z.i18n.t("PRO_AJAX_READ_TIPS")
+            method: z.getDefault("PRO_AJAX_READ_METHOD"), tips: z.i18n("PRO_AJAX_READ_TIPS")
         }));
     },
     update: function (options) {
         $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, {
-            method: z.getDefault("PRO_AJAX_UPDATE_METHOD"), tips: z.i18n.t("PRO_AJAX_UPDATE_TIPS")
+            method: z.getDefault("PRO_AJAX_UPDATE_METHOD"), tips: z.i18n("PRO_AJAX_UPDATE_TIPS")
         }));
     },
     delete: function (options) {
         $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, {
-            method: z.getDefault("PRO_AJAX_DELETE_METHOD"), tips: z.i18n.t("PRO_AJAX_DELETE_TIPS")
+            method: z.getDefault("PRO_AJAX_DELETE_METHOD"), tips: z.i18n("PRO_AJAX_DELETE_TIPS")
         }));
     },
     /**
@@ -1375,6 +1558,8 @@ var $AjaxCRUD = {
         if (tips == null) {
             tips = "";
         }
+
+        var activeElement = document.activeElement;
         var loading = options.loading;
         if (loading !== false) {
             z.widget.loading(tips, options.loading_parent);
@@ -1392,22 +1577,25 @@ var $AjaxCRUD = {
                 if (loading !== false) {
                     z.widget.loading(false, options.loading_parent);
                 }
+                if (activeElement) {
+                    activeElement.focus();
+                }
                 var failContent;
                 var codeType = status / 100 | 0;
                 if (codeType === 2) {
                     if (result.hasOwnProperty("status") && result.status !== z.getDefault("PRO_AJAX_SUCCESS_STATE")) {
-                        failContent = z.i18n.t("PRO_AJAX_FAIL_TIPS");
+                        failContent = z.i18n("PRO_AJAX_FAIL_TIPS");
                     }
                 } else if (codeType === 4) {
                     if (status === 408) {
-                        failContent = tips + z.i18n.t("PRO_AJAX_TIMEOUT_TIPS");
+                        failContent = tips + z.i18n("PRO_AJAX_TIMEOUT_TIPS");
                     } else {
-                        failContent = z.i18n.t("PRO_AJAX_CLIENT_ERROR_TIPS");
+                        failContent = z.i18n("PRO_AJAX_CLIENT_ERROR_TIPS");
                     }
                 } else if (codeType === 5) {
-                    failContent = z.i18n.t("PRO_AJAX_SERVER_ERROR_TIPS");
+                    failContent = z.i18n("PRO_AJAX_SERVER_ERROR_TIPS");
                 } else {
-                    failContent = tips + z.i18n.t("PRO_AJAX_EXCEPTION_TIPS");
+                    failContent = tips + z.i18n("PRO_AJAX_EXCEPTION_TIPS");
                 }
                 if (options.complete) {
                     options.complete.apply(options.context, [result, httpRequest]);
@@ -1427,7 +1615,7 @@ var $AjaxCRUD = {
                     return;
                 }
                 if (options.success_notify !== false) {
-                    z.widget.notify(tips + z.i18n.t("PRO_AJAX_SUCCESS_TIPS"), z.util.mergeObject(
+                    z.widget.notify(tips + z.i18n("PRO_AJAX_SUCCESS_TIPS"), z.util.mergeObject(
                         {type: "success", duration: 1000}, z.getDefault("PRO_AJAX_NOTIFY_OPTIONS"), z.getDefault("PRO_AJAX_SUCCESS_NOTIFY_OPTIONS")));
                 }
                 if (options.success) {
@@ -1440,7 +1628,10 @@ var $AjaxCRUD = {
         return result.message;
     },
     showError: function (error) {
-        z.widget.notify(error, z.util.mergeObject({type: "error", close_on_click: false}, z.getDefault("PRO_AJAX_NOTIFY_OPTIONS"), z.getDefault("PRO_AJAX_FAIL_NOTIFY_OPTIONS")));
+        z.widget.notify(error, z.util.mergeObject({
+            type: "error",
+            close_on_click: false
+        }, z.getDefault("PRO_AJAX_NOTIFY_OPTIONS"), z.getDefault("PRO_AJAX_FAIL_NOTIFY_OPTIONS")));
     },
     _getURL: function (url, url_params) {
         if (z.type.isObject(url_params)) {
@@ -1465,7 +1656,11 @@ var $AjaxCRUD = {
                 url: options
             }
         }
-        return z.util.mergeObject({}, defaultOptions, options)
+        // return z.util.mergeObject({}, defaultOptions, options)
+        var ajax_options = z.util.deepMergeObject({}, (defaultOptions || {}).ajax_options || {}, (options || {}).ajax_options || {})
+        var _options = z.util.mergeObject({}, defaultOptions, options)
+        _options.ajax_options = ajax_options;
+        return _options;
     }
 };
 //多页面数据共享
@@ -1545,7 +1740,7 @@ var $FileUtil = {
             options = {url: z.$.StrUtil.replaceVars(options, urlParameters)};
         }
         $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, { //@2024-04-15修改为options模式
-            tips: z.i18n.t("PRO_AJAX_DOWNLOAD_TIPS"),
+            tips: z.i18n("PRO_AJAX_DOWNLOAD_TIPS"),
             success_notify: false,
             ajax_options: {
                 responseType: "blob"
@@ -1556,30 +1751,38 @@ var $FileUtil = {
             }
         }));
     },
-
     upload: function (options) {
         var files = options.files;
         var len = files.length;
         if (len === 0) {
             return;
         }
-        var filename = options.filename || z.getDefault("PRO_AJAX_UPLOAD_FILE_NAME");
+        var file_name = options.filename || z.getDefault("PRO_AJAX_UPLOAD_FILE_NAME");
+        var formData = $FileUtil.createFileFormData(files, file_name)
+        var _options = $AjaxCRUD._getOptions(options, {
+            method: z.getDefault("PRO_AJAX_UPLOAD_METHOD"),
+            tips: z.i18n("PRO_AJAX_UPLOAD_TIPS"),
+            data: formData
+            /*ajax_options: {
+                headers: {"Content-Type": false}
+            }*/
+        })
+        z.util.setObjectDeepValue(_options, "ajax_options.headers.Content-Type", false)
+        return $AjaxCRUD.ajax(_options);
+    },
+    createFileFormData: function (files, file_name) {
         var formData = new FormData();
-        if (len === 1) {
-            formData.append(filename, files[0]);
+        if (!file_name) {
+            file_name = z.getDefault("PRO_AJAX_UPLOAD_FILE_NAME");
+        }
+        if (files.length === 1) {
+            formData.append(file_name, files[0]);
         } else {
             for (var i = 0; i < len; i++) {
-                formData.append(filename + '_' + i, files[i]);
+                formData.append(file_name + '_' + i, files[i]);
             }
         }
-        return $AjaxCRUD.ajax($AjaxCRUD._getOptions(options, {
-            method: z.getDefault("PRO_AJAX_UPLOAD_METHOD"),
-            tips: z.i18n.t("PRO_AJAX_UPLOAD_TIPS"),
-            data: formData,
-            ajax_options: {
-                headers: {"Content-Type": false}
-            }
-        }));
+        return formData;
     },
     /**
      *
@@ -1615,9 +1818,9 @@ var $FileUtil = {
      * js-get:
      * pro.FileUtil.upload({
      *        files: z.dom.getValue("#fileInput"),
-     *        url: AjaxUrl.sys_licenses.add,
+     *        url: AjaxUrl.sys_license.add,
      *        success: function () {
-     *            z.widget.alert(z.i18n.t("SYS_LICENSES_UPLOAD_SUCCESS_MSG"), z.i18n.t("PRO_MESSAGE_TIPS"), function () {
+     *            z.widget.alert(z.i18n("SYS_LICENSES_UPLOAD_SUCCESS_MSG"), z.i18n("PRO_MESSAGE_TIPS"), function () {
      *                window.top.location.reload();
      *            });
      *        }
@@ -1658,9 +1861,11 @@ var $FileUtil = {
     _getContentDispositionFilename: function (httpRequest) {
         var contentDispositionHeader = httpRequest.getResponseHeader('Content-Disposition')
         var filename = '';
-        var matches = contentDispositionHeader.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-        if (matches != null && matches[1]) {
-            filename = matches[1].replace(/['"]/g, '');
+        if (contentDispositionHeader) {//@2024-08-08添加
+            var matches = contentDispositionHeader.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+            if (matches != null && matches[1]) {
+                filename = matches[1].replace(/['"]/g, '');
+            }
         }
         return filename;
     },
@@ -1707,8 +1912,8 @@ var $TimeUtil = {
             outputFormat = z.getDefault("PRO_TIME_FORMAT");
         }
 
-        var aDays = z.i18n.t("PRO_TIME_WEEKS"),
-            aMonths = z.i18n.t("PRO_TIME_MONTHS");
+        var aDays = z.i18n("PRO_TIME_WEEKS"),
+            aMonths = z.i18n("PRO_TIME_MONTHS");
 
         var nDay = dateTime.getDay(),
             nDate = dateTime.getDate(),
@@ -1751,8 +1956,8 @@ var $TimeUtil = {
                 '%l': (nHour + 11) % 12 + 1,
                 '%m': zeroPad(nMonth + 1, 2),
                 '%M': zeroPad(dateTime.getMinutes(), 2),
-                '%p': (nHour < 12) ? z.i18n.t("PRO_TIME_AM_UPPERCASE") : z.i18n.t("PRO_TIME_PM_UPPERCASE"),
-                '%P': (nHour < 12) ? z.i18n.t("PRO_TIME_AM_LOWERCASE") : z.i18n.t("PRO_TIME_PM_LOWERCASE"),
+                '%p': (nHour < 12) ? z.i18n("PRO_TIME_AM_UPPERCASE") : z.i18n("PRO_TIME_PM_UPPERCASE"),
+                '%P': (nHour < 12) ? z.i18n("PRO_TIME_AM_LOWERCASE") : z.i18n("PRO_TIME_PM_LOWERCASE"),
                 '%s': Math.round(dateTime.getTime() / 1000),
                 '%S': zeroPad(dateTime.getSeconds(), 2),
                 '%u': nDay || 7,
@@ -2020,6 +2225,7 @@ var $DataUtil = {
             return childrenArr.indexOf(item) < 0
         })
     },
+
     getArrayMap: function (arr, mapKey, mapValueKey, itemChildrenKey) {
         var map = {};
         if (mapKey == null) {
@@ -2194,6 +2400,46 @@ var $NetworkUtil = {
         return 32;
     }
 };
+var $SortUtil = {
+    sort: function (data, prop, reverse, value_convert) {
+        if (data.length === 0) {
+            return data
+        }
+        var isData = z.type.isData(data[0]);
+        var isObject = z.type.isObject(data[0]);
+        data.sort(function (d1, d2) {
+            var v1, v2;
+            if (isData) {
+                v1 = d1.get(prop);
+                v2 = d2.get(prop);
+            } else if (isObject) {
+                v1 = d1[prop];
+                v2 = d2[prop];
+            } else {
+                v1 = d1;
+                v2 = d2;
+            }
+            if (value_convert) {
+                v1 = value_convert(v1)
+                v2 = value_convert(v2)
+            }
+            if (v1 < v2) {
+                return -1;
+            }
+            if (v1 > v2) {
+                return 1;
+            }
+            return 0;
+        })
+        if (reverse === true) {
+            data.reverse();
+        }
+        return data;
+    },
+    sorted: function (data, prop, reverse, value_convert) {
+        return $SortUtil.sort(data.slice(), prop, reverse, value_convert);
+    }
+}
 var $SheetUtil = {
     parseToKVData: function (data, option) {
         option = z.util.mergeObject({
@@ -2493,7 +2739,7 @@ var $CRUDTablePage = {
         return grid;
     },
     _is_pageable: function () {
-        return this.page_options.grid_options.pageable === true;
+        return this.page_options.grid_options.pageable === true || z.type.isObject(this.page_options.grid_options.pageable);
     },
     /**
      * 创建表格
@@ -2566,7 +2812,8 @@ var $CRUDTablePage = {
                 this.handleSearchChange();
             }, this);
             z.dom.event.on(this.page_options.search_input, "keydown.Enter", function (evt) {
-                this.handleSearchChange();
+                z.util.callRAFLater(this.handleSearchChange, this);
+                // this.handleSearchChange();
             }, this);
         }
 
@@ -2621,13 +2868,13 @@ var $CRUDTablePage = {
         var modal_title;
         switch (editType) {
             case "add":
-                modal_title = z.i18n.t("PRO_MODAL_ADD_TITLE");
+                modal_title = z.i18n("PRO_MODAL_ADD_TITLE");
                 break;
             case "update":
-                modal_title = z.i18n.t("PRO_MODAL_UPDATE_TITLE");
+                modal_title = z.i18n("PRO_MODAL_UPDATE_TITLE");
                 break;
             case "view":
-                modal_title = z.i18n.t("PRO_MODAL_VIEW_TITLE");
+                modal_title = z.i18n("PRO_MODAL_VIEW_TITLE");
                 break;
             default:
                 modal_title = " "
@@ -2754,6 +3001,13 @@ var $CRUDTablePage = {
                 // variables: {id: ids},
                 data: delete_data,
                 success: function (result) {
+                    if (bat === true) {
+                        _this.queryData();
+                        return;
+                    }
+                    modelDataArr.forEach(function (data) {//@2024-05-08 添加
+                        data.removeProperty("parent");
+                    })
                     _this.grid.removeData(modelDataArr);
                     _this._onModelDelete(modelDataArr);
                 }
@@ -2762,15 +3016,15 @@ var $CRUDTablePage = {
         if (confirm === false) {
             ajaxDelete();
         } else {
-            z.widget.confirm(z.i18n.t("PRO_MESSAGE_DELETE_CONFIRM"), z.i18n.t("PRO_MESSAGE_TIPS"), function (result) {//callback
+            z.widget.confirm(z.i18n("PRO_MESSAGE_DELETE_CONFIRM"), z.i18n("PRO_MESSAGE_TIPS"), function (result) {//callback
                 if (result) {
                     ajaxDelete();
                 }
             }, {
                 confirm_class: z.getDefault("PRO_MODAL_CONFIRM_CLASS"),
                 cancel_class: z.getDefault("PRO_MODAL_CANCEL_CLASS"),
-                confirm_text: z.i18n.t("PRO_MODAL_CONFIRM_TEXT"),
-                cancel_text: z.i18n.t("PRO_MODAL_CANCEL_TEXT")
+                confirm_text: z.i18n("PRO_MODAL_CONFIRM_TEXT"),
+                cancel_text: z.i18n("PRO_MODAL_CANCEL_TEXT")
             });
         }
     },
@@ -2797,7 +3051,7 @@ var $CRUDTablePage = {
         dataArr.forEach(function (item) {
             ids.push(item.get("id"));
         });
-        if(bat){
+        if (bat) {
             return ids;
         }
         return {
@@ -2826,7 +3080,10 @@ var $CRUDTablePage = {
      */
     queryData: function (options) {
         var _this = this;
-        _this.grid.clearData();
+        options = this.getQueryAjaxOption(options);
+        if (!options || options.clear !== false) {
+            _this.grid.clearData();
+        }
         $AjaxCRUD.query(z.util.mergeObject({
             url: _this.page_options.url.query || _this.page_options.url.search,
             data: _this.getQueryPayload(_this.searchConfig, _this.pageConfig, _this.sortConfig),
@@ -2856,6 +3113,9 @@ var $CRUDTablePage = {
                 // }
             }
         }, options));
+    },
+    getQueryAjaxOption: function (options) {
+        return options;
     },
     /**
      * 返回查询的payload参数
@@ -3247,13 +3507,13 @@ var $CrudPage = function (prefix) {
                 var modalTitle;
                 switch (editType) {
                     case "add":
-                        modalTitle = z.i18n.t("PRO_MODAL_ADD_TITLE");
+                        modalTitle = z.i18n("PRO_MODAL_ADD_TITLE");
                         break;
                     case "update":
-                        modalTitle = z.i18n.t("PRO_MODAL_UPDATE_TITLE");
+                        modalTitle = z.i18n("PRO_MODAL_UPDATE_TITLE");
                         break;
                     case "view":
-                        modalTitle = z.i18n.t("PRO_MODAL_VIEW_TITLE");
+                        modalTitle = z.i18n("PRO_MODAL_VIEW_TITLE");
                         break;
                     default:
                         modalTitle = " "
@@ -3450,15 +3710,15 @@ var $CrudPage = function (prefix) {
                     modelDelete();
                     return;
                 }
-                z.widget.confirm(z.i18n.t("PRO_MESSAGE_DELETE_CONFIRM"), z.i18n.t("PRO_MESSAGE_TIPS"), function (result) {//callback
+                z.widget.confirm(z.i18n("PRO_MESSAGE_DELETE_CONFIRM"), z.i18n("PRO_MESSAGE_TIPS"), function (result) {//callback
                     if (result) {
                         modelDelete();
                     }
                 }, {
                     confirm_class: z.getDefault("PRO_MODAL_CONFIRM_CLASS"),
                     cancel_class: z.getDefault("PRO_MODAL_CANCEL_CLASS"),
-                    confirm_text: z.i18n.t("PRO_MODAL_CONFIRM_TEXT"),
-                    cancel_text: z.i18n.t("PRO_MODAL_CANCEL_TEXT")
+                    confirm_text: z.i18n("PRO_MODAL_CONFIRM_TEXT"),
+                    cancel_text: z.i18n("PRO_MODAL_CANCEL_TEXT")
                 });
             },
             /**
@@ -3536,10 +3796,10 @@ var $PropertySheet = function () {
     var _this = this;
     this.setColumns([
         z.util.mergeObject({
-            name: z.i18n.t("PRO_SHEET_PROPERTY_COLUMN_NAME"), field: z.getDefault("PRO_SHEET_PROPERTY_COLUMN_FIELD"), sortable: true
+            name: z.i18n("PRO_SHEET_PROPERTY_COLUMN_NAME"), field: z.getDefault("PRO_SHEET_PROPERTY_COLUMN_FIELD"), sortable: true
         }, this.get("property_column_properties")),
         z.util.mergeObject({
-            name: z.i18n.t("PRO_SHEET_VALUE_COLUMN_NAME"), filter: false,
+            name: z.i18n("PRO_SHEET_VALUE_COLUMN_NAME"), filter: false,
             render: function (td, propertyRowData) {
                 if (_this._getPropertyField(propertyRowData)) {//'attr.name'
                     var editType = _this._getEditType(propertyRowData);//edit/view
@@ -4107,7 +4367,7 @@ $GVUtil.parseData = $GVDataParser.parseJSON
 z.util.mergeObject($GVUtil, {
     initSubviewNav: function (gView, option) {
         option = z.util.mergeObject({
-            nav_style: "position: absolute;left: 60px;user-select: none;padding:2px",
+            nav_style: "position: absolute;left: 60px;top: 3px;user-select: none;padding:2px",
             active_style: "color: #006bce;cursor: pointer;",
             top_label: "<svg width='0.9em' height='0.9em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'></path></svg>"
         }, option);
@@ -4118,7 +4378,8 @@ z.util.mergeObject($GVUtil, {
         }
 
         var navDiv = z.dom.create('<div id="navDiv" style="' + option.nav_style + '"></div>');
-        gView.getRoot().appendChild(navDiv);
+        var navParent = gView.getRoot().parentNode || gView.getRoot();
+        navParent.appendChild(navDiv);
         $GVUtil._updateSubviewNav(gView, navDiv, option);
 
         gView.onViewChange(function (evt) {
@@ -4198,32 +4459,32 @@ z.util.mergeObject($GVUtil, {
         var toolbar = z.dom.create("div", 'gv-toolbar');
         $GVUtil.createToolbarBtn(toolbar,
             '<svg><line x1="11" y1="3" x2="11" y2="19"></line><line x1="3" y1="11" x2="19" y2="11"></line></svg>',
-            z.i18n.t("PRO_GVIEW_TOOLBAR_ZOOM_IN_TITLE"),
+            z.i18n("PRO_GVIEW_TOOLBAR_ZOOM_IN_TITLE"),
             function () {
                 gView.zoomIn(false);
             });
         $GVUtil.createToolbarBtn(toolbar,
             '<svg><line x1="3" y1="11" x2="19" y2="11"></line></svg>',
-            z.i18n.t("PRO_GVIEW_TOOLBAR_ZOOM_OUT_TITLE"),
+            z.i18n("PRO_GVIEW_TOOLBAR_ZOOM_OUT_TITLE"),
             function () {
                 gView.zoomOut(false);
             });
         $GVUtil.createToolbarBtn(toolbar,
             '<svg><path d="M8 3H4a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M2 16v3a2 2 0 002 2h3"></path></svg>',
-            z.i18n.t("PRO_GVIEW_TOOLBAR_ZOOM_FIT_TITLE"),
+            z.i18n("PRO_GVIEW_TOOLBAR_ZOOM_FIT_TITLE"),
             function () {
                 gView.zoomFit();
             });
         $GVUtil.createToolbarBtn(toolbar,
             '<svg><polyline points="17 2 20 5 17 8"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h13"></path><polyline points="7 20 3 17 7 14"></polyline><path d="M20 11v2a4 4 0 0 1-4 4H3"></path></svg>',
-            z.i18n.t("PRO_GVIEW_TOOLBAR_RESET_TITLE"),
+            z.i18n("PRO_GVIEW_TOOLBAR_RESET_TITLE"),
             function () {
                 gView.resetTransform();
             });
         toolbar.appendChild(z.dom.create("br"));
         $GVUtil.createToolbarBtn(toolbar,
             '<svg><rect x="2" y="2" width="18" height="18" rx="2" ry="2"></rect><circle cx="8" cy="8" r="1.5"></circle><polyline points="20 14 15 9 4 20"></polyline></svg>',
-            z.i18n.t("PRO_GVIEW_TOOLBAR_SAVE_IMAGE_TITLE"),
+            z.i18n("PRO_GVIEW_TOOLBAR_SAVE_IMAGE_TITLE"),
             function () {
                 $GVUtil._saveAsImg(gView.toImage(), "gv.png");
             });
@@ -4646,14 +4907,25 @@ z.util.extendClass($GVEditController, Object, z.util.mergeObject({
                 }
                 //属性优先级， gView编辑属性 < data编辑属性 < 设置的属性，编辑器的属性值优先级最低
                 var viewValue = _this.getObjectEditValue(gView, _this._getObjectEditValue(gView), data);
+
                 var dataValue = _this.getObjectEditValue(data, _this._getObjectEditValue(data), data);
-                var props = z.util.mergeObject({}, viewValue, dataValue || {}, original_props);
+                var props = null;
+                // z.util.mergeObject({}, viewValue, dataValue || {}, original_props);
                 if (_this.data_property_first === true) { //data属性优先
-                    var dataProps = data.gets(false);
                     // todo link设置了type，全局设置了link_type，不启作用，getDataProperties的优先级最高，viewValue单独判断？
+                    var dataProps = data.gets(false);
+                    props = z.util.filterObject(z.util.mergeObject({}, viewValue), function (key, value) {
+                        if (key.startsWith("node_") || key.startsWith("link_") || key.startsWith("group_")) {
+                            return !dataProps.hasOwnProperty(key.slice(key.indexOf('_') + 1))
+                        }
+                        return true;
+                    });
+                    props = z.util.mergeObject(props,dataValue || {}, original_props)
                     props = z.util.filterObject(props, function (key, value) {
                         return !dataProps.hasOwnProperty(key);
                     });
+                } else {
+                    props = z.util.mergeObject({}, viewValue, dataValue || {}, original_props);
                 }
                 return props;
             };
@@ -6451,6 +6723,7 @@ var pro = {
     DataUtil: $DataUtil,
     ValidUtil: $ValidUtil,
     NetworkUtil: $NetworkUtil,
+    SortUtil: $SortUtil,
 
     SheetUtil: $SheetUtil,
     VisibleUtil: $VisibleUtil,

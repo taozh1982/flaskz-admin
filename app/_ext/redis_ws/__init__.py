@@ -19,29 +19,19 @@ REDIS_WEBSOCKET_DEFAULT_CHANNEL = "ws:channel"  # redis websocket订阅的默认
 REDIS_WEBSOCKET_MESSAGE_TIMEOUT = 1  # redis websocket消息等待时间
 """
 import asyncio
-import multiprocessing
+import signal
 
 import redis
 import redisz
 import websockets
 from flaskz import log
 from flaskz.log import flaskz_logger
-from flaskz.utils import get_app_config
 
 ws_server_config = {}  # 进程
 
 
-def init_websocket(app):
-    """
-    初始化redis websocket
-    """
-    multiprocessing.Process(target=run_process_server, args=(get_app_config(),), daemon=True).start()
-
-
-def run_process_server(app_config):
-    """
-    初始化websocket进程
-    """
+def start_msg_server(app_config):
+    """ 初始化 WebSocket 进程 """
     global ws_server_config
     log.init_log(app_config)
     ws_server_config.update({
@@ -52,27 +42,40 @@ def run_process_server(app_config):
         'REDIS_WEBSOCKET_DEFAULT_CHANNEL': app_config.get('REDIS_WEBSOCKET_DEFAULT_CHANNEL'),
         'REDIS_WEBSOCKET_MESSAGE_TIMEOUT': app_config.get('REDIS_WEBSOCKET_MESSAGE_TIMEOUT'),
     })
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        loop.add_signal_handler(sig, lambda: asyncio.create_task(shutdown(loop)))
+
     try:
-        asyncio.run(websocket_server(ws_server_config.get('WEBSOCKET_HOST'), ws_server_config.get('WEBSOCKET_PORT')))
-    except OSError as err:  # OSError: [Errno 48] error while attempting to bind on address ('0.0.0.0', 3667): address already in use
-        flaskz_logger.error('--- start websocket service error: {}---'.format(err))
-        pass
-    except KeyboardInterrupt:  # stop service
-        pass
+        loop.run_until_complete(websocket_server())
+    except OSError as err:
+        flaskz_logger.error(f'--- start websocket service error: {err} ---')
+    finally:
+        loop.run_until_complete(asyncio.sleep(0.1))
+        loop.close()
 
 
-async def websocket_server(host, port):
-    """
-    启动websocket服务.
-    """
-    if host is None:
-        host = '0.0.0.0'
-    flaskz_logger.info('--- start websocket service: {}:{}---'.format(host, port))
+async def shutdown(loop):
+    """ 关闭事件循环 """
+    flaskz_logger.info("--- close websocket service ---")
+    tasks = [t for t in asyncio.all_tasks(loop) if t is not asyncio.current_task()]
+    [task.cancel() for task in tasks]
+    await asyncio.gather(*tasks, return_exceptions=True)
+    loop.stop()
+
+
+async def websocket_server():
+    """ 启动 WebSocket 服务 """
+    host = ws_server_config['WEBSOCKET_HOST']
+    port = ws_server_config['WEBSOCKET_PORT']
+    flaskz_logger.info(f'--- start websocket service: {host}:{port} ---')
     async with websockets.serve(websocket_handler, host, port):
-        await asyncio.Future()
+        await asyncio.Future()  # 保持 WebSocket 服务器运行
 
 
-async def websocket_handler(websocket, path):
+async def websocket_handler(websocket):
     """
     websocket连接处理函数, 当有ws连接时自动回调
 
@@ -94,8 +97,17 @@ async def websocket_handler(websocket, path):
 
         # await task
     """
-    if websocket.closed:
-        return
+    new_ver = hasattr(websocket, 'request')
+    if new_ver:
+        if websocket.close_code is not None:
+            return
+        request = websocket.request
+        path = request.path
+    else:
+        if websocket.closed:
+            return
+        path = websocket.path
+
     ws_redis = redisz.Redisz(ws_server_config.get('REDIS_URL'), asyncio=True, **ws_server_config.get('REDIS_KWARGS'))
     ws_channel = ws_redis.get_pubsub()  # AttributeError: 'asyncio.RedisCluster' object has no attribute 'pubsub'
     channel = path.replace('/', '')  # ws://127.0.0.1:3667/a-channel 指定channel
@@ -108,8 +120,12 @@ async def websocket_handler(websocket, path):
     await ws_channel.subscribe(*channel)  # 每个ws连接监听的channel可以不一样
     try:
         while True:
-            if websocket.closed:
-                break
+            if new_ver:
+                if websocket.close_code is not None:
+                    return
+            else:
+                if websocket.closed:
+                    break
             redis_message = await ws_channel.get_message(ignore_subscribe_messages=True, timeout=timeout)
             if redis_message:
                 redis_message = redis_message.get('data')
@@ -121,7 +137,7 @@ async def websocket_handler(websocket, path):
     except redis.exceptions.ConnectionError as e:  # @2023-09-01 添加redis哨兵模式的逻辑处理
         flaskz_logger.debug('redis-ws redis connection error= ' + str(e))
         await ws_channel.unsubscribe(channel)
-        await websocket_handler(websocket, path)  # reconnect redis
+        await websocket_handler(websocket)  # reconnect redis
     finally:
         await ws_channel.unsubscribe(channel)
         flaskz_logger.debug('redis websocket channel=' + str(channel) + ' clear resource')

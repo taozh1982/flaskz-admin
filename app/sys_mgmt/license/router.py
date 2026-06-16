@@ -12,8 +12,7 @@ from . import SysLicense
 from .util import parse_license
 from ..router import sys_mgmt_bp, log_operation
 from ...main import allowed_file
-from ...sys_init import status_codes
-from ...utils import get_app_license
+from ...utils import get_app_license, get_app_license_manager
 
 
 # -------------------------------------------license-------------------------------------------
@@ -24,7 +23,7 @@ def sys_license_upload():
     license_txt = None
     public_key_file = get_app_config('APP_LICENSE_PUBLIC_KEY_FILEPATH')
     if not os.path.isfile(public_key_file):
-        success, res_data = False, status_codes.license_public_key_not_found
+        success, res_data = False, res_status_codes.license_public_key_not_found
     else:
         file = request.files.get('file')
         if file is None or file.filename == '':
@@ -36,7 +35,7 @@ def sys_license_upload():
                     public_key = f.read()
                 license_result = parse_license(public_key, license_txt)
                 if license_result is False:
-                    success, res_data = False, status_codes.license_parse_error
+                    success, res_data = False, res_status_codes.license_parse_error
                 else:
                     success, res_data = SysLicense.add({
                         'license': license_txt,
@@ -47,8 +46,11 @@ def sys_license_upload():
                         'end_date': license_result.get('EndDate'),
                     })
                     res_data = model_to_dict(res_data)
+                    license_manager = get_app_license_manager()
+                    if license_manager:
+                        license_manager.get_license(reload=True)  # reload
             else:
-                success, res_data = False, status_codes.file_format_not_allowed
+                success, res_data = False, res_status_codes.file_format_not_allowed
 
     license_upload_log_data = None
     if license_txt:
@@ -63,7 +65,7 @@ def sys_license_upload():
         license_res_data = dict(res_data)
         pop_dict_keys(license_res_data, ['Signature', 'license_hash'])
 
-    log_operation('licenses', 'upload', success, license_upload_log_data, get_log_data(license_res_data))
+    log_operation('licenses', 'add', success, license_upload_log_data, get_log_data(license_res_data))
     flaskz_logger.info(get_rest_log_msg('Upload license', license_txt, success, license_res_data))
     return create_response(success, license_res_data)
 
@@ -72,17 +74,19 @@ def sys_license_upload():
 @rest_permission_required('licenses')
 def sys_license_query():
     """查询license列表"""
-    result = SysLicense.query_all()
-    success = result[0]
-    res_data = model_to_dict(result[1])
+    success, res_data = SysLicense.query_all()
+    # success = result[0]
+    if success:
+        res_data = model_to_dict(res_data)
+        res_data.reverse()
 
-    current_license = get_app_license()
-    for data in res_data:
-        signature = data.get('Signature')
-        if current_license and signature == current_license.get('Signature'):
-            data['in_use'] = True
+        current_license = get_app_license()
+        for data in res_data:
+            signature = data.get('Signature')
+            if current_license and signature == current_license.get('Signature'):
+                data['in_use'] = True
 
-        pop_dict_keys(data, ['Signature', 'license_hash'])
+            pop_dict_keys(data, ['Signature', 'license_hash'])
 
     flaskz_logger.debug(get_rest_log_msg('Query license', None, success, res_data))
     return create_response(success, res_data)

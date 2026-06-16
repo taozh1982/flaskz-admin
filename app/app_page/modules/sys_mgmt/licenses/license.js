@@ -3,15 +3,15 @@ var License = z.util.mergeObject(pro.template.CRUDTablePage, {
         url: AjaxUrl.sys_licenses,
         grid_options: {
             columns: [
-                {name: z.i18n.t("SYS_LICENSES_USER"), field: "user"},
+                {name: z.i18n("SYS_LICENSES_USER"), field: "user"},
                 {
-                    name: z.i18n.t("SYS_LICENSES_TYPE"), field: "type",
+                    name: z.i18n("SYS_LICENSES_TYPE"), field: "type",
                     render: function (td, data) {
                         td.innerHTML = License.getLicenseType(data.get("type"));
                     }
                 },
                 {
-                    name: z.i18n.t("SYS_LICENSES_START_END_DATE"), field: "start_date",
+                    name: z.i18n("SYS_LICENSES_START_END_DATE"), field: "start_date",
                     render: function (td, data) {
                         var txt = data.get("start_date") + " - " + data.get("end_date");
                         if (data.get('in_use') === true) {
@@ -21,7 +21,7 @@ var License = z.util.mergeObject(pro.template.CRUDTablePage, {
                     }
                 },
                 {
-                    name: z.i18n.t("SYS_LICENSES_UPLOADED_AT"), field: "created_at",
+                    name: z.i18n("SYS_LICENSES_UPLOADED_AT"), field: "created_at",
                     render: function (td, data) {
                         td.innerHTML = pro.TimeUtil.format(data.get("created_at"));
                     }
@@ -37,8 +37,8 @@ var License = z.util.mergeObject(pro.template.CRUDTablePage, {
     },
     getLicenseType: function (type) {
         var typeMap = {
-            "EVALUATION": z.i18n.t("SYS_LICENSES_TYPE_EVALUATION"),
-            "RUNTIME": z.i18n.t("SYS_LICENSES_TYPE_RUNTIME")
+            "EVALUATION": z.i18n("SYS_LICENSES_TYPE_EVALUATION"),
+            "RUNTIME": z.i18n("SYS_LICENSES_TYPE_RUNTIME")
         }
         return typeMap[type] || type;
     }
@@ -68,7 +68,7 @@ var License = z.util.mergeObject(pro.template.CRUDTablePage, {
             files: z.dom.getValue("#fileInput"),
             url: AjaxUrl.sys_licenses.add,
             success: function () {
-                z.widget.alert(z.i18n.t("SYS_LICENSES_UPLOAD_SUCCESS_MSG"), z.i18n.t("PRO_MESSAGE_TIPS"), function () {
+                z.widget.alert(z.i18n("SYS_LICENSES_UPLOAD_SUCCESS_MSG"), z.i18n("PRO_MESSAGE_TIPS"), function () {
                     window.top.location.reload();
                 });
             }
