@@ -23,4 +23,4 @@ init_cli(app)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=666, debug=True, threaded=False)
 
-__version__ = '3.0.0'
+__version__ = '3.1.0'

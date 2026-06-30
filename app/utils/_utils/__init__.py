@@ -15,7 +15,14 @@ def clean_dict(data):
     return data
 
 
-def get_es_req_result(response):
+def get_es_req_result(success, response):
+    if success is False:
+        return success, res_status_codes.es_connect_err
+
+    status_code = response.status_code
+    if not 200 <= status_code < 300:
+        return False, res_status_codes.es_connect_err
+
     error = None
     try:
         response_json = response.json()
@@ -30,11 +37,13 @@ def get_es_req_result(response):
         else:
             return False, res_status_codes.es_connect_err
 
-    status_code = response.status_code
-    if 200 <= status_code < 300:
-        if response_json:
-            return True, response_json
-    return False, res_status_codes.es_connect_err
+    return True, response_json
+
+    # if 200 <= status_code < 300:
+    #     if response_json:
+    #         return True, response_json
+    # return False, res_status_codes.es_connect_err
+
 
 
 from . import es_util

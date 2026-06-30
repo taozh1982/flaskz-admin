@@ -6,7 +6,10 @@ var Login = {
     },
     initController: function () {
         z.dom.event.onclick("#loginBtn", this._login, this);
-        z.dom.event.on("#usernameInput", "keydown.Enter", function () {
+        z.dom.event.on("#usernameInput", "keydown.Enter", function (evt) {
+            if (evt.isComposing) {
+                return
+            }
             z.dom.focus("#pwdInput")
         });
         z.dom.event.on("#pwdInput", "keydown.Enter", this._login, this);
@@ -43,7 +46,7 @@ var Login = {
         pro.AjaxCRUD.ajax({
             url: AjaxUrl.sys_auth.login,
             data: value,
-            tips: z.i18n('LOGIN_ACTION_LOGIN'),
+            tips: z.i18n.t('LOGIN_ACTION_LOGIN'),
             success_notify: false,
             fail_notify: false,
             error: function (result) {

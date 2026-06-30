@@ -1,18 +1,17 @@
 import json
 
-from flask import request, abort
-from flask_login import login_user, logout_user, current_user
+from flask import abort, make_response, request
+from flask_login import current_user, login_user, logout_user
 from flaskz import res_status_codes
 from flaskz.log import flaskz_logger, get_log_data
 from flaskz.models import model_to_dict, query_all_models
-from flaskz.rest import get_rest_log_msg, rest_login_required, rest_permission_required, register_model_route, register_model_query_pss_route, \
-    register_model_query_route, \
-    register_model_delete_route
-from flaskz.utils import create_response, get_wrap_str, find_list, get_dict_mapping, get_app_config, pop_dict_keys, get_ins_mapping
+from flaskz.rest import get_rest_log_msg, register_model_delete_route, register_model_query_pss_route, register_model_query_route, register_model_route, rest_login_required, \
+    rest_permission_required
+from flaskz.utils import create_response, find_list, get_app_config, get_dict_mapping, get_ins_mapping, get_request_json, get_wrap_str, pop_dict_keys
 
-from . import sys_mgmt_bp, log_operation
-from .auth import verify_refresh_token, generate_token
-from .model import SysUser, SysRole, SysModule, SysRoleModule, SysActionLog, SysUserOption, SysOption
+from . import log_operation, sys_mgmt_bp
+from .auth import generate_token, verify_refresh_token
+from .model import SysActionLog, SysModule, SysOption, SysRole, SysUser, SysUserOption
 from ..utils import get_app_license
 
 
@@ -20,7 +19,7 @@ from ..utils import get_app_license
 @sys_mgmt_bp.route('/auth/login/', methods=['POST'])
 def sys_auth_login():
     """用户登录Session/Cookie"""
-    request_json = request.json
+    request_json = get_request_json({})
     username, password, remember_me = request_json.get('username'), request_json.get('password'), request_json.get('remember_me')
     success, result = SysUser.verify_password(username, password)
     res_data = None
@@ -39,54 +38,63 @@ def sys_auth_logout():
     """用户登出Session/Cookie"""
     logout_user()
     flaskz_logger.info(get_rest_log_msg('User logout', None, True, None))
-    return create_response(True, None)
+    res = make_response(create_response(True, None))
+    res.delete_cookie('refresh_token')
+    return res
 
 
 @sys_mgmt_bp.route('/auth/token/', methods=['POST'])
 def sys_auth_get_token():
     """获取Token"""
     # grant_type
-    request_json = request.json
+    request_json = get_request_json({})
     username, password = request_json.get('username'), request_json.get('password')
     success, result = SysUser.verify_password(username, password)
+    refresh_token = ''
     if success is False:
         res_data = model_to_dict(result)
     else:
         res_data = generate_token({'id': result.get_id()})
         SysUserOption.update_login(result.id)
+        refresh_token = res_data.get('refresh_token')
 
     log_operation('users', 'login', success, username, None)
     flaskz_logger.info(get_rest_log_msg('User get login token', {'username': username}, success, res_data))
-    return create_response(success, res_data)
+    res = make_response(create_response(success, res_data))
+    if refresh_token:
+        res.set_cookie('refresh_token', refresh_token, max_age=get_app_config('APP_REFRESH_TOKEN_EXPIRES_IN'))
+    else:
+        res.delete_cookie('refresh_token')
+    return res
 
 
-@sys_mgmt_bp.route('/auth/token/refresh/', methods=['POST'])
+@sys_mgmt_bp.route('/auth/token/refresh/', methods=['POST', 'GET'])
 def sys_auth_token_refresh():
     """刷新Token"""
-    request_json = request.json
+    request_json = get_request_json({})
     # req_log_data = json.dumps(request_json)
-    refresh_token = request_json.get('refresh_token', '')
-    refresh_token_payload = verify_refresh_token(refresh_token)
-    username = None
+    refresh_token = (request.cookies.get('refresh_token') or request_json.get('refresh_token') or '').strip()
     success = False
-    if refresh_token_payload is False:
-        res_data = res_status_codes.refresh_token_err
-    else:
-        user_id = refresh_token_payload.get('id')
-        user = SysUser.query_by_pk(user_id)
-        if user:
-            success = True
-            username = user.username
-            res_data = generate_token({'id': user_id})
-            SysUserOption.update_login(user_id)
-        else:
-            res_data = res_status_codes.account_not_found
+    username = None
+    result = res_status_codes.refresh_token_err
+    if refresh_token:
+        refresh_token_payload = verify_refresh_token(refresh_token)
+        if refresh_token_payload is not False:
+            user_id = refresh_token_payload.get('id')
+            user = SysUser.query_by_pk(user_id)
+            if user:
+                success = True
+                username = user.username
+                result = generate_token({'id': user_id})
+                SysUserOption.update_login(user_id)
+            else:
+                result = res_status_codes.account_not_found
 
     log_operation('users', 'login', success, {'refresh_token': refresh_token[:6] + '*' * 6 + refresh_token[-6:]}, log_data={
         'username': username
     })
-    flaskz_logger.info(get_rest_log_msg('User refresh login token', {'username': username}, success, res_data))
-    return create_response(success, res_data)
+    flaskz_logger.info(get_rest_log_msg('User refresh login token', {'username': username}, success, result))
+    return create_response(success, result)
 
 
 @sys_mgmt_bp.route('/auth/keep-alive/', methods=['GET', 'POST'])
@@ -169,7 +177,7 @@ def sys_auth_account_query():
 @rest_login_required()
 def sys_auth_account_update():
     """更新账号信息(非管理员)"""
-    request_json = request.json
+    request_json = get_request_json({})
     req_log_data = json.dumps(request_json)
     # role和username不可修改
     pop_dict_keys(request_json, ['role_id', 'username'])
@@ -221,7 +229,7 @@ register_model_delete_route(sys_mgmt_bp, SysRole, 'roles', 'roles')  # 删除角
 @rest_permission_required('roles', 'add')
 def sys_role_add():
     """添加角色"""
-    request_json = request.json
+    request_json = get_request_json({})
     req_log_data = json.dumps(request_json)
 
     result = SysRole.add(SysRole.to_server_json(request_json))
@@ -240,7 +248,7 @@ def sys_role_add():
 @rest_permission_required('roles', 'update')
 def sys_role_update():
     """更新角色"""
-    request_json = request.json
+    request_json = get_request_json({})
     req_log_data = json.dumps(request_json)
 
     result = SysRole.update(SysRole.to_server_json(request_json))
@@ -289,7 +297,7 @@ register_model_route(sys_mgmt_bp, SysOption, 'sys-options', 'sys-options')
 @rest_permission_required('sys-options', 'update')
 def sys_options_bulk_update():
     """批量更新Options"""
-    request_json = request.json
+    request_json = get_request_json({})
     req_log_data = json.dumps(request_json)
     try:
         success, options = SysOption.query_all()

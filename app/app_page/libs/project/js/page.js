@@ -26,23 +26,53 @@ z.setDefault({
                 try {
                     var result = JSON.parse(httpRequest.responseText);
                     if (result.status !== z.getDefault("PRO_AJAX_SUCCESS_STATE") && result.status_code === 'uri_unauthorized') {
-                        var hash = z.bom.getLocationHash()
-                        if (hash) {
-                            z.bom.setSessionStorage('selected_menu', hash);
+                        var _login = function () {
+                            var hash = z.bom.getLocationHash()
+                            if (hash) {
+                                z.bom.setSessionStorage('selected_menu', hash);
+                            }
+                            var pathname = window.location.pathname;
+                            if (pathname === "/" || pathname === "/index" || pathname === "index") {
+                                window.top.location.href = "/login";
+                            } else {
+                                z.widget.alert(z.i18n("LOGIN_REQUIRED"), z.i18n("PRO_MESSAGE_TIPS"), function (result) {//callback
+                                    z.widget.notify(false);
+                                    if (window.top.Admin && window.top.Admin.showLoginModal) {
+                                        window.top.Admin.showLoginModal();
+                                    } else {
+                                        window.top.location.href = "/login";
+                                    }
+                                });
+                            }
                         }
-                        var pathname = window.location.pathname;
-                        if (pathname === "/" || pathname === "/index" || pathname === "index") {
-                            window.top.location.href = "/login";
-                        } else {
-                            z.widget.alert(z.i18n("LOGIN_REQUIRED"), z.i18n("PRO_MESSAGE_TIPS"), function (result) {//callback
+                        if (!z.bom.getCookie("refresh_token")) {
+                            _login();
+                            return;
+                        }
+                        pro.AjaxCRUD.ajax({
+                            url: AjaxUrl.sys_auth.refresh_token,
+                            loading: false,
+                            success_notify: false,
+                            error: function (result) {
+                                _login();
+                            },
+                            success: function (result) {
                                 z.widget.notify(false);
-                                if (window.top.Admin && window.top.Admin.showLoginModal) {
-                                    window.top.Admin.showLoginModal();
-                                } else {
-                                    window.top.location.href = "/login";
+                                z.widget.notify(z.i18n("AJAX_REFRESH_TOKEN_SUCCESS"), {type: "info", duration: 2000});
+                                if (result.data) {
+                                    var data = result.data;
+                                    var token;
+                                    if (z.type.isString(data)) {
+                                        token = data;
+                                    } else if (z.type.isObject(data)) {
+                                        token = data.token;
+                                    }
+                                    if (token) {
+                                        z.bom.setLocalStorage("auth-token", token);
+                                    }
                                 }
-                            });
-                        }
+                            }
+                        })
                     }
                 } catch (err) {
                 }

@@ -1,5 +1,5 @@
 from flaskz.log import flaskz_logger
-from flaskz.utils import request, json_dumps
+from flaskz.utils import json_dumps, request
 
 
 def query(es_url, es_index, payload, hits_source=True):
@@ -217,20 +217,29 @@ def _bulk_save(bulk_url, bulk_method, action, bulk_data, bulk_max_size):
 def _request_es(*args, **kwargs):
     raw_response = kwargs.pop('raw_response', None)
     success, response = request(*args, **kwargs, raw_response=True)
-    if success is False or raw_response is True:
+    if raw_response is True:
         return success, response
 
-    return get_request_result(response)
+    return get_request_result(success, response)
 
 
-def get_request_result(response):
+def get_request_result(success, response):
     """
     重写以自定义返回结果
 
-    def get_es_req_result(response):
+    def get_es_req_result(success, response):
+        if success is False:
+            return success, res_status_codes.es_connect_err
+
+        status_code = response.status_code
+        if not 200 <= status_code < 300:
+            return False, res_status_codes.es_connect_err
+
+        error = None
         try:
             response_json = response.json()
-            error = response_json.get('errors') or response_json.get('error')
+            if type(response_json) is dict:
+                error = response_json.get('errors') or response_json.get('error')
         except Exception as e:
             return False, str(e)
 
@@ -240,17 +249,15 @@ def get_request_result(response):
             else:
                 return False, res_status_codes.es_connect_err
 
-        status_code = response.status_code
-        if 200 <= status_code < 300:
-            if response_json:
-                return True, response_json
-        return False, res_status_codes.es_connect_err
-
+        return True, response_json
 
     es_util.get_request_result = get_es_req_result
 
 
     """
+    if success is False:
+        return success, response
+
     response_json, error = None, None
     try:
         response_json = response.json()

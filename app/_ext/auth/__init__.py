@@ -15,13 +15,12 @@ auth_tacacs_auth_fail = 'aaa_tacacs_auth_fail', 'TACACS认证失败'
 4. 替换登录API [POST] http://{{server}}/sys-mgmt/auth/aaa/
 
 """
-from flask import request
 from flask_login import login_user
 from flaskz import res_status_codes
 from flaskz.log import flaskz_logger
 from flaskz.models import model_to_dict
-from flaskz.rest import log_operation, get_rest_log_msg
-from flaskz.utils import create_response
+from flaskz.rest import get_rest_log_msg, log_operation
+from flaskz.utils import create_response, get_request_json
 
 from .model import SysAuthMode
 from ...sys_init import status_codes
@@ -31,7 +30,7 @@ from ...sys_mgmt.model import SysRole, SysUser, SysUserOption
 
 @sys_mgmt_bp.route('/auth/aaa/', methods=['POST'])
 def sys_aaa_auth():
-    request_json = request.json
+    request_json = get_request_json({})
 
     username, password, remember_me = request_json.get('username'), request_json.get('password'), request_json.get('remember_me')
     auth_mode_ins = SysAuthMode.query_by({'default': True}, True)

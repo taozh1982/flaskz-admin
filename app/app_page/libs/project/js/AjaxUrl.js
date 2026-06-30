@@ -30,6 +30,7 @@ var AjaxUrl = {
         // login: {url: "/sys-mgmt/auth/login/", method: "POST"},
         login: {url: "/sys-mgmt/auth/token/", method: "POST"},
         logout: {url: "/sys-mgmt/auth/logout/", method: "GET"},
+        refresh_token: {url: "/sys-mgmt/auth/token/refresh/", method: "GET"},
 
         query: "/sys-mgmt/auth/account/",
         update: "/sys-mgmt/auth/account/"

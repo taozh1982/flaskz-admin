@@ -2,7 +2,7 @@
 根据数据库类型设置模型属性
 """
 from flaskz.utils import get_app_config
-from sqlalchemy import cast, func, BigInteger
+from sqlalchemy import BigInteger, cast, func
 
 
 def update_model_by_db():

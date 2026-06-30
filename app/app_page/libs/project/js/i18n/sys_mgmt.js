@@ -1,4 +1,8 @@
 z.util.mergeObject(I18ns, {
+    // Ajax
+    AJAX_STATUS_LAST_ADMIN_USER_NOT_ALLOWED: ["The user is the last that can manage roles", "当前是最后一个有角色管理权限的用户"],
+    AJAX_REFRESH_TOKEN_SUCCESS: ["Access Token refresh successful, please resubmit", "更新请求Token成功, 请重新提交"],
+
     //Sys Users
     SYS_USERS_TITLE: ["Users", "用户列表"],
     SYS_USERS_USERNAME: ["Username", "用户名"],
@@ -15,7 +19,6 @@ z.util.mergeObject(I18ns, {
     SYS_USERS_DISABLE_CONFIRM: ["<i class='fa fa-warning color-warning'></i> Confirm to disable?", "<i class='fa fa-warning color-warning'></i> 确认停用?"],
     SYS_USERS_SHOW_PASSWORD: ["Show", "显示"],
     SYS_USERS_CONFIRM_PASSWORD: ["Confirm Password", "确认密码"],
-    AJAX_STATUS_LAST_ADMIN_USER_NOT_ALLOWED: ["The user is the last that can manage roles", "当前是最后一个有角色管理权限的用户"],
 
     //Sys Roles
     SYS_ROLES_TITLE: ["Roles", "角色列表"],

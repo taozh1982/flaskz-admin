@@ -76,7 +76,7 @@ def employees_clear():
 # @rest_permission_required('ex-employees', 'update')
 # def employees_bulk_add():
 #     """批量添加数据"""
-#     request_json = request.json
+#     request_json = get_request_json({})
 #     req_log_data = json.dumps(request_json)
 #     success, result = True, None
 #     try:
@@ -95,7 +95,7 @@ def employees_clear():
 # @rest_permission_required('ex-employees', 'update')
 # def employees_bulk_delete():
 #     """批量删除数据"""
-#     request_json = request.json
+#     request_json = get_request_json({})
 #     req_log_data = json.dumps(request_json)
 #     success, result = True, None
 #     try:
@@ -117,7 +117,7 @@ def employees_clear():
 # @rest_permission_required('ex-employees', 'update')
 # def employees_bulk_update():
 #     """批量更新数据"""
-#     request_json = request.json
+#     request_json = get_request_json({})
 #     req_log_data = json.dumps(request_json)
 #     success, result = True, None
 #     try:

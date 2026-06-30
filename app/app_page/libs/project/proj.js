@@ -1,4 +1,4 @@
-// 2026/06/16 13:06:23
+// 2026/07/01 00:01:29
 //项目定制化
 z.setDefault({
     FORM_VALIDATE_ERROR_CLASS: "is-invalid",
@@ -120,15 +120,18 @@ var I18ns = {
 z.util.mergeObject(I18ns, {
     SYSTEM_TITLE: ["Flaskz Admin", "Flaskz 管理系统"],
     SYSTEM_ABOUT: [
-        "Flaskz Admin v3.0.0.0616<br>For assistance, please contact:<ol><li>Zhang Tao ｜ <a href='mailto:taozh1982@outlook.com?subject=Flaskz Admin'>taozh1982@outlook.com</a> ｜ 15021399876</li></ol>",
-        "Flaskz 管理系统 v3.0.0.0616<br>如需帮助, 请联系:<ol><li>张涛 | <a href='mailto:taozh1982@outlook.com?subject=Flaskz Admin'>taozh1982@outlook.com</a> | 15021399876</li></ol>",
+        "Flaskz Admin v3.1.0.0701<br>For assistance, please contact:<ol><li>Zhang Tao | <a href='mailto:taozh1982@outlook.com?subject=Flaskz Admin'>taozh1982@outlook.com</a> | 5021399876</li></ol>",
+        "Flaskz 管理系统 v3.1.0.0701<br>如需帮助, 请联系:<ol><li>张涛 | <a href='mailto:taozh1982@outlook.com?subject=Flaskz Admin'>taozh1982@outlook.com</a> | 15021399876</li></ol>"
     ],
-
-    SYSTEM_VERSION: ["v3.0.0.0616", "v3.0.0.0616", "v3.0.0.0616"],
+    SYSTEM_VERSION: ["v3.1.0.0701", "v3.1.0.0701", "v3.1.0.0701"],
     HOMEPAGE_GUIDE_DOC: ["Guide", "使用手册", "使用手冊"]
 });
 
 z.util.mergeObject(I18ns, {
+    // Ajax
+    AJAX_STATUS_LAST_ADMIN_USER_NOT_ALLOWED: ["The user is the last that can manage roles", "当前是最后一个有角色管理权限的用户"],
+    AJAX_REFRESH_TOKEN_SUCCESS: ["Access Token refresh successful, please resubmit", "更新请求Token成功, 请重新提交"],
+
     //Sys Users
     SYS_USERS_TITLE: ["Users", "用户列表"],
     SYS_USERS_USERNAME: ["Username", "用户名"],
@@ -145,7 +148,6 @@ z.util.mergeObject(I18ns, {
     SYS_USERS_DISABLE_CONFIRM: ["<i class='fa fa-warning color-warning'></i> Confirm to disable?", "<i class='fa fa-warning color-warning'></i> 确认停用?"],
     SYS_USERS_SHOW_PASSWORD: ["Show", "显示"],
     SYS_USERS_CONFIRM_PASSWORD: ["Confirm Password", "确认密码"],
-    AJAX_STATUS_LAST_ADMIN_USER_NOT_ALLOWED: ["The user is the last that can manage roles", "当前是最后一个有角色管理权限的用户"],
 
     //Sys Roles
     SYS_ROLES_TITLE: ["Roles", "角色列表"],
@@ -235,6 +237,7 @@ var AjaxUrl = {
         // login: {url: "/sys-mgmt/auth/login/", method: "POST"},
         login: {url: "/sys-mgmt/auth/token/", method: "POST"},
         logout: {url: "/sys-mgmt/auth/logout/", method: "GET"},
+        refresh_token: {url: "/sys-mgmt/auth/token/refresh/", method: "GET"},
 
         query: "/sys-mgmt/auth/account/",
         update: "/sys-mgmt/auth/account/"
@@ -291,23 +294,53 @@ z.setDefault({
                 try {
                     var result = JSON.parse(httpRequest.responseText);
                     if (result.status !== z.getDefault("PRO_AJAX_SUCCESS_STATE") && result.status_code === 'uri_unauthorized') {
-                        var hash = z.bom.getLocationHash()
-                        if (hash) {
-                            z.bom.setSessionStorage('selected_menu', hash);
+                        var _login = function () {
+                            var hash = z.bom.getLocationHash()
+                            if (hash) {
+                                z.bom.setSessionStorage('selected_menu', hash);
+                            }
+                            var pathname = window.location.pathname;
+                            if (pathname === "/" || pathname === "/index" || pathname === "index") {
+                                window.top.location.href = "/login";
+                            } else {
+                                z.widget.alert(z.i18n("LOGIN_REQUIRED"), z.i18n("PRO_MESSAGE_TIPS"), function (result) {//callback
+                                    z.widget.notify(false);
+                                    if (window.top.Admin && window.top.Admin.showLoginModal) {
+                                        window.top.Admin.showLoginModal();
+                                    } else {
+                                        window.top.location.href = "/login";
+                                    }
+                                });
+                            }
                         }
-                        var pathname = window.location.pathname;
-                        if (pathname === "/" || pathname === "/index" || pathname === "index") {
-                            window.top.location.href = "/login";
-                        } else {
-                            z.widget.alert(z.i18n("LOGIN_REQUIRED"), z.i18n("PRO_MESSAGE_TIPS"), function (result) {//callback
+                        if (!z.bom.getCookie("refresh_token")) {
+                            _login();
+                            return;
+                        }
+                        pro.AjaxCRUD.ajax({
+                            url: AjaxUrl.sys_auth.refresh_token,
+                            loading: false,
+                            success_notify: false,
+                            error: function (result) {
+                                _login();
+                            },
+                            success: function (result) {
                                 z.widget.notify(false);
-                                if (window.top.Admin && window.top.Admin.showLoginModal) {
-                                    window.top.Admin.showLoginModal();
-                                } else {
-                                    window.top.location.href = "/login";
+                                z.widget.notify(z.i18n("AJAX_REFRESH_TOKEN_SUCCESS"), {type: "info", duration: 2000});
+                                if (result.data) {
+                                    var data = result.data;
+                                    var token;
+                                    if (z.type.isString(data)) {
+                                        token = data;
+                                    } else if (z.type.isObject(data)) {
+                                        token = data.token;
+                                    }
+                                    if (token) {
+                                        z.bom.setLocalStorage("auth-token", token);
+                                    }
                                 }
-                            });
-                        }
+                            }
+                        })
                     }
                 } catch (err) {
                 }
